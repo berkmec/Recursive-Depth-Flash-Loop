@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-EE4C2C.svg)](pyproject.toml)
-[![Ham JSON Doğrulaması](https://img.shields.io/badge/Doğrulanan_Hücre-698%2F698_(0_uyuşmazlık)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
+[![Ham JSON Doğrulaması](https://img.shields.io/badge/Doğrulanan_Hücre-773%2F773_(0_uyuşmazlık)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
 
 **[English](README.md)** · **[Türkçe](README.tr.md)** · **[Mimari Belirtim](docs/ARCHITECTURE.md)** · **[Denetlenmiş Özet JSON](results/audited_summary.json)** · **[Ham Denetim JSON'ları](results/raw/)**
 
@@ -119,17 +119,34 @@ Görülmeyen tohumlarda `(42, 137, 2026)` `graf_izli` ve `Byte LM` ([`results/ra
 
 ---
 
-## 5. Yöntemsel Kısıtlar
+## 5. `RDFL v0.3` Sertleştirme (`K1–K5`), Servis Duvarı (`H5`) ve Mekanistik X-Ray
+
+Tüm `v0.3` çekirdek onarımları (`13/13` CPU birim testi, [`tests/test_rdfl.py`](tests/test_rdfl.py)), servis ölçümleri ve mekanistik problar [`results/raw/`](results/raw/) altında arşivlenmiştir (`deney_a_k1_k5.json`, `h5_memory_latency_and_serving.json`, `math_xray_master_synthesis.json`, `p3_long_v03.json`, `p2_long_v03.json`; durum: *Carbon denetimi bekliyor*):
+
+1. **`K1–K5` Çekirdek Sertleştirme ([`results/raw/deney_a_k1_k5.json`](results/raw/deney_a_k1_k5.json)):**
+   - **`K3` (`std=0,02` Ağırlık Başlatma):** Adım-0 logit patlamasını (`d=192: CE 193,82 -> 5,54`, `d=768: 752,45 -> 5,78`) ve FP16 taşmalarını (`8 -> 0`) ortadan kaldırır; 500-adım `Byte LM` (`mix_val`) skorunu **`-0,5789 bpb`** iyileştirir (`3,1682 ± 0,0065 -> 2,5893 ± 0,0066`, `p = 8e-5`).
+   - **`K5` (`0`-Ekstra-Geçiş Anlık-Görüntü Spekülatif Çözümleme):** `forward_with_snapshots()` geri-alma yeniden hesaplamasını sıfırlar (`0` ekstra geçiş, `0` bayt sapma) ve eager GPU'da **`1,68×`** gerçek duvar-saati hızlanması sağlar (`K3: 2,349s -> 1,401s`, `%59,3` kabul; `MTP-4: 2,349s -> 1,396s`, `%21,3` kabul; Triton/Graph eğitimli checkpoint doğrulaması açık).
+   - **`K1 / K4 / K2` Şerhleri:** `K1` (başlık-başı FP32 `o_norm`) FP16 güvenlik ve baş-denge onarımıdır (`0` NaN; `+0,0134 bpb`, `p = 0,098`, gürültü içinde); `K4` (`mtp_stop_grad=True` + tek `final_norm`) ana başlık CE girişimini kaldırır (`150` adımda `2,2023 -> 2,0638`); `K2` (`rlt2_s1` 300-adım `graf_izli trace=False`) şans tabanında kalmıştır (`0,0443`, sonuçsuz).
+2. **`H5` Canlı GPU Servis Duvarı & Eş-Param Metin-Baytı Belleği ([`results/raw/h5_memory_latency_and_serving.json`](results/raw/h5_memory_latency_and_serving.json)):**
+   - **Canlı GPU (`B=8`):** `T = 65.536`'da `RoPE-Transformer` **OOM** verirken (`T = 32.768`'de `2.415,8 MiB`), **Saf `RDFL`** $O(1)$ ile **`153,77 MiB`** (`T = 32.768`'de `151,77 MiB`) düzeyinde kalır.
+   - **Eş-Parametre Metin-Baytı Karşılaştırması (`1M` Metin Baytında `1B` & `55M`):** `GQA-8 FP8` (`4B/tok`) karşısında `1B` Saf `RDFL` (`10,55 MiB`) **`291,3×`** (`3.072 MiB` KV, geçiş `3.600 B`), `55M` Saf `RDFL` (`2,11 MiB`) **`303,4×`** (`640 MiB` KV, geçiş `3.456 B`) daha küçüktür.
+3. **Mekanistik X-Ray & Çürütme Disiplini ([`results/raw/math_xray_master_synthesis.json`](results/raw/math_xray_master_synthesis.json), [`p3_long_v03.json`](results/raw/p3_long_v03.json), [`p2_long_v03.json`](results/raw/p2_long_v03.json)):**
+   - **Gerçek Özyinelemeli Bellek (`mqar_k8` & `byte_lm`):** $S_t=0$ sıfırlaması `mqar_k8`'i **`%98,63 -> %6,25`** (şans) düzeyine çökertir; `byte_lm` **`BDH L0 = %90,5`** seyreklik (`r=0`), boşluk-sonrası karar baytlarında **`1,69×`** odaklanma (`r=1`), **`P(beta > 1,0) = %32,2 / %33,4`** aktif Householder rejimi ve `T = 2048`'e dek **`0`** rank çöküşü gösterir (geri çekilen `running=True` `S5`/`Parity` kestirme X-ray'leri iddia dışıdır).
+   - **5-Tohum `1000`-Adım Mimari Yasaları (`P3_long` & `P2_long`):** `P3` (`unit_rms/safe_rms/ency_init`) çürütülmüş (`p = 0,423 / 0,910`), eş-param `use_bdh=False` (`SwiGLU`) ise `5/5` tohumda `BDH ReLU*ReLU`'yu geçerek (**`-0,0121 bpb`** `mix_val`, **`-0,0150 bpb`** `web_val`, `p = 0,0018`) `BDH` yorumlanabilirlik seyreklik vergisini ölçmüştür. `P2` (`conv.bias=0`) da çürütülmüştür: `short_conv.conv.bias`'ı silmek `erank`'i artırsa da (`8,26 -> 12,19`) `Byte LM`'yi bozmuştur (**`+0,0085 bpb`**, `p = 0,0048`), `conv.bias`'ın yararlı bir lineer attention-sink kanalı olduğunu kanıtlamıştır.
+
+---
+
+## 6. Yöntemsel Kısıtlar
 
 1. **Referans Çekirdek & Spekülatif Yük:** Saf PyTorch'ta `55M` kayıpsız `K3` yalnız `1,042×` (`RSI 1,007×`), `MTP-4` ise `%42,8` kabule rağmen `0,968×` (`RSI 0,865×`) hız vermiştir; sıfırdan büyük ölçekli eğitim için birleşik Triton / `fla` `GatedDeltaNet` çekirdeği şarttır.
 2. **Hibrit `55M` Yan-Dal vs Saf `RDFL`:** `G_BASE_ONLY` (`1,5K`) ve `en_iyi.pt` `RDFL ON/OFF` (`21K`) kontrolleri hibrit yan-dalın saf LM `bpb`'ye ihmal edilebilir katkı verdiğini göstermiştir; mimari üstünlük iddiası için sıfırdan **Saf `RDFL`** ön-eğitimi gerekir.
 3. **`SlotCore` Çöküşü (`v0.3`'te Ertelendi) & `Multi-Hop ICL` Tavanı (`KPN-Y01`):** Simetrik `FP32 SlotCore` `cos = 0,999982` (`norm = 664,5`) ile çöküp `55M`'de `0,0` durum-izleme katkısı vermiştir. `1,20M` `Multi-Hop ICL` `%22,72` skoru `%25,0 / %12,5` derece-filtreleme tavanı içindedir (`KPN-Y01`), giriş çıpalaması ise sıfır etki göstermiştir.
 4. **OOD Uzaklaşması & RSI SFT Koruması:** `1,20M` `OOD-Uzak` (`L=7,8 = %0,0`) ve `55M` `L=4 ↔ L=5` duvarı (`0/96` kabul) + `completion 0,78 → 0,58` çöküşü, RSI'da hem uzunluk köprüsü hem SFT/`EOT` koruma payı zorunluluğunu kanıtlamıştır.
-5. **Doğrulama:** `results/audited_summary.json` içindeki **`698/698`** hücre CI'da ham JSON'lara karşı doğrulanmaktadır (`55M` final çıktıları bağımsız Carbon kapanış denetimini beklemektedir).
+5. **Doğrulama:** `results/audited_summary.json` içindeki **`773/773`** hücre CI'da ham JSON'lara karşı doğrulanmaktadır (`55M` final ve `v0.3` çıktıları bağımsız Carbon kapanış denetimini beklemektedir).
 
 ---
 
-## 6. Hızlı Başlangıç ve Tek-Komutla Doğrulama (CPU)
+## 7. Hızlı Başlangıç ve Tek-Komutla Doğrulama (CPU)
 
 ```bash
 git clone https://github.com/berkmec/Recursive-Depth-Flash-Loop.git

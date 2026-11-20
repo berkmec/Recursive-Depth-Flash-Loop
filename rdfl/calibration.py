@@ -17,15 +17,50 @@ def msp_uncertainty(logits: Tensor, temperature: float = 1.0) -> tuple[Tensor, T
     return conf, 1.0 - conf
 
 
-def fit_temperature(logits: Tensor, targets: Tensor) -> float:
-    """Grid-searches NLL-optimal scalar temperature T* on a held-out calibration split."""
+def fit_temperature(
+    logits: Tensor,
+    targets: Tensor,
+    mask: Tensor | None = None,
+    t_min: float = 0.2,
+    t_max: float | None = 8.0,
+    num_grid: int = 129,
+) -> float:
+    """Finds NLL-optimal scalar temperature T* in [t_min, t_max] with optional byte mask."""
+    hi_bound = 100.0 if t_max is None else float(t_max)
+    if t_min <= 0.0 or t_min >= hi_bound:
+        raise ValueError("Require 0 < t_min < t_max")
+    if num_grid < 3:
+        raise ValueError("num_grid must be >= 3")
     lg = logits.float().reshape(-1, logits.shape[-1])
     y = targets.long().reshape(-1)
-    best_t, best_nll = 1.0, float("inf")
-    for t_cand in np.linspace(0.40, 2.00, 65):
+    if lg.shape[0] != y.shape[0]:
+        raise ValueError("logits and targets token counts must match")
+    if mask is not None:
+        m = mask.bool().reshape(-1)
+        if m.shape[0] != y.shape[0]:
+            raise ValueError("mask must match targets token count")
+        if not bool(m.any().item()):
+            raise ValueError("mask must select at least one token")
+        lg = lg[m]
+        y = y[m]
+
+    grid = np.geomspace(t_min, hi_bound, num_grid)
+    best_idx = 0
+    best_nll = float("inf")
+    for idx, t_cand in enumerate(grid):
         nll = float(F.cross_entropy(lg / float(t_cand), y))
         if nll < best_nll:
-            best_nll, best_t = nll, float(t_cand)
+            best_nll = nll
+            best_idx = idx
+
+    lo = float(grid[max(0, best_idx - 1)])
+    hi = float(grid[min(len(grid) - 1, best_idx + 1)])
+    best_t = float(grid[best_idx])
+    for t_cand in np.linspace(lo, hi, 33):
+        nll = float(F.cross_entropy(lg / float(t_cand), y))
+        if nll < best_nll:
+            best_nll = nll
+            best_t = float(t_cand)
     return best_t
 
 

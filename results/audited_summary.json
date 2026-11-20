@@ -1069,6 +1069,133 @@
         "rsi_55m_delta_durum_puan": 0.0,
         "verdict_55m": "DEFERRED_REPLACED_IN_V0_3 (zero state-tracking gain delta_durum=0.0 + cos=0.999982 collapse)"
       }
+    },
+    "rdfl_v0_3_hardening_and_xray": {
+      "audit_status": "Pending Carbon audit",
+      "rdfl_version": "0.3.0",
+      "unit_tests_passed": 13,
+      "k1_k5_ablation": {
+        "raw_file": "results/raw/deney_a_k1_k5.json",
+        "n_seeds": 3,
+        "k3_std002_init": {
+          "legacy_std1_val_bpb_mean": 3.1682,
+          "legacy_std1_val_bpb_std": 0.0065,
+          "legacy_std1_val_acc_mean": 0.3817,
+          "v03_std002_val_bpb_mean": 2.5893,
+          "v03_std002_val_bpb_std": 0.0066,
+          "v03_std002_val_acc_mean": 0.4846,
+          "delta_bpb": -0.5789,
+          "paired_p_value": 8e-5,
+          "step0_ce_d192_legacy": 193.8157,
+          "step0_ce_d192_v03": 5.5414,
+          "step0_ce_d768_legacy": 752.4451,
+          "step0_ce_d768_v03": 5.7835,
+          "fp16_overflow_count_before": 8,
+          "fp16_overflow_count_after": 0
+        },
+        "k5_snapshot_speculative": {
+          "n_prompts": 4,
+          "gen_tokens_per_prompt": 64,
+          "greedy_sec": 2.3486,
+          "k3_sec": 1.4012,
+          "k3_speedup": 1.6761,
+          "k3_acceptance_rate": 0.5928,
+          "k3_mismatch_bytes": 0,
+          "k3_extra_passes": 0,
+          "k3_rollbacks": 60,
+          "mtp4_sec": 1.3961,
+          "mtp4_speedup": 1.6822,
+          "mtp4_acceptance_rate": 0.2135,
+          "mtp4_mismatch_bytes": 0,
+          "mtp4_extra_passes": 0,
+          "mtp4_rollbacks": 150,
+          "caveat": "Measured in eager mode (launch-bound); Triton/CUDA-Graph trained checkpoint verification pending."
+        },
+        "k1_headwise_fp32_note": "FP16 safety & head-balance fix (0 NaN); 300-step byte_lm diff +0.0134 bpb (p=0.098, within noise): 2.8325 vs 2.8191.",
+        "k4_mtp_note": "Step-0 consistency & w_n^2 fix; mtp_stop_grad=True removes main-head CE interference (2.2023 -> 2.0638 at 150 steps).",
+        "k2_rlt2_s1_note": "300-step trace=False graf_izli stayed at chance floor (0.0443) across all K2 arms; inconclusive."
+      },
+      "h5_memory_latency_and_serving": {
+        "raw_file": "results/raw/h5_memory_latency_and_serving.json",
+        "gpu_wall_b8_t32768_pure_rdfl_mib": 151.7749,
+        "gpu_wall_b8_t32768_rope_tx_mib": 2415.7769,
+        "gpu_wall_b8_t65536_pure_rdfl_mib": 153.7749,
+        "gpu_wall_b8_t65536_pure_rdfl_oom": false,
+        "gpu_wall_b8_t65536_rope_tx_oom": true,
+        "iso_1b_gqa8_fp8_1m_bytes": {
+          "rdfl_r2_state_mib": 10.5469,
+          "tx_kv_cache_mib": 3072.0,
+          "kv_to_rdfl_state_ratio": 291.271,
+          "crossover_text_bytes": 3600.0
+        },
+        "iso_55m_gqa8_fp8_1m_bytes": {
+          "rdfl_r2_state_mib": 2.1094,
+          "tx_kv_cache_mib": 640.0,
+          "kv_to_rdfl_state_ratio": 303.407,
+          "crossover_text_bytes": 3456.0
+        }
+      },
+      "math_xray_master_synthesis": {
+        "raw_file": "results/raw/math_xray_master_synthesis.json",
+        "mqar_k8": {
+          "eval_acc_R1": 0.6016,
+          "eval_acc_R2": 0.9727,
+          "eval_acc_R8": 0.9219,
+          "s_t_zero_collapse_pct": "98.63% -> 6.25%",
+          "cross_loop_vec_cos": 0.5017,
+          "r0_hl_median_bytes": 314.1993,
+          "r1_hl_median_bytes": 167.6149,
+          "r0_p_beta_gt_1_0": 0.1246,
+          "r1_p_beta_gt_1_0": 0.1436,
+          "r0_max_head_p_beta_gt_1_0": 0.5375,
+          "r1_max_head_p_beta_gt_1_0": 0.7836
+        },
+        "byte_lm": {
+          "eval_bpb_R1": 2.7967,
+          "eval_bpb_R2": 2.3455,
+          "eval_bpb_R8": 3.3256,
+          "r0_bdh_l0": 0.905,
+          "r1_bdh_l0": 0.8765,
+          "r0_bdh_byte_selectivity": 0.4714,
+          "r1_post_ws_decision_byte_ratio": 1.69,
+          "r0_p_beta_gt_1_0": 0.3219,
+          "r1_p_beta_gt_1_0": 0.3342,
+          "cross_loop_vec_cos": 0.5528,
+          "t2048_rank_collapse": 0
+        },
+        "retracted_shortcut_xrays": [
+          "s5_perm32_running_true",
+          "parity64_running_true"
+        ]
+      },
+      "p3_long_v03_bdh_sparsity_tax": {
+        "raw_file": "results/raw/p3_long_v03.json",
+        "n_seeds": 5,
+        "steps": 1000,
+        "relu_relu_mix_val_bpb_mean": 2.2601,
+        "no_bdh_iso_param_mix_val_bpb_mean": 2.248,
+        "mix_val_delta_bpb": -0.0121,
+        "mix_val_p_value": 0.0148,
+        "relu_relu_web_val_bpb_mean": 2.3884,
+        "no_bdh_iso_param_web_val_bpb_mean": 2.3734,
+        "web_val_delta_bpb": -0.015,
+        "web_val_p_value": 0.0018,
+        "falsified_hypothesis_note": "P3 unit_rms/safe_rms/ency_init falsified at 1000 steps (mix_val 2.2570/2.2597 vs 2.2601, p=0.423/0.910); no_bdh_iso_param SwiGLU beats BDH ReLU*ReLU on 5/5 seeds (interpretability sparsity tax)."
+      },
+      "p2_long_v03_conv_bias_sink": {
+        "raw_file": "results/raw/p2_long_v03.json",
+        "n_seeds": 5,
+        "steps": 1000,
+        "v03_default_mix_val_bpb_mean": 2.2601,
+        "no_conv_bias_mix_val_bpb_mean": 2.2686,
+        "mix_val_delta_bpb": 0.0085,
+        "mix_val_p_value": 0.0048,
+        "v03_default_web_val_bpb_mean": 2.3884,
+        "no_conv_bias_web_val_bpb_mean": 2.3972,
+        "v03_default_post_erank": 8.2624,
+        "no_conv_bias_post_erank": 12.1887,
+        "falsified_hypothesis_note": "Removing short_conv.conv.bias increases erank (+47%) but significantly degrades Byte-LM (p=0.0048); conv.bias acts as a linear attention-sink / shared context channel and is retained."
+      }
     }
   }
 }

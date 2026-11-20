@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "recursive-depth-flash-loop"
-version = "0.2.0"
+version = "0.3.0"
 description = "Recursive Depth Flash Loop (RDFL): Byte-level O(1)-memory recurrent hybrid architecture with FP32 SlotCore, decoupled K3 early-exit, MTP-4 lookahead, calibrated MSP uncertainty, and verifier-gated bounded RSI."
 readme = "README.md"
 license = { text = "MIT" }

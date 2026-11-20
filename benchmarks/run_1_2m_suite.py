@@ -104,6 +104,7 @@ def build_arm(arm: str, d_model: int, num_heads: int, ffn_dim: int, chunk_size: 
             num_loops=2,
             chunk_size=chunk_size,
             num_slots=0,
+            boundary_mode="none",
         )
         return RDFLModel(cfg)
     if arm == "rdfl_slotcore":
@@ -114,6 +115,7 @@ def build_arm(arm: str, d_model: int, num_heads: int, ffn_dim: int, chunk_size: 
             num_loops=2,
             chunk_size=chunk_size,
             num_slots=4,
+            boundary_mode="slotcore_s4",
         )
         return RDFLModel(cfg)
     raise ValueError(f"Unknown arm '{arm}'. Valid: {ARM_NAMES}")
@@ -126,6 +128,13 @@ def _pairwise_slot_stats(slots: Tensor) -> dict[str, float]:
     unit = F.normalize(s_mat, p=2, dim=-1, eps=1e-8)
     sim = torch.matmul(unit, unit.transpose(0, 1))
     s_cnt = sim.shape[0]
+    if s_cnt < 2:
+        return {
+            "cos_mean": 1.0,
+            "cos_min": 1.0,
+            "cos_max": 1.0,
+            "norm_mean": round(float(norms.mean().item()), 4),
+        }
     mask = ~torch.eye(s_cnt, dtype=torch.bool, device=sim.device)
     off = sim[mask]
     return {

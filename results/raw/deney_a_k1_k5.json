@@ -1,0 +1,1246 @@
+{
+  "experiment": "deney_a_k1_k5",
+  "k1_head_norms": {
+    "head_state_fro_norms": [
+      1.4041078090667725,
+      1.7838237285614014,
+      2.1215763092041016,
+      2.541693925857544,
+      2.632765769958496,
+      2.8211395740509033
+    ],
+    "head_output_rms": [
+      0.04344424977898598,
+      0.052603092044591904,
+      0.06146116927266121,
+      0.07416163384914398,
+      0.0748676061630249,
+      0.07620781660079956
+    ],
+    "slow_to_fast_state_ratio": 2.0092043900289593,
+    "slow_to_fast_y_ratio": 1.754151976118629
+  },
+  "k3_dim_probe": [
+    {
+      "d_model": 192,
+      "init": "legacy_std1",
+      "step0_ce": 193.81570434570312,
+      "step0_logit_std": 18.327585220336914
+    },
+    {
+      "d_model": 192,
+      "init": "v03_std002",
+      "step0_ce": 5.541408538818359,
+      "step0_logit_std": 0.29463863372802734
+    },
+    {
+      "d_model": 512,
+      "init": "legacy_std1",
+      "step0_ce": 507.528564453125,
+      "step0_logit_std": 39.00740432739258
+    },
+    {
+      "d_model": 512,
+      "init": "v03_std002",
+      "step0_ce": 5.654892921447754,
+      "step0_logit_std": 0.4642347991466522
+    },
+    {
+      "d_model": 768,
+      "init": "legacy_std1",
+      "step0_ce": 752.4451293945312,
+      "step0_logit_std": 54.61979293823242
+    },
+    {
+      "d_model": 768,
+      "init": "v03_std002",
+      "step0_ce": 5.783459663391113,
+      "step0_logit_std": 0.5638648867607117
+    }
+  ],
+  "k4_mtp_ablation": [
+    {
+      "double_final_norm": true,
+      "mtp_stop_grad": false,
+      "seed": 42,
+      "ce_main": 2.1998233795166016,
+      "mtp_ces": [
+        2.919788360595703,
+        3.1371989250183105,
+        3.1970622539520264
+      ]
+    },
+    {
+      "double_final_norm": true,
+      "mtp_stop_grad": false,
+      "seed": 137,
+      "ce_main": 2.2116708755493164,
+      "mtp_ces": [
+        2.8918344974517822,
+        3.140800952911377,
+        3.1993136405944824
+      ]
+    },
+    {
+      "double_final_norm": true,
+      "mtp_stop_grad": false,
+      "seed": 2026,
+      "ce_main": 2.1797397136688232,
+      "mtp_ces": [
+        2.8931126594543457,
+        3.1337549686431885,
+        3.19643235206604
+      ]
+    },
+    {
+      "double_final_norm": true,
+      "mtp_stop_grad": true,
+      "seed": 42,
+      "ce_main": 2.066835880279541,
+      "mtp_ces": [
+        2.9889097213745117,
+        3.1998305320739746,
+        3.247248888015747
+      ]
+    },
+    {
+      "double_final_norm": true,
+      "mtp_stop_grad": true,
+      "seed": 137,
+      "ce_main": 2.0650060176849365,
+      "mtp_ces": [
+        2.947005271911621,
+        3.1950881481170654,
+        3.2491931915283203
+      ]
+    },
+    {
+      "double_final_norm": true,
+      "mtp_stop_grad": true,
+      "seed": 2026,
+      "ce_main": 2.0595152378082275,
+      "mtp_ces": [
+        2.977135181427002,
+        3.1987874507904053,
+        3.2544195652008057
+      ]
+    },
+    {
+      "double_final_norm": false,
+      "mtp_stop_grad": false,
+      "seed": 42,
+      "ce_main": 2.2047247886657715,
+      "mtp_ces": [
+        2.917820453643799,
+        3.145555019378662,
+        3.199899196624756
+      ]
+    },
+    {
+      "double_final_norm": false,
+      "mtp_stop_grad": false,
+      "seed": 137,
+      "ce_main": 2.2203750610351562,
+      "mtp_ces": [
+        2.9043290615081787,
+        3.1507976055145264,
+        3.2088510990142822
+      ]
+    },
+    {
+      "double_final_norm": false,
+      "mtp_stop_grad": false,
+      "seed": 2026,
+      "ce_main": 2.181715965270996,
+      "mtp_ces": [
+        2.896078586578369,
+        3.1360795497894287,
+        3.204395294189453
+      ]
+    },
+    {
+      "double_final_norm": false,
+      "mtp_stop_grad": true,
+      "seed": 42,
+      "ce_main": 2.066835880279541,
+      "mtp_ces": [
+        3.013014554977417,
+        3.22174072265625,
+        3.257962465286255
+      ]
+    },
+    {
+      "double_final_norm": false,
+      "mtp_stop_grad": true,
+      "seed": 137,
+      "ce_main": 2.0650060176849365,
+      "mtp_ces": [
+        2.9916365146636963,
+        3.2153992652893066,
+        3.260263681411743
+      ]
+    },
+    {
+      "double_final_norm": false,
+      "mtp_stop_grad": true,
+      "seed": 2026,
+      "ce_main": 2.0595152378082275,
+      "mtp_ces": [
+        3.005152702331543,
+        3.2111382484436035,
+        3.265620231628418
+      ]
+    }
+  ],
+  "k5_speculative": {
+    "n_prompts": 4,
+    "gen_tokens_per_prompt": 64,
+    "greedy_sec": 2.348643765988527,
+    "k3_sec": 1.4012326280062553,
+    "k3_speedup": 1.6761269464088173,
+    "k3_acceptance_rate": 0.5928263546798029,
+    "k3_mismatch_bytes": 0,
+    "k3_verify_calls": 117,
+    "k3_rollbacks": 60,
+    "k3_extra_passes": 0,
+    "mtp4_sec": 1.3961336229986046,
+    "mtp4_speedup": 1.6822485522153163,
+    "mtp4_acceptance_rate": 0.21348568944430174,
+    "mtp4_mismatch_bytes": 0,
+    "mtp4_verify_calls": 156,
+    "mtp4_rollbacks": 150,
+    "mtp4_extra_passes": 0
+  },
+  "summary": {
+    "byte_lm_k1::K1_global_onorm": {
+      "task": "byte_lm_k1",
+      "model": "K1_global_onorm",
+      "n_seeds": 3,
+      "total_params": 957902,
+      "non_emb_params": 908750,
+      "flops_per_token": 3440542.0,
+      "state_bytes_fp32_per_seq": 54528,
+      "val_acc_mean": 0.4455430772569445,
+      "val_acc_std": 0.002337498038100909,
+      "val_bpb_mean": 2.8190600375260644,
+      "val_bpb_std": 0.013074639834103988,
+      "val_ce_mean": 1.9540235168404048,
+      "val_accs_by_seed": [
+        {
+          "seed": 42,
+          "val_acc": 0.4448038736979167
+        },
+        {
+          "seed": 137,
+          "val_acc": 0.4481608072916667
+        },
+        {
+          "seed": 2026,
+          "val_acc": 0.44366455078125
+        }
+      ],
+      "val_bpbs_by_seed": [
+        {
+          "seed": 42,
+          "val_bpb": 2.8264322792790204
+        },
+        {
+          "seed": 137,
+          "val_bpb": 2.8039641074731136
+        },
+        {
+          "seed": 2026,
+          "val_bpb": 2.8267837258260586
+        }
+      ],
+      "step0_ce_mean": 5.482972462972005,
+      "collapse_rate_lt_0_5": 1.0,
+      "max_vram_mib": 394.76025390625,
+      "wall_sec_mean": 29.85665754699342
+    },
+    "byte_lm_k1::K1_headwise_fp32": {
+      "task": "byte_lm_k1",
+      "model": "K1_headwise_fp32",
+      "n_seeds": 3,
+      "total_params": 957742,
+      "non_emb_params": 908590,
+      "flops_per_token": 3440542.0,
+      "state_bytes_fp32_per_seq": 54528,
+      "val_acc_mean": 0.4433797200520833,
+      "val_acc_std": 0.002662093895997544,
+      "val_bpb_mean": 2.8324980118290344,
+      "val_bpb_std": 0.009615075554925771,
+      "val_ce_mean": 1.963338010840946,
+      "val_accs_by_seed": [
+        {
+          "seed": 42,
+          "val_acc": 0.4403076171875
+        },
+        {
+          "seed": 137,
+          "val_acc": 0.44482421875
+        },
+        {
+          "seed": 2026,
+          "val_acc": 0.44500732421875
+        }
+      ],
+      "val_bpbs_by_seed": [
+        {
+          "seed": 42,
+          "val_bpb": 2.8426468895936914
+        },
+        {
+          "seed": 137,
+          "val_bpb": 2.8235248695705217
+        },
+        {
+          "seed": 2026,
+          "val_bpb": 2.8313222763228905
+        }
+      ],
+      "step0_ce_mean": 5.4835098584493,
+      "collapse_rate_lt_0_5": 1.0,
+      "max_vram_mib": 394.9150390625,
+      "wall_sec_mean": 28.74506885399266
+    },
+    "graf_izli_k2::K2_none": {
+      "task": "graf_izli_k2",
+      "model": "K2_none",
+      "n_seeds": 3,
+      "total_params": 772462,
+      "non_emb_params": 723310,
+      "flops_per_token": 3213568.0,
+      "state_bytes_fp32_per_seq": 53760,
+      "val_acc_mean": 0.044270833333333336,
+      "val_acc_std": 0.0,
+      "val_bpb_mean": 4.008616341799567,
+      "val_bpb_std": 0.0005102033035645812,
+      "val_ce_mean": 2.7785611152648926,
+      "val_accs_by_seed": [
+        {
+          "seed": 42,
+          "val_acc": 0.044270833333333336
+        },
+        {
+          "seed": 137,
+          "val_acc": 0.044270833333333336
+        },
+        {
+          "seed": 2026,
+          "val_acc": 0.044270833333333336
+        }
+      ],
+      "val_bpbs_by_seed": [
+        {
+          "seed": 42,
+          "val_bpb": 4.008203698092598
+        },
+        {
+          "seed": 137,
+          "val_bpb": 4.008458519053626
+        },
+        {
+          "seed": 2026,
+          "val_bpb": 4.00918680825248
+        }
+      ],
+      "step0_ce_mean": 5.5598039627075195,
+      "collapse_rate_lt_0_5": 1.0,
+      "max_vram_mib": 652.28515625,
+      "wall_sec_mean": 19.960468060327305
+    },
+    "graf_izli_k2::K2_rlt2_s1_last": {
+      "task": "graf_izli_k2",
+      "model": "K2_rlt2_s1_last",
+      "n_seeds": 3,
+      "total_params": 957742,
+      "non_emb_params": 908590,
+      "flops_per_token": 3440542.0,
+      "state_bytes_fp32_per_seq": 54528,
+      "val_acc_mean": 0.044270833333333336,
+      "val_acc_std": 0.0,
+      "val_bpb_mean": 4.0079869712887355,
+      "val_bpb_std": 0.0008381463817743195,
+      "val_ce_mean": 2.7781248688697815,
+      "val_accs_by_seed": [
+        {
+          "seed": 42,
+          "val_acc": 0.044270833333333336
+        },
+        {
+          "seed": 137,
+          "val_acc": 0.044270833333333336
+        },
+        {
+          "seed": 2026,
+          "val_acc": 0.044270833333333336
+        }
+      ],
+      "val_bpbs_by_seed": [
+        {
+          "seed": 42,
+          "val_bpb": 4.008888762318535
+        },
+        {
+          "seed": 137,
+          "val_bpb": 4.007840327415099
+        },
+        {
+          "seed": 2026,
+          "val_bpb": 4.007231824132573
+        }
+      ],
+      "step0_ce_mean": 5.635768413543701,
+      "collapse_rate_lt_0_5": 1.0,
+      "max_vram_mib": 678.61083984375,
+      "wall_sec_mean": 17.820849075001508
+    },
+    "graf_izli_k2::K2_rlt2_s1_mean": {
+      "task": "graf_izli_k2",
+      "model": "K2_rlt2_s1_mean",
+      "n_seeds": 3,
+      "total_params": 957742,
+      "non_emb_params": 908590,
+      "flops_per_token": 3440542.0,
+      "state_bytes_fp32_per_seq": 54528,
+      "val_acc_mean": 0.044270833333333336,
+      "val_acc_std": 0.0,
+      "val_bpb_mean": 4.007893307626158,
+      "val_bpb_std": 0.0007913379943120866,
+      "val_ce_mean": 2.778059946166145,
+      "val_accs_by_seed": [
+        {
+          "seed": 42,
+          "val_acc": 0.044270833333333336
+        },
+        {
+          "seed": 137,
+          "val_acc": 0.044270833333333336
+        },
+        {
+          "seed": 2026,
+          "val_acc": 0.044270833333333336
+        }
+      ],
+      "val_bpbs_by_seed": [
+        {
+          "seed": 42,
+          "val_bpb": 4.008761638475772
+        },
+        {
+          "seed": 137,
+          "val_bpb": 4.007705550344374
+        },
+        {
+          "seed": 2026,
+          "val_bpb": 4.007212734058327
+        }
+      ],
+      "step0_ce_mean": 5.626840750376384,
+      "collapse_rate_lt_0_5": 1.0,
+      "max_vram_mib": 678.68115234375,
+      "wall_sec_mean": 18.49938640665884
+    },
+    "graf_izli_k2::K2_slotcore_s4": {
+      "task": "graf_izli_k2",
+      "model": "K2_slotcore_s4",
+      "n_seeds": 3,
+      "total_params": 1105774,
+      "non_emb_params": 1056622,
+      "flops_per_token": 3445168.0,
+      "state_bytes_fp32_per_seq": 56832,
+      "val_acc_mean": 0.044270833333333336,
+      "val_acc_std": 0.0,
+      "val_bpb_mean": 4.007988060512191,
+      "val_bpb_std": 0.00043595640808416703,
+      "val_ce_mean": 2.7781256238619485,
+      "val_accs_by_seed": [
+        {
+          "seed": 42,
+          "val_acc": 0.044270833333333336
+        },
+        {
+          "seed": 137,
+          "val_acc": 0.044270833333333336
+        },
+        {
+          "seed": 2026,
+          "val_acc": 0.044270833333333336
+        }
+      ],
+      "val_bpbs_by_seed": [
+        {
+          "seed": 42,
+          "val_bpb": 4.008032288717238
+        },
+        {
+          "seed": 137,
+          "val_bpb": 4.008400216934984
+        },
+        {
+          "seed": 2026,
+          "val_bpb": 4.007531675884351
+        }
+      ],
+      "step0_ce_mean": 5.649770418802897,
+      "collapse_rate_lt_0_5": 1.0,
+      "max_vram_mib": 682.13330078125,
+      "wall_sec_mean": 18.971433450332068
+    },
+    "byte_lm_k3::K3_legacy_std1": {
+      "task": "byte_lm_k3",
+      "model": "K3_legacy_std1",
+      "n_seeds": 3,
+      "total_params": 957742,
+      "non_emb_params": 908590,
+      "flops_per_token": 3440542.0,
+      "state_bytes_fp32_per_seq": 54528,
+      "val_acc_mean": 0.3816630045572917,
+      "val_acc_std": 0.003037776710160248,
+      "val_bpb_mean": 3.1682104346379525,
+      "val_bpb_std": 0.006465488800794776,
+      "val_ce_mean": 2.1960361301898956,
+      "val_accs_by_seed": [
+        {
+          "seed": 42,
+          "val_acc": 0.3786773681640625
+        },
+        {
+          "seed": 137,
+          "val_acc": 0.3847503662109375
+        },
+        {
+          "seed": 2026,
+          "val_acc": 0.381561279296875
+        }
+      ],
+      "val_bpbs_by_seed": [
+        {
+          "seed": 42,
+          "val_bpb": 3.1678497225255993
+        },
+        {
+          "seed": 137,
+          "val_bpb": 3.1619328529031465
+        },
+        {
+          "seed": 2026,
+          "val_bpb": 3.174848728485112
+        }
+      ],
+      "step0_ce_mean": 178.37230428059897,
+      "collapse_rate_lt_0_5": 1.0,
+      "max_vram_mib": 446.78564453125,
+      "wall_sec_mean": 40.53991541066595
+    },
+    "byte_lm_k3::K3_v03_std002": {
+      "task": "byte_lm_k3",
+      "model": "K3_v03_std002",
+      "n_seeds": 3,
+      "total_params": 957742,
+      "non_emb_params": 908590,
+      "flops_per_token": 3440542.0,
+      "state_bytes_fp32_per_seq": 54528,
+      "val_acc_mean": 0.484619140625,
+      "val_acc_std": 0.002401405709583252,
+      "val_bpb_mean": 2.589298906225358,
+      "val_bpb_std": 0.0065948834564165185,
+      "val_ce_mean": 1.7947652364770572,
+      "val_accs_by_seed": [
+        {
+          "seed": 42,
+          "val_acc": 0.482421875
+        },
+        {
+          "seed": 137,
+          "val_acc": 0.4842529296875
+        },
+        {
+          "seed": 2026,
+          "val_acc": 0.4871826171875
+        }
+      ],
+      "val_bpbs_by_seed": [
+        {
+          "seed": 42,
+          "val_bpb": 2.596884906887125
+        },
+        {
+          "seed": 137,
+          "val_bpb": 2.584929769388542
+        },
+        {
+          "seed": 2026,
+          "val_bpb": 2.586082042400407
+        }
+      ],
+      "step0_ce_mean": 5.4835098584493,
+      "collapse_rate_lt_0_5": 1.0,
+      "max_vram_mib": 446.78564453125,
+      "wall_sec_mean": 39.232053741676886
+    }
+  },
+  "runs": [
+    {
+      "model": "K1_global_onorm",
+      "task": "byte_lm_k1",
+      "seed": 42,
+      "budget": {
+        "name": "K1_global_onorm",
+        "total_params": 957902,
+        "non_emb_params": 908750,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.456868648529053,
+      "step0_logit_std": 0.2929461598396301,
+      "train_last_ce": 1.8601317405700684,
+      "val_ce": 1.9591335654258728,
+      "val_bpb": 2.8264322792790204,
+      "val_acc": 0.4448038736979167,
+      "bpb": 2.8264322792790204,
+      "acc": 0.4448038736979167,
+      "grad_overflows": 0,
+      "wall_sec": 30.02441797600477,
+      "peak_vram_mib": 394.76025390625,
+      "fix": "K1",
+      "version": "old"
+    },
+    {
+      "model": "K1_global_onorm",
+      "task": "byte_lm_k1",
+      "seed": 137,
+      "budget": {
+        "name": "K1_global_onorm",
+        "total_params": 957902,
+        "non_emb_params": 908750,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.50347900390625,
+      "step0_logit_std": 0.2951008379459381,
+      "train_last_ce": 1.8358166217803955,
+      "val_ce": 1.943559815486272,
+      "val_bpb": 2.8039641074731136,
+      "val_acc": 0.4481608072916667,
+      "bpb": 2.8039641074731136,
+      "acc": 0.4481608072916667,
+      "grad_overflows": 0,
+      "wall_sec": 29.935970464983257,
+      "peak_vram_mib": 394.76025390625,
+      "fix": "K1",
+      "version": "old"
+    },
+    {
+      "model": "K1_global_onorm",
+      "task": "byte_lm_k1",
+      "seed": 2026,
+      "budget": {
+        "name": "K1_global_onorm",
+        "total_params": 957902,
+        "non_emb_params": 908750,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.488569736480713,
+      "step0_logit_std": 0.2943459153175354,
+      "train_last_ce": 1.8411614894866943,
+      "val_ce": 1.9593771696090698,
+      "val_bpb": 2.8267837258260586,
+      "val_acc": 0.44366455078125,
+      "bpb": 2.8267837258260586,
+      "acc": 0.44366455078125,
+      "grad_overflows": 0,
+      "wall_sec": 29.60958419999224,
+      "peak_vram_mib": 394.76025390625,
+      "fix": "K1",
+      "version": "old"
+    },
+    {
+      "model": "K1_headwise_fp32",
+      "task": "byte_lm_k1",
+      "seed": 42,
+      "budget": {
+        "name": "K1_headwise_fp32",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.456319808959961,
+      "step0_logit_std": 0.2925054728984833,
+      "train_last_ce": 1.8681414127349854,
+      "val_ce": 1.9703726768493652,
+      "val_bpb": 2.8426468895936914,
+      "val_acc": 0.4403076171875,
+      "bpb": 2.8426468895936914,
+      "acc": 0.4403076171875,
+      "grad_overflows": 0,
+      "wall_sec": 27.96872390099452,
+      "peak_vram_mib": 394.9150390625,
+      "fix": "K1",
+      "version": "new"
+    },
+    {
+      "model": "K1_headwise_fp32",
+      "task": "byte_lm_k1",
+      "seed": 137,
+      "budget": {
+        "name": "K1_headwise_fp32",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.5068864822387695,
+      "step0_logit_std": 0.29462724924087524,
+      "train_last_ce": 1.8566482067108154,
+      "val_ce": 1.9571183025836945,
+      "val_bpb": 2.8235248695705217,
+      "val_acc": 0.44482421875,
+      "bpb": 2.8235248695705217,
+      "acc": 0.44482421875,
+      "grad_overflows": 0,
+      "wall_sec": 28.76097153199953,
+      "peak_vram_mib": 394.9150390625,
+      "fix": "K1",
+      "version": "new"
+    },
+    {
+      "model": "K1_headwise_fp32",
+      "task": "byte_lm_k1",
+      "seed": 2026,
+      "budget": {
+        "name": "K1_headwise_fp32",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.48732328414917,
+      "step0_logit_std": 0.2948724925518036,
+      "train_last_ce": 1.8413985967636108,
+      "val_ce": 1.9625230530897777,
+      "val_bpb": 2.8313222763228905,
+      "val_acc": 0.44500732421875,
+      "bpb": 2.8313222763228905,
+      "acc": 0.44500732421875,
+      "grad_overflows": 0,
+      "wall_sec": 29.505511128983926,
+      "peak_vram_mib": 394.9150390625,
+      "fix": "K1",
+      "version": "new"
+    },
+    {
+      "model": "K2_none",
+      "task": "graf_izli_k2",
+      "seed": 42,
+      "budget": {
+        "name": "K2_none",
+        "total_params": 772462,
+        "non_emb_params": 723310,
+        "flops_per_token": 3213568.0,
+        "flops_per_seq": 546306560.0,
+        "state_bytes_fp32_per_seq": 53760
+      },
+      "steps": 300,
+      "step0_ce": 5.480513572692871,
+      "step0_logit_std": 0.29119300842285156,
+      "train_last_ce": 2.766408920288086,
+      "val_ce": 2.7782750924428306,
+      "val_bpb": 4.008203698092598,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.008203698092598,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 19.632805543980794,
+      "peak_vram_mib": 652.28515625,
+      "fix": "K2",
+      "version": "old"
+    },
+    {
+      "model": "K2_none",
+      "task": "graf_izli_k2",
+      "seed": 137,
+      "budget": {
+        "name": "K2_none",
+        "total_params": 772462,
+        "non_emb_params": 723310,
+        "flops_per_token": 3213568.0,
+        "flops_per_seq": 546306560.0,
+        "state_bytes_fp32_per_seq": 53760
+      },
+      "steps": 300,
+      "step0_ce": 5.554034233093262,
+      "step0_logit_std": 0.29274415969848633,
+      "train_last_ce": 2.7657480239868164,
+      "val_ce": 2.7784517208735147,
+      "val_bpb": 4.008458519053626,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.008458519053626,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 19.121922377991723,
+      "peak_vram_mib": 652.28515625,
+      "fix": "K2",
+      "version": "old"
+    },
+    {
+      "model": "K2_none",
+      "task": "graf_izli_k2",
+      "seed": 2026,
+      "budget": {
+        "name": "K2_none",
+        "total_params": 772462,
+        "non_emb_params": 723310,
+        "flops_per_token": 3213568.0,
+        "flops_per_seq": 546306560.0,
+        "state_bytes_fp32_per_seq": 53760
+      },
+      "steps": 300,
+      "step0_ce": 5.644864082336426,
+      "step0_logit_std": 0.29568037390708923,
+      "train_last_ce": 2.768141746520996,
+      "val_ce": 2.7789565324783325,
+      "val_bpb": 4.00918680825248,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.00918680825248,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 21.1266762590094,
+      "peak_vram_mib": 652.28515625,
+      "fix": "K2",
+      "version": "old"
+    },
+    {
+      "model": "K2_rlt2_s1_last",
+      "task": "graf_izli_k2",
+      "seed": 42,
+      "budget": {
+        "name": "K2_rlt2_s1_last",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 584892140.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.6878204345703125,
+      "step0_logit_std": 0.292953222990036,
+      "train_last_ce": 2.7671375274658203,
+      "val_ce": 2.778749942779541,
+      "val_bpb": 4.008888762318535,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.008888762318535,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 19.65685129800113,
+      "peak_vram_mib": 678.61083984375,
+      "post_eval": {
+        "shift_0": 0.09375,
+        "shift_1": 0.09375,
+        "shift_17": 0.09375,
+        "shift_32": 0.09375
+      },
+      "fix": "K2",
+      "version": "new"
+    },
+    {
+      "model": "K2_rlt2_s1_last",
+      "task": "graf_izli_k2",
+      "seed": 137,
+      "budget": {
+        "name": "K2_rlt2_s1_last",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 584892140.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.626451015472412,
+      "step0_logit_std": 0.29710114002227783,
+      "train_last_ce": 2.7671730518341064,
+      "val_ce": 2.7780232230822244,
+      "val_bpb": 4.007840327415099,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.007840327415099,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 17.162007412989624,
+      "peak_vram_mib": 678.61083984375,
+      "fix": "K2",
+      "version": "new"
+    },
+    {
+      "model": "K2_rlt2_s1_last",
+      "task": "graf_izli_k2",
+      "seed": 2026,
+      "budget": {
+        "name": "K2_rlt2_s1_last",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 584892140.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.593033790588379,
+      "step0_logit_std": 0.2966732680797577,
+      "train_last_ce": 2.768794536590576,
+      "val_ce": 2.777601440747579,
+      "val_bpb": 4.007231824132573,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.007231824132573,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 16.643688514013775,
+      "peak_vram_mib": 678.61083984375,
+      "fix": "K2",
+      "version": "new"
+    },
+    {
+      "model": "K2_rlt2_s1_mean",
+      "task": "graf_izli_k2",
+      "seed": 42,
+      "budget": {
+        "name": "K2_rlt2_s1_mean",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 584892140.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.696494102478027,
+      "step0_logit_std": 0.29179927706718445,
+      "train_last_ce": 2.7676804065704346,
+      "val_ce": 2.778661827246348,
+      "val_bpb": 4.008761638475772,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.008761638475772,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 17.99629941600142,
+      "peak_vram_mib": 678.68115234375,
+      "post_eval": {
+        "shift_0": 0.09375,
+        "shift_1": 0.09375,
+        "shift_17": 0.09375,
+        "shift_32": 0.09375
+      },
+      "fix": "K2",
+      "version": "new"
+    },
+    {
+      "model": "K2_rlt2_s1_mean",
+      "task": "graf_izli_k2",
+      "seed": 137,
+      "budget": {
+        "name": "K2_rlt2_s1_mean",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 584892140.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.62231969833374,
+      "step0_logit_std": 0.29687222838401794,
+      "train_last_ce": 2.7657735347747803,
+      "val_ce": 2.7779298027356467,
+      "val_bpb": 4.007705550344374,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.007705550344374,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 18.891035540989833,
+      "peak_vram_mib": 678.68115234375,
+      "fix": "K2",
+      "version": "new"
+    },
+    {
+      "model": "K2_rlt2_s1_mean",
+      "task": "graf_izli_k2",
+      "seed": 2026,
+      "budget": {
+        "name": "K2_rlt2_s1_mean",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 584892140.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 300,
+      "step0_ce": 5.561708450317383,
+      "step0_logit_std": 0.2961883246898651,
+      "train_last_ce": 2.768390655517578,
+      "val_ce": 2.777588208516439,
+      "val_bpb": 4.007212734058327,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.007212734058327,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 18.61082426298526,
+      "peak_vram_mib": 678.68115234375,
+      "fix": "K2",
+      "version": "new"
+    },
+    {
+      "model": "K2_slotcore_s4",
+      "task": "graf_izli_k2",
+      "seed": 42,
+      "budget": {
+        "name": "K2_slotcore_s4",
+        "total_params": 1105774,
+        "non_emb_params": 1056622,
+        "flops_per_token": 3445168.0,
+        "flops_per_seq": 585678560.0,
+        "state_bytes_fp32_per_seq": 56832
+      },
+      "steps": 300,
+      "step0_ce": 5.615583419799805,
+      "step0_logit_std": 0.291271448135376,
+      "train_last_ce": 2.766101360321045,
+      "val_ce": 2.778156280517578,
+      "val_bpb": 4.008032288717238,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.008032288717238,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 19.151678972993977,
+      "peak_vram_mib": 682.13330078125,
+      "fix": "K2",
+      "version": "old"
+    },
+    {
+      "model": "K2_slotcore_s4",
+      "task": "graf_izli_k2",
+      "seed": 137,
+      "budget": {
+        "name": "K2_slotcore_s4",
+        "total_params": 1105774,
+        "non_emb_params": 1056622,
+        "flops_per_token": 3445168.0,
+        "flops_per_seq": 585678560.0,
+        "state_bytes_fp32_per_seq": 56832
+      },
+      "steps": 300,
+      "step0_ce": 5.654397010803223,
+      "step0_logit_std": 0.2909684181213379,
+      "train_last_ce": 2.7666947841644287,
+      "val_ce": 2.778411308924357,
+      "val_bpb": 4.008400216934984,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.008400216934984,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 18.576440061995527,
+      "peak_vram_mib": 682.13330078125,
+      "fix": "K2",
+      "version": "old"
+    },
+    {
+      "model": "K2_slotcore_s4",
+      "task": "graf_izli_k2",
+      "seed": 2026,
+      "budget": {
+        "name": "K2_slotcore_s4",
+        "total_params": 1105774,
+        "non_emb_params": 1056622,
+        "flops_per_token": 3445168.0,
+        "flops_per_seq": 585678560.0,
+        "state_bytes_fp32_per_seq": 56832
+      },
+      "steps": 300,
+      "step0_ce": 5.679330825805664,
+      "step0_logit_std": 0.29204073548316956,
+      "train_last_ce": 2.7680041790008545,
+      "val_ce": 2.777809282143911,
+      "val_bpb": 4.007531675884351,
+      "val_acc": 0.044270833333333336,
+      "bpb": 4.007531675884351,
+      "acc": 0.044270833333333336,
+      "grad_overflows": 0,
+      "wall_sec": 19.186181316006696,
+      "peak_vram_mib": 682.13330078125,
+      "fix": "K2",
+      "version": "old"
+    },
+    {
+      "model": "K3_legacy_std1",
+      "task": "byte_lm_k3",
+      "seed": 42,
+      "budget": {
+        "name": "K3_legacy_std1",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 500,
+      "step0_ce": 175.6172637939453,
+      "step0_logit_std": 18.113265991210938,
+      "train_last_ce": 2.213080644607544,
+      "val_ce": 2.195786103606224,
+      "val_bpb": 3.1678497225255993,
+      "val_acc": 0.3786773681640625,
+      "bpb": 3.1678497225255993,
+      "acc": 0.3786773681640625,
+      "grad_overflows": 3,
+      "wall_sec": 41.84807289298624,
+      "peak_vram_mib": 446.78564453125,
+      "fix": "K3",
+      "version": "old"
+    },
+    {
+      "model": "K3_legacy_std1",
+      "task": "byte_lm_k3",
+      "seed": 137,
+      "budget": {
+        "name": "K3_legacy_std1",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 500,
+      "step0_ce": 176.68333435058594,
+      "step0_logit_std": 18.130826950073242,
+      "train_last_ce": 2.205796718597412,
+      "val_ce": 2.19168484210968,
+      "val_bpb": 3.1619328529031465,
+      "val_acc": 0.3847503662109375,
+      "bpb": 3.1619328529031465,
+      "acc": 0.3847503662109375,
+      "grad_overflows": 2,
+      "wall_sec": 41.275612730009016,
+      "peak_vram_mib": 446.78564453125,
+      "fix": "K3",
+      "version": "old"
+    },
+    {
+      "model": "K3_legacy_std1",
+      "task": "byte_lm_k3",
+      "seed": 2026,
+      "budget": {
+        "name": "K3_legacy_std1",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 500,
+      "step0_ce": 182.81631469726562,
+      "step0_logit_std": 18.581218719482422,
+      "train_last_ce": 2.2146339416503906,
+      "val_ce": 2.2006374448537827,
+      "val_bpb": 3.174848728485112,
+      "val_acc": 0.381561279296875,
+      "bpb": 3.174848728485112,
+      "acc": 0.381561279296875,
+      "grad_overflows": 3,
+      "wall_sec": 38.4960606090026,
+      "peak_vram_mib": 446.78564453125,
+      "fix": "K3",
+      "version": "old"
+    },
+    {
+      "model": "K3_v03_std002",
+      "task": "byte_lm_k3",
+      "seed": 42,
+      "budget": {
+        "name": "K3_v03_std002",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 500,
+      "step0_ce": 5.456319808959961,
+      "step0_logit_std": 0.2925054728984833,
+      "train_last_ce": 1.7850942611694336,
+      "val_ce": 1.8000234514474869,
+      "val_bpb": 2.596884906887125,
+      "val_acc": 0.482421875,
+      "bpb": 2.596884906887125,
+      "acc": 0.482421875,
+      "grad_overflows": 0,
+      "wall_sec": 37.43927024898585,
+      "peak_vram_mib": 446.78564453125,
+      "fix": "K3",
+      "version": "new"
+    },
+    {
+      "model": "K3_v03_std002",
+      "task": "byte_lm_k3",
+      "seed": 137,
+      "budget": {
+        "name": "K3_v03_std002",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 500,
+      "step0_ce": 5.5068864822387695,
+      "step0_logit_std": 0.29462724924087524,
+      "train_last_ce": 1.777336835861206,
+      "val_ce": 1.7917367815971375,
+      "val_bpb": 2.584929769388542,
+      "val_acc": 0.4842529296875,
+      "bpb": 2.584929769388542,
+      "acc": 0.4842529296875,
+      "grad_overflows": 0,
+      "wall_sec": 37.915482391021214,
+      "peak_vram_mib": 446.78564453125,
+      "fix": "K3",
+      "version": "new"
+    },
+    {
+      "model": "K3_v03_std002",
+      "task": "byte_lm_k3",
+      "seed": 2026,
+      "budget": {
+        "name": "K3_v03_std002",
+        "total_params": 957742,
+        "non_emb_params": 908590,
+        "flops_per_token": 3440542.0,
+        "flops_per_seq": 880778752.0,
+        "state_bytes_fp32_per_seq": 54528
+      },
+      "steps": 500,
+      "step0_ce": 5.48732328414917,
+      "step0_logit_std": 0.2948724925518036,
+      "train_last_ce": 1.7818727493286133,
+      "val_ce": 1.792535476386547,
+      "val_bpb": 2.586082042400407,
+      "val_acc": 0.4871826171875,
+      "bpb": 2.586082042400407,
+      "acc": 0.4871826171875,
+      "grad_overflows": 0,
+      "wall_sec": 42.3414085850236,
+      "peak_vram_mib": 446.78564453125,
+      "fix": "K3",
+      "version": "new"
+    }
+  ]
+}

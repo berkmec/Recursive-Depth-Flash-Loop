@@ -20,6 +20,7 @@ class SpeculativeDecodeResult:
     proposed_drafts: int
     verify_calls: int
     rollbacks: int
+    extra_passes: int = 0
 
     @property
     def acceptance_rate(self) -> float:
@@ -44,19 +45,25 @@ def _k3_draft_step(
     tok: Tensor,
     gdn_r0: tuple[Tensor, Tensor | None] | None,
     slot_st: Tensor,
+    chunk_sum: Tensor | None,
     pos: int,
-) -> tuple[Tensor, tuple[Tensor, Tensor], Tensor]:
+) -> tuple[Tensor, tuple[Tensor, Tensor | None], Tensor, Tensor | None]:
     """Run a single cheap R=1 + K3 adapter step to propose one draft byte."""
     h0 = model.emb(tok)
     anchor = model.n_anchor(h0)
     h_seg = model.boundary.apply_feedback(h0, slot_st) if model.boundary is not None else h0
     h_r1, new_gdn_r0 = model._run_loop_step(h_seg, anchor, 0, gdn_r0, single_step=True)
-    if model.boundary is not None and ((pos + 1) % model.cfg.chunk_size == 0):
-        slot_st = model.boundary.commit_boundary(slot_st, h_r1[:, -1])
+    slot_st, chunk_sum = model._commit_if_boundary(
+        slot_st,
+        chunk_sum,
+        h_r1[:, 0] if model.cfg.boundary_pool == "mean" else h_r1,
+        pos + 1,
+        is_full_seg=False,
+    )
     z_k3 = model.k3_adapter(h_r1)
     hn_k3 = model.final_norm(z_k3)
     draft_tok = F.linear(hn_k3, model.head.weight).argmax(dim=-1)
-    return draft_tok, new_gdn_r0, slot_st
+    return draft_tok, new_gdn_r0, slot_st, chunk_sum
 
 
 def _draft_k3_sequence(
@@ -68,11 +75,14 @@ def _draft_k3_sequence(
     """Propose `draft_k` sequential draft tokens using only R=1 + K3."""
     gdn_r0 = state.gdn_states[0]
     slot_st = state.slot_state
+    chunk_sum = state.chunk_sum
     pos = state.pos
     inp = cur_tok
     drafts: list[Tensor] = []
     for _ in range(draft_k):
-        nxt, gdn_r0, slot_st = _k3_draft_step(model, inp, gdn_r0, slot_st, pos)
+        nxt, gdn_r0, slot_st, chunk_sum = _k3_draft_step(
+            model, inp, gdn_r0, slot_st, chunk_sum, pos
+        )
         drafts.append(nxt)
         inp = nxt
         pos += 1
@@ -117,7 +127,7 @@ def speculative_decode_k3(
     max_new_tokens: int,
     draft_k: int = 2,
 ) -> SpeculativeDecodeResult:
-    """Lossless K3 (R=1 -> full R) speculative decoding with exact parallel verification."""
+    """Lossless K3 (R=1 -> full R) speculative decoding with 0-extra-pass snapshot rollback."""
     _validate_single_prompt(prompt, max_new_tokens)
     if draft_k < 1:
         raise ValueError("draft_k must be >= 1")
@@ -132,7 +142,7 @@ def speculative_decode_k3(
         drafts = _draft_k3_sequence(model, cur, state, k)
         proposed += k
         verify_in = torch.cat([cur, *drafts], dim=1)
-        v_logits, _, _, v_state = model.forward_stateful(verify_in, state=state)
+        v_logits, _, _, snapshots = model.forward_with_snapshots(verify_in, state=state)
         verify_calls += 1
 
         n_acc, step_toks = _count_accepted(drafts, v_logits)
@@ -142,11 +152,9 @@ def speculative_decode_k3(
         if len(out) >= max_new_tokens:
             break
         cur = take[-1]
-        if n_acc == k:
-            state = v_state
-        else:
+        if n_acc < k:
             rollbacks += 1
-            _, _, _, state = model.forward_stateful(verify_in[:, : n_acc + 1], state=state)
+        state = snapshots[n_acc]
 
     return SpeculativeDecodeResult(
         tokens=torch.cat(out, dim=1),
@@ -154,6 +162,7 @@ def speculative_decode_k3(
         proposed_drafts=proposed,
         verify_calls=verify_calls,
         rollbacks=rollbacks,
+        extra_passes=0,
     )
 
 
@@ -163,14 +172,14 @@ def speculative_decode_mtp4(
     prompt: Tensor,
     max_new_tokens: int,
 ) -> SpeculativeDecodeResult:
-    """Lossless MTP-4 (t+2..t+4 -> full R) speculative decoding with zero draft forward passes."""
+    """Lossless MTP-4 (t+2..t+4 -> full R) speculative decoding with 0-extra-pass rollback."""
     _validate_single_prompt(prompt, max_new_tokens)
     n_heads = len(model.mtp_heads)
     if n_heads < 1:
         raise ValueError("model.mtp_heads must contain at least 1 lookahead head")
-    logits, _, hn, state = model.forward_stateful(prompt, state=None)
+    logits, _, h_fin, state = model.forward_stateful(prompt, state=None)
     cur = logits[:, -1:, :].argmax(dim=-1)
-    hn_cur = hn[:, -1:, :]
+    hn_cur = h_fin[:, -1:, :]
     out = [cur]
     accepted = proposed = verify_calls = rollbacks = 0
 
@@ -180,7 +189,7 @@ def speculative_decode_mtp4(
         drafts = [lg.argmax(dim=-1) for lg in model.mtp_logits(hn_cur)[:k]]
         proposed += k
         verify_in = torch.cat([cur, *drafts], dim=1)
-        v_logits, _, v_hn, v_state = model.forward_stateful(verify_in, state=state)
+        v_logits, _, v_h_fin, snapshots = model.forward_with_snapshots(verify_in, state=state)
         verify_calls += 1
 
         n_acc, step_toks = _count_accepted(drafts, v_logits)
@@ -190,12 +199,10 @@ def speculative_decode_mtp4(
         if len(out) >= max_new_tokens:
             break
         cur = take[-1]
-        hn_cur = v_hn[:, n_acc : n_acc + 1, :]
-        if n_acc == k:
-            state = v_state
-        else:
+        hn_cur = v_h_fin[:, n_acc : n_acc + 1, :]
+        if n_acc < k:
             rollbacks += 1
-            _, _, _, state = model.forward_stateful(verify_in[:, : n_acc + 1], state=state)
+        state = snapshots[n_acc]
 
     return SpeculativeDecodeResult(
         tokens=torch.cat(out, dim=1),
@@ -203,4 +210,5 @@ def speculative_decode_mtp4(
         proposed_drafts=proposed,
         verify_calls=verify_calls,
         rollbacks=rollbacks,
+        extra_passes=0,
     )

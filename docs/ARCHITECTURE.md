@@ -76,13 +76,29 @@ $$D_{\text{KL}}(\pi_g \,\|\, \pi_0) = \frac{1}{BT}\sum_{b=1}^B\sum_{t=1}^T \sum_
 
 ---
 
-## 3. Kernel Implementation Note
+## 3. `RDFL v0.3` Core Hardening (`K1–K5`) & Mechanistic Design Laws
+
+The `v0.3` reference package (`rdfl/`, `tests/test_rdfl.py`, `13/13` unit tests) resolves five structural bugs (`K1–K5`, [`results/raw/deney_a_k1_k5.json`](../results/raw/deney_a_k1_k5.json)) and incorporates 5-seed mechanistic findings ([`math_xray_master_synthesis.json`](../results/raw/math_xray_master_synthesis.json), [`p3_long_v03.json`](../results/raw/p3_long_v03.json), [`p2_long_v03.json`](../results/raw/p2_long_v03.json), [`h5_memory_latency_and_serving.json`](../results/raw/h5_memory_latency_and_serving.json)):
+
+1. **`K1` (Per-Head FP32 `o_norm` & `alpha_max`):** Replaces global `o_norm` with per-head `float32`-stabilized output normalization (`Fp32HeadRMSNorm`) to prevent slow/fast head norm imbalance (`0` FP16 NaN; `+0.0134 bpb`, `p=0.098` within noise).
+2. **`K2` (`rlt2_s1` Default Boundary & Mean/Last Pooling):** Replaces symmetric 4-slot `SlotCore` (`cos=0.999982` collapse) with damped 1-slot `Fp32RLT2Boundary` (`boundary_mode="rlt2_s1"`) as the default boundary module, preserving `slotcore_s4` as an explicit ablation mode.
+3. **`K3` (`std=0.02` Initialization):** Initializes tied embeddings, linear weights, and `step_emb` at `std=0.02`, eliminating step-0 logit explosion (`d=192: CE 193.82 -> 5.54`, `d=768: 752.45 -> 5.78`), reducing FP16 overflows (`8 -> 0`), and improving 500-step `Byte LM` (`mix_val`) by **`-0.5789 bpb`** (`p = 8e-5`).
+4. **`K4` (Single `final_norm` & `mtp_stop_grad`):** Removes redundant double `final_norm` on `MTP-4` heads and adds `mtp_stop_grad=True` to eliminate main-head CE interference (`2.2023 -> 2.0638` at 150 steps).
+5. **`K5` (`0`-Extra-Pass Snapshot Rollback):** `RDFLModel.forward_with_snapshots()` records per-token streaming states during verification, yielding **`1.68×`** eager-mode wall-clock speedup (`0` extra passes, `0` byte mismatch).
+6. **Mechanistic Laws & Falsified Hypotheses:**
+   - **Genuine Memory & Householder Regime:** `mqar_k8` collapses `98.63% -> 6.25%` when $S_t=0$; `byte_lm` shows `BDH L0 = 90.5%`, `1.69×` post-whitespace decision-byte concentration, `P(beta > 1.0) = 32.2% / 33.4%`, and `0` rank collapse up to `T = 2048`.
+   - **`BDH` Sparsity Tax (`P3_long`) & `conv.bias` Attention Sink (`P2_long`):** `P3 unit_rms` was falsified (`p=0.423`); iso-param `use_bdh=False` (`SwiGLU`) beats `BDH ReLU*ReLU` on `5/5` seeds (`-0.0121` / `-0.0150 bpb`, `p=0.0018`). `P2 conv.bias=0` was falsified (`+0.0085 bpb` regression, `p=0.0048`), confirming `short_conv.conv.bias` acts as a linear attention-sink channel.
+   - **`H5` Serving Wall:** Live `B=8` GPU `RoPE-Transformer` hits OOM at `T=65,536` while Pure `RDFL` stays `O(1)` at `153.77 MiB`; at `1M` text bytes (`4B/tok` `GQA-8 FP8`), `1B` Pure `RDFL` (`10.55 MiB`) is **`291.3×`** smaller (`3,072 MiB` KV).
+
+---
+
+## 4. Kernel Implementation Note
 
 The reference PyTorch implementation executes chunk-parallel `WY` updates in exact FP32/FP64 via `torch.linalg.solve_triangular` alongside PyTorch SDPA. Fusing the chunk-parallel `GatedDeltaNet` recurrence into a Triton / Flash Linear Attention (`fla`) kernel leaves the mathematical specification unchanged while substantially accelerating large-scale from-scratch training.
 
 ---
 
-## 4. References
+## 5. References
 
 1. **Gated DeltaNet:** Songlin Yang, Jan Kautz, and Ali Hatamizadeh. *Gated Delta Networks: Improving Mamba2 with Delta Rule.* ICLR 2025. [`arXiv:2412.06464`](https://arxiv.org/abs/2412.06464)
 2. **RLT:** Yifan Zhang et al. *Recurrent Looped Transformer.* 2026. [`arXiv:2610.07591`](https://arxiv.org/abs/2610.07591)

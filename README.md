@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-EE4C2C.svg)](pyproject.toml)
-[![Raw JSON Verification](https://img.shields.io/badge/Verified_Cells-698%2F698_(0_mismatches)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
+[![Raw JSON Verification](https://img.shields.io/badge/Verified_Cells-773%2F773_(0_mismatches)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
 
 **[English](README.md)** · **[Türkçe](README.tr.md)** · **[Architectural Specification](docs/ARCHITECTURE.md)** · **[Audited Summary JSON](results/audited_summary.json)** · **[Raw Audited JSONs](results/raw/)**
 
@@ -137,27 +137,44 @@ We attach `RDFL` (`d = 384`, `R = 2`, `2.81M`), `FP32 SlotCore` (`S = 4`, `1.33M
 
 ---
 
-## 5. Methodological Limitations
+## 5. `RDFL v0.3` Hardening (`K1–K5`), Serving Wall (`H5`), & Mechanistic X-Ray
+
+All `v0.3` kernel fixes (`13/13` CPU unit tests in [`tests/test_rdfl.py`](tests/test_rdfl.py)), serving benchmarks, and mechanistic probes are archived in [`results/raw/`](results/raw/) (`deney_a_k1_k5.json`, `h5_memory_latency_and_serving.json`, `math_xray_master_synthesis.json`, `p3_long_v03.json`, `p2_long_v03.json`; status: *Pending Carbon audit*):
+
+1. **`K1–K5` Core Hardening ([`results/raw/deney_a_k1_k5.json`](results/raw/deney_a_k1_k5.json)):**
+   - **`K3` (`std=0.02` Weight Initialization):** Eliminates step-0 logit explosion (`d=192: CE 193.82 -> 5.54`, `d=768: 752.45 -> 5.78`), cuts FP16 overflows (`8 -> 0`), and improves 500-step `Byte LM` (`mix_val`) by **`-0.5789 bpb`** (`3.1682 ± 0.0065 -> 2.5893 ± 0.0066`, `p = 8e-5`).
+   - **`K5` (`0`-Extra-Pass Snapshot Speculative Decoding):** `forward_with_snapshots()` eliminates rollback recomputation (`0` extra passes, `0` byte mismatch), delivering **`1.68×`** real wall-clock speedup on eager GPU (`K3: 2.349s -> 1.401s`, `59.3%` accept; `MTP-4: 2.349s -> 1.396s`, `21.3%` accept; Triton/Graph trained-checkpoint verification pending).
+   - **`K1 / K4 / K2` Scoped Notes:** `K1` (per-head FP32 `o_norm`) is an FP16 safety & head-balance fix (`0` NaN; `+0.0134 bpb`, `p = 0.098`, within noise); `K4` (`mtp_stop_grad=True` + single `final_norm`) removes main-head CE interference (`2.2023 -> 2.0638` at 150 steps); `K2` (`rlt2_s1` 300-step `graf_izli trace=False`) remained at chance (`0.0443`, inconclusive).
+2. **`H5` Live GPU Serving Wall & Iso-Param Text-Normalized Memory ([`results/raw/h5_memory_latency_and_serving.json`](results/raw/h5_memory_latency_and_serving.json)):**
+   - **Live GPU (`B=8`):** At `T = 65,536`, `RoPE-Transformer` hits **OOM** (`2,415.8 MiB` already at `T = 32,768`), whereas **Pure `RDFL`** stays $O(1)$ at **`153.77 MiB`** (`151.77 MiB` at `T = 32,768`).
+   - **Iso-Parameter Text-Byte Comparison (`1B` & `55M` at `1M` Text Bytes):** Against `GQA-8 FP8` (`4B/tok`), `1B` Pure `RDFL` (`10.55 MiB`) is **`291.3×`** smaller (`3,072 MiB` KV, crossover `3,600 B`), and `55M` Pure `RDFL` (`2.11 MiB`) is **`303.4×`** smaller (`640 MiB` KV, crossover `3,456 B`).
+3. **Mechanistic X-Ray & Falsification Discipline ([`results/raw/math_xray_master_synthesis.json`](results/raw/math_xray_master_synthesis.json), [`p3_long_v03.json`](results/raw/p3_long_v03.json), [`p2_long_v03.json`](results/raw/p2_long_v03.json)):**
+   - **Genuine Recurrent Memory (`mqar_k8` & `byte_lm`):** Zeroing $S_t=0$ collapses `mqar_k8` from **`98.63% -> 6.25%`** (chance); `byte_lm` exhibits **`BDH L0 = 90.5%`** sparsity (`r=0`), **`1.69×`** concentration on post-whitespace decision bytes (`r=1`), **`P(beta > 1.0) = 32.2% / 33.4%`** active Householder regime, and **`0`** rank collapse up to `T = 2048` (retracted `running=True` `S5`/`Parity` shortcut X-rays are excluded).
+   - **5-Seed `1000`-Step Architectural Laws (`P3_long` & `P2_long`):** `P3` (`unit_rms/safe_rms/ency_init`) was falsified (`p = 0.423 / 0.910`), while iso-param `use_bdh=False` (`SwiGLU`) outperformed `BDH ReLU*ReLU` on `5/5` seeds (**`-0.0121 bpb`** `mix_val`, **`-0.0150 bpb`** `web_val`, `p = 0.0018`), quantifying `BDH`'s interpretability sparsity tax. `P2` (`conv.bias=0`) was also falsified: removing `short_conv.conv.bias` raised `erank` (`8.26 -> 12.19`) but degraded `Byte LM` (**`+0.0085 bpb`**, `p = 0.0048`), proving `conv.bias` acts as a useful linear attention-sink channel.
+
+---
+
+## 6. Methodological Limitations
 
 1. **Pure-PyTorch Reference Kernel & Speculative Overhead:** Pure-PyTorch chunk-parallel WY + SDPA hits a kernel-launch ceiling on consumer GPUs: at `55M`, lossless `K3` (`99.0–100%` accept) yields only `1.042×` (`1.007×` RSI) and `MTP-4` (`42.8%` accept) yields `0.968×` (`0.865×` RSI). From-scratch scaling requires a fused Triton / Flash Linear Attention (`fla`) `GatedDeltaNet` kernel.
 2. **Hybrid `55M` Side-Branch vs. Pure `RDFL`:** Our `G_BASE_ONLY` (`1.5K`) and `en_iyi.pt` `RDFL ON/OFF` (`21K`) controls show that attaching `RDFL` as a warm side-branch onto a `55M` windowed-attention backbone yields negligible pure-LM `bpb` gain (`-0.0010 / -0.0002 / 0.0000`) and `0.0` state-tracking gain; evaluating `RDFL` at scale therefore requires from-scratch **Pure `RDFL`** pretraining against iso-FLOP baselines.
 3. **`SlotCore` Collapse (`Deferred / Replaced in v0.3`) & `Multi-Hop ICL` Ceiling (`KPN-Y01`):** Symmetric `FP32 SlotCore` collapses to `cos = 0.999982` (`norm = 664.5`) with `0.0` `55M` state-tracking gain and is deferred for competitive `v0.3` `SlotAttention`. At `1.20M`, `Multi-Hop ICL` `22.72%` lies within the `1/4 = 25.0%` (`1/8 = 12.5%`) degree-filtering ceiling (`KPN-Y01`), and input anchoring showed a null effect (`A6_R4_cipasiz` matched `A6_R4_cipali`).
 4. **OOD Extrapolation & RSI SFT Guard:** Both `1.20M` (`OOD-Far L=7,8 = 0.0%`) and `55M` RSI (`L=4 <-> L=5` wall, `0/96` accepted on `L=5`) show that verifier-gated RSI cannot bootstrap past a zero-acceptance length wall without curriculum bridges, and requires explicit SFT/`EOT` replay to prevent completion/repetition drift.
-5. **Hardware & Verification Protocol:** All experiments ran on a single consumer 8 GiB Turing GPU with strict train/validation/test separation; **`698/698`** cells in `results/audited_summary.json` are programmatically verified against `results/raw/*.json` in CI (`55M` final artifacts are pending independent Carbon closure audit).
+5. **Hardware & Verification Protocol:** All experiments ran on a single consumer 8 GiB Turing GPU with strict train/validation/test separation; **`773/773`** cells in `results/audited_summary.json` are programmatically verified against `results/raw/*.json` in CI (`55M` final and `v0.3` artifacts are pending independent Carbon closure audit).
 
 ---
 
-## 6. Reference Implementation & One-Command Reproducibility (CPU)
+## 7. Reference Implementation & One-Command Reproducibility (CPU)
 
 ```bash
 git clone https://github.com/berkmec/Recursive-Depth-Flash-Loop.git
 cd Recursive-Depth-Flash-Loop
 pip install -e ".[dev]"
 
-# 1. Mathematical invariant unit tests (chunk==step FP64, causality, zero-diff, K3/MTP-4 lossless speculative, FP32 SlotCore lock, AUROC ties)
+# 1. Mathematical invariant unit tests (13/13: chunk==step FP64, causality, zero-diff, K1-K5, FP32 SlotCore/RLT2 lock, AUROC ties)
 python -m unittest discover -s tests -v
 
-# 2. Programmatically verify all 698 audited cells in results/audited_summary.json against results/raw/*.json
+# 2. Programmatically verify all 773 audited cells in results/audited_summary.json against results/raw/*.json
 python benchmarks/verify_audited_results.py
 
 # 3. Measure O(1) decode state vs. FP16 full-KV cache directly from CPU PyTorch tensors

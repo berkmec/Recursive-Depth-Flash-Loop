@@ -267,6 +267,103 @@ def _verify_oy7_8_10(
     ck.close("oy10.gain", s10["pretraining_55m_gain_pp"], r10["kazanc_puan"], 1e-4)
 
 
+def _verify_v03_study(ck: CellChecker, v03: dict[str, Any]) -> None:
+    deney_a = load_json(RAW_DIR / "deney_a_k1_k5.json")
+    h5 = load_json(RAW_DIR / "h5_memory_latency_and_serving.json")
+    mx = load_json(RAW_DIR / "math_xray_master_synthesis.json")
+    p3 = load_json(RAW_DIR / "p3_long_v03.json")
+    p2 = load_json(RAW_DIR / "p2_long_v03.json")
+
+    ck.eq("v03.audit_status", v03["audit_status"], "Pending Carbon audit")
+
+    # K1-K5 ablation (deney_a_k1_k5.json)
+    ab = v03["k1_k5_ablation"]
+    k3 = ab["k3_std002_init"]
+    s_leg = deney_a["summary"]["byte_lm_k3::K3_legacy_std1"]
+    s_v03 = deney_a["summary"]["byte_lm_k3::K3_v03_std002"]
+    ck.eq("v03.k3.n_seeds", ab["n_seeds"], s_v03["n_seeds"])
+    ck.close("v03.k3.leg_bpb", k3["legacy_std1_val_bpb_mean"], round(s_leg["val_bpb_mean"], 4), 1e-4)
+    ck.close("v03.k3.leg_std", k3["legacy_std1_val_bpb_std"], round(s_leg["val_bpb_std"], 4), 1e-4)
+    ck.close("v03.k3.leg_acc", k3["legacy_std1_val_acc_mean"], round(s_leg["val_acc_mean"], 4), 1e-4)
+    ck.close("v03.k3.v03_bpb", k3["v03_std002_val_bpb_mean"], round(s_v03["val_bpb_mean"], 4), 1e-4)
+    ck.close("v03.k3.v03_std", k3["v03_std002_val_bpb_std"], round(s_v03["val_bpb_std"], 4), 1e-4)
+    ck.close("v03.k3.v03_acc", k3["v03_std002_val_acc_mean"], round(s_v03["val_acc_mean"], 4), 1e-4)
+    ck.close("v03.k3.delta_bpb", k3["delta_bpb"], round(s_v03["val_bpb_mean"] - s_leg["val_bpb_mean"], 4), 1e-4)
+
+    dim_probe = {(r["d_model"], r["init"]): r for r in deney_a["k3_dim_probe"]}
+    ck.close("v03.k3.ce_192_leg", k3["step0_ce_d192_legacy"], round(dim_probe[(192, "legacy_std1")]["step0_ce"], 4), 1e-4)
+    ck.close("v03.k3.ce_192_v03", k3["step0_ce_d192_v03"], round(dim_probe[(192, "v03_std002")]["step0_ce"], 4), 1e-4)
+    ck.close("v03.k3.ce_768_leg", k3["step0_ce_d768_legacy"], round(dim_probe[(768, "legacy_std1")]["step0_ce"], 4), 1e-4)
+    ck.close("v03.k3.ce_768_v03", k3["step0_ce_d768_v03"], round(dim_probe[(768, "v03_std002")]["step0_ce"], 4), 1e-4)
+
+    k5 = ab["k5_snapshot_speculative"]
+    rk5 = deney_a["k5_speculative"]
+    ck.eq("v03.k5.n_prompts", k5["n_prompts"], rk5["n_prompts"])
+    ck.eq("v03.k5.gen_toks", k5["gen_tokens_per_prompt"], rk5["gen_tokens_per_prompt"])
+    ck.close("v03.k5.greedy_sec", k5["greedy_sec"], round(rk5["greedy_sec"], 4), 1e-4)
+    ck.close("v03.k5.k3_sec", k5["k3_sec"], round(rk5["k3_sec"], 4), 1e-4)
+    ck.close("v03.k5.k3_spd", k5["k3_speedup"], round(rk5["k3_speedup"], 4), 1e-4)
+    ck.close("v03.k5.k3_acc", k5["k3_acceptance_rate"], round(rk5["k3_acceptance_rate"], 4), 1e-4)
+    ck.eq("v03.k5.k3_mis", k5["k3_mismatch_bytes"], rk5["k3_mismatch_bytes"])
+    ck.eq("v03.k5.k3_ext", k5["k3_extra_passes"], rk5["k3_extra_passes"])
+    ck.eq("v03.k5.k3_rb", k5["k3_rollbacks"], rk5["k3_rollbacks"])
+    ck.close("v03.k5.mtp4_sec", k5["mtp4_sec"], round(rk5["mtp4_sec"], 4), 1e-4)
+    ck.close("v03.k5.mtp4_spd", k5["mtp4_speedup"], round(rk5["mtp4_speedup"], 4), 1e-4)
+    ck.close("v03.k5.mtp4_acc", k5["mtp4_acceptance_rate"], round(rk5["mtp4_acceptance_rate"], 4), 1e-4)
+    ck.eq("v03.k5.mtp4_mis", k5["mtp4_mismatch_bytes"], rk5["mtp4_mismatch_bytes"])
+    ck.eq("v03.k5.mtp4_ext", k5["mtp4_extra_passes"], rk5["mtp4_extra_passes"])
+    ck.eq("v03.k5.mtp4_rb", k5["mtp4_rollbacks"], rk5["mtp4_rollbacks"])
+
+    # H5 memory latency and serving
+    sh5 = v03["h5_memory_latency_and_serving"]
+    gw = {(r["batch_size"], r["seq_len"]): r for r in h5["gpu_wall"]}
+    ck.close("v03.h5.b8_32k_rdfl", sh5["gpu_wall_b8_t32768_pure_rdfl_mib"], round(gw[(8, 32768)]["pure_rdfl"]["peak_vram_mib"], 4), 1e-4)
+    ck.close("v03.h5.b8_32k_tx", sh5["gpu_wall_b8_t32768_rope_tx_mib"], round(gw[(8, 32768)]["rope_transformer"]["peak_vram_mib"], 4), 1e-4)
+    ck.close("v03.h5.b8_64k_rdfl", sh5["gpu_wall_b8_t65536_pure_rdfl_mib"], round(gw[(8, 65536)]["pure_rdfl"]["peak_vram_mib"], 4), 1e-4)
+    ck.eq("v03.h5.b8_64k_rdfl_oom", sh5["gpu_wall_b8_t65536_pure_rdfl_oom"], gw[(8, 65536)]["pure_rdfl"]["oom"])
+    ck.eq("v03.h5.b8_64k_tx_oom", sh5["gpu_wall_b8_t65536_rope_tx_oom"], gw[(8, 65536)]["rope_transformer"]["oom"])
+
+    tbl = {(r["scale"], r["tx_variant"], r["text_bytes"]): r for r in h5["text_normalized_serving_table"]}
+    r1b = tbl[("1B_class", "GQA8_FP8", 1048576)]
+    r55 = tbl[("55M_class", "GQA8_FP8", 1048576)]
+    for tag, src_r, dst_r in (("1b", r1b, sh5["iso_1b_gqa8_fp8_1m_bytes"]), ("55m", r55, sh5["iso_55m_gqa8_fp8_1m_bytes"])):
+        ck.close(f"v03.h5.{tag}.rdfl", dst_r["rdfl_r2_state_mib"], src_r["rdfl_r2_state_mib"], 1e-4)
+        ck.close(f"v03.h5.{tag}.tx", dst_r["tx_kv_cache_mib"], src_r["tx_kv_cache_mib"], 1e-4)
+        ck.close(f"v03.h5.{tag}.ratio", dst_r["kv_to_rdfl_state_ratio"], src_r["kv_to_rdfl_state_ratio"], 1e-3)
+        ck.close(f"v03.h5.{tag}.cross", dst_r["crossover_text_bytes"], src_r["crossover_text_bytes"], 1e-1)
+
+    # Math X-ray master synthesis
+    smx = v03["math_xray_master_synthesis"]
+    rmq = mx["verified_solved_xrays"]["mqar_k8"]
+    rbl = mx["verified_solved_xrays"]["byte_lm"]
+    for k in ("eval_acc_R1", "eval_acc_R2", "eval_acc_R8", "cross_loop_vec_cos", "r0_hl_median_bytes", "r1_hl_median_bytes", "r0_p_beta_gt_1_0", "r1_p_beta_gt_1_0", "r0_max_head_p_beta_gt_1_0", "r1_max_head_p_beta_gt_1_0"):
+        ck.close(f"v03.mx.mqar.{k}", smx["mqar_k8"][k], round(rmq[k], 4), 1e-4)
+    for k in ("eval_bpb_R1", "eval_bpb_R2", "eval_bpb_R8", "r0_bdh_l0", "r1_bdh_l0", "r0_bdh_byte_selectivity", "r0_p_beta_gt_1_0", "r1_p_beta_gt_1_0", "cross_loop_vec_cos"):
+        ck.close(f"v03.mx.blm.{k}", smx["byte_lm"][k], round(rbl[k], 4), 1e-4)
+    ck.eq("v03.mx.retracted", smx["retracted_shortcut_xrays"], list(mx["retracted_shortcut_xrays"].keys()))
+
+    # P3_long and P2_long
+    sp3 = v03["p3_long_v03_bdh_sparsity_tax"]
+    vp3 = p3["result"]["variants"]
+    ck.eq("v03.p3.n_seeds", sp3["n_seeds"], len(p3["meta"]["seeds"]))
+    ck.eq("v03.p3.steps", sp3["steps"], p3["meta"]["steps"])
+    ck.close("v03.p3.relu_mix", sp3["relu_relu_mix_val_bpb_mean"], round(vp3["relu_relu"]["mix_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
+    ck.close("v03.p3.nobdh_mix", sp3["no_bdh_iso_param_mix_val_bpb_mean"], round(vp3["no_bdh_iso_param"]["mix_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
+    ck.close("v03.p3.relu_web", sp3["relu_relu_web_val_bpb_mean"], round(vp3["relu_relu"]["web_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
+    ck.close("v03.p3.nobdh_web", sp3["no_bdh_iso_param_web_val_bpb_mean"], round(vp3["no_bdh_iso_param"]["web_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
+
+    sp2 = v03["p2_long_v03_conv_bias_sink"]
+    vp2 = p2["result"]["variants"]
+    ck.eq("v03.p2.n_seeds", sp2["n_seeds"], len(p2["meta"]["seeds"]))
+    ck.eq("v03.p2.steps", sp2["steps"], p2["meta"]["steps"])
+    ck.close("v03.p2.def_mix", sp2["v03_default_mix_val_bpb_mean"], round(vp2["v03_default"]["mix_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
+    ck.close("v03.p2.nob_mix", sp2["no_conv_bias_mix_val_bpb_mean"], round(vp2["no_conv_bias"]["mix_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
+    ck.close("v03.p2.def_web", sp2["v03_default_web_val_bpb_mean"], round(vp2["v03_default"]["web_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
+    ck.close("v03.p2.nob_web", sp2["no_conv_bias_web_val_bpb_mean"], round(vp2["no_conv_bias"]["web_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
+    ck.close("v03.p2.def_erank", sp2["v03_default_post_erank"], round(vp2["v03_default"]["post_erank"]["mean"], 4), 1e-4)
+    ck.close("v03.p2.nob_erank", sp2["no_conv_bias_post_erank"], round(vp2["no_conv_bias"]["post_erank"]["mean"], 4), 1e-4)
+
+
 def main() -> int:
     summary = load_json(SUMMARY_PATH)
     studies = summary["studies"]
@@ -294,6 +391,7 @@ def main() -> int:
         studies["diogenes_rdfl_55m_final"],
         oy["oy10_toolrunner"],
     )
+    _verify_v03_study(ck, studies["rdfl_v0_3_hardening_and_xray"])
 
     if ck.errors:
         for err in ck.errors:
