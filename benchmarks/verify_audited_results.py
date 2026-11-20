@@ -2,38 +2,19 @@
 
 from __future__ import annotations
 
-import json
-import math
 import statistics
 import sys
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from benchmarks.verify_55m import CellChecker, load_json, verify_55m_and_live
+
 RAW_DIR = ROOT / "results" / "raw"
 SUMMARY_PATH = ROOT / "results" / "audited_summary.json"
-
-
-class CellChecker:
-    """Deterministic cell-by-cell comparator tracking checked count and mismatches."""
-
-    def __init__(self) -> None:
-        self.checked = 0
-        self.errors: list[str] = []
-
-    def eq(self, key: str, summary_val: Any, raw_val: Any) -> None:
-        self.checked += 1
-        if summary_val != raw_val:
-            self.errors.append(f"{key}: summary={summary_val!r} != raw={raw_val!r}")
-
-    def close(self, key: str, summary_val: float, raw_val: float, tol: float = 1e-4) -> None:
-        self.checked += 1
-        if not math.isclose(float(summary_val), float(raw_val), rel_tol=0.0, abs_tol=tol):
-            self.errors.append(f"{key}: summary={summary_val} != raw={raw_val} (tol={tol})")
-
-
-def _load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _mean_std(vals: list[float], ndigits: int) -> tuple[float, float]:
@@ -76,14 +57,17 @@ def _verify_arch_ablations(ck: CellChecker, ab: dict[str, Any], arch: dict[str, 
         grouped.setdefault((row["etiket"], row["gorev"]), []).append(row)
 
     for tag, entry in arch["structural_ablations"].items():
+        if not isinstance(entry, dict):
+            continue
         mh_rows = grouped[(tag, "multihop_icl")]
         lm_rows = grouped[(tag, "byte_lm")]
         mh_m, mh_s = _mean_std([float(r["alt_metrik"]) for r in mh_rows], 2)
-        lm_m, _ = _mean_std([float(r["birincil_metrik"]) for r in lm_rows], 4)
+        lm_m, lm_s = _mean_std([float(r["birincil_metrik"]) for r in lm_rows], 4)
         kb_s = round(statistics.mean(float(r["hiz_kb_sn"]) for r in lm_rows), 2)
         ck.close(f"arch.abl.{tag}.mh_mean", entry["multihop_3hop_mean"], mh_m, 0.01)
         ck.close(f"arch.abl.{tag}.mh_std", entry["multihop_3hop_std"], mh_s, 0.01)
         ck.close(f"arch.abl.{tag}.lm_bpb", entry["byte_lm_bpb_mean"], lm_m, 1e-4)
+        ck.close(f"arch.abl.{tag}.lm_std", entry["byte_lm_bpb_std"], lm_s, 1e-4)
         ck.close(f"arch.abl.{tag}.kb_s", entry["byte_lm_kb_s"], kb_s, 0.01)
 
 
@@ -105,9 +89,9 @@ def _verify_arch_memory(ck: CellChecker, gp: dict[str, Any], arch: dict[str, Any
 
 
 def _verify_arch_study(ck: CellChecker, arch: dict[str, Any]) -> None:
-    gate = _load_json(RAW_DIR / "dogrulama_kapisi.json")
-    ab = _load_json(RAW_DIR / "ablasyon_sonuclari.json")
-    gp = _load_json(RAW_DIR / "gpu_profil_55m.json")
+    gate = load_json(RAW_DIR / "dogrulama_kapisi.json")
+    ab = load_json(RAW_DIR / "ablasyon_sonuclari.json")
+    gp = load_json(RAW_DIR / "gpu_profil_55m.json")
 
     ck.eq("arch.hash", arch["frozen_code_hash"], gate["meta"]["kod_sha256"])
     ck.eq("arch.hash_ab", arch["frozen_code_hash"], ab["meta"]["kod_sha256"])
@@ -142,8 +126,7 @@ def _verify_oy1_k3(ck: CellChecker, oy14: dict[str, Any], oy_gate: dict[str, Any
 
     prompts = diff_bytes = 0
     for row in oy14["oy1_3_kosular"]:
-        k_tarama = (row.get("spekulatif_oy1b") or {}).get("k_tarama", {})
-        for kd in k_tarama.values():
+        for kd in (row.get("spekulatif_oy1b") or {}).get("k_tarama", {}).values():
             prompts += int(kd.get("duvar_saati_n_istem", 0))
             diff_bytes += int(kd.get("kayipsiz_fark_bayt", 0))
     ck.eq("oy1.spec_prompts", k3["speculative_prompts_total"], prompts)
@@ -154,12 +137,28 @@ def _verify_oy1_k3(ck: CellChecker, oy14: dict[str, Any], oy_gate: dict[str, Any
     ck.close("oy1.k3_k2_flop", k3["speculative_flop_speedup_k2_k4"][0], statistics.mean(r["spekulatif_oy1b"]["k_tarama"]["K2"]["rollback_dahil_flop_hizlanma"] for r in k3_lm))
     ck.close("oy1.k3_k4_flop", k3["speculative_flop_speedup_k2_k4"][1], statistics.mean(r["spekulatif_oy1b"]["k_tarama"]["K4"]["rollback_dahil_flop_hizlanma"] for r in k3_lm))
     ck.close("oy1.k3_k2_wall", k3["wall_speedup_k3_k2"], statistics.mean(r["spekulatif_oy1b"]["k_tarama"]["K2"]["duvar_saati_hizlanma"] for r in k3_lm))
+    ck.close("oy1.k3_k4_wall", k3["wall_speedup_k3_k4"], statistics.mean(r["spekulatif_oy1b"]["k_tarama"]["K4"]["duvar_saati_hizlanma"] for r in k3_lm))
     ck.close("oy1.k1_k4_wall", k3["wall_speedup_k1_k4"], statistics.mean(r["spekulatif_oy1b"]["k_tarama"]["K4"]["duvar_saati_hizlanma"] for r in k1_lm))
 
 
-def _verify_oy3_cal(ck: CellChecker, oy14: dict[str, Any], oy: dict[str, Any]) -> None:
+def _verify_oy2(ck: CellChecker, oy14: dict[str, Any], oy: dict[str, Any]) -> None:
+    o2 = oy["oy2_adaptive_depth"]
+    k3_lm = _filter_rows(oy14["oy1_3_kosular"], "OY1_K3_KOPUK_BASLIK", "byte_lm")
+    k3_gr = _filter_rows(oy14["oy1_3_kosular"], "OY1_K3_KOPUK_BASLIK", "graf_izli")
+    ck.close("oy2.lm_b32_flop", o2["byte_lm_chunk_b32_flop_save_pct"], statistics.mean(r["oy2_durumlu_parca_b32"]["flop_tasarruf_pct"] for r in k3_lm), 0.01)
+    ck.close("oy2.lm_b32_bpb", o2["byte_lm_chunk_b32_delta_bpb"], statistics.mean(r["oy2_durumlu_parca_b32"]["delta_bpb_vs_r4"] for r in k3_lm), 1e-4)
+    ck.close("oy2.lm_b32_acc", o2["byte_lm_chunk_b32_delta_acc_pp"], statistics.mean(r["oy2_durumlu_parca_b32"]["delta_acc_vs_r4"] for r in k3_lm), 0.01)
+    ck.close("oy2.lm_st_flop", o2["byte_lm_step_flop_save_pct"], statistics.mean(r["oy2_durumlu_bayt_step"]["flop_tasarruf_pct"] for r in k3_lm), 0.01)
+    ck.close("oy2.lm_st_bpb", o2["byte_lm_step_delta_bpb"], statistics.mean(r["oy2_durumlu_bayt_step"]["delta_bpb_vs_r4"] for r in k3_lm), 1e-4)
+    ck.close("oy2.gr_b32_flop", o2["graf_chunk_b32_flop_save_pct"], statistics.mean(r["oy2_durumlu_parca_b32"]["flop_tasarruf_pct"] for r in k3_gr), 0.01)
+    ck.close("oy2.gr_b32_bpb", o2["graf_chunk_b32_delta_bpb"], statistics.mean(r["oy2_durumlu_parca_b32"]["delta_bpb_vs_r4"] for r in k3_gr), 1e-4)
+    ck.close("oy2.gr_b32_acc", o2["graf_chunk_b32_delta_acc_pp"], statistics.mean(r["oy2_durumlu_parca_b32"]["delta_acc_vs_r4"] for r in k3_gr), 0.01)
+
+
+def _verify_oy3(ck: CellChecker, oy14: dict[str, Any], oy: dict[str, Any]) -> None:
     cal = oy["oy3_msp_calibration"]
     k3_lm = _filter_rows(oy14["oy1_3_kosular"], "OY1_K3_KOPUK_BASLIK", "byte_lm")
+    k3_gr = _filter_rows(oy14["oy1_3_kosular"], "OY1_K3_KOPUK_BASLIK", "graf_izli")
     ck.close("oy3.auroc", cal["byte_lm_auroc"], statistics.mean(r["oy3_kalibrasyon"]["sinyaller"]["sicaklik_kalibre_msp"]["auroc_hata"] for r in k3_lm))
     ck.close("oy3.ece15", cal["byte_lm_ece15"], statistics.mean(r["oy3_kalibrasyon"]["sinyaller"]["sicaklik_kalibre_msp"]["ece_15"] for r in k3_lm))
     b_acc = statistics.mean(r["oy3_kalibrasyon"]["taban_dogruluk_pct"] for r in k3_lm)
@@ -167,8 +166,6 @@ def _verify_oy3_cal(ck: CellChecker, oy14: dict[str, Any], oy: dict[str, Any]) -
     ck.close("oy3.abstain_before", cal["abstain40_acc_before"], b_acc, 0.01)
     ck.close("oy3.abstain_after", cal["abstain40_acc_after"], s60, 0.01)
     ck.close("oy3.abstain_gain", cal["abstain40_gain_pp"], s60 - b_acc, 0.01)
-
-    k3_gr = _filter_rows(oy14["oy1_3_kosular"], "OY1_K3_KOPUK_BASLIK", "graf_izli")
     g_raw = statistics.mean(r["oy3_kalibrasyon"]["sinyaller"]["msp_1_eksi_maxp"]["ece_15"] for r in k3_gr)
     g_cal = statistics.mean(r["oy3_kalibrasyon"]["sinyaller"]["sicaklik_kalibre_msp"]["ece_15"] for r in k3_gr)
     ck.close("oy3.graf_ece_raw", cal["graf_ece_raw"], g_raw, 1e-4)
@@ -176,9 +173,8 @@ def _verify_oy3_cal(ck: CellChecker, oy14: dict[str, Any], oy: dict[str, Any]) -
     ck.close("oy3.graf_ece_ratio", cal["graf_ece_reduction_x"], g_raw / g_cal, 0.02)
 
 
-def _verify_oy4_mtp(ck: CellChecker, oy14: dict[str, Any], oy: dict[str, Any]) -> None:
-    o4 = oy14["ozet"]["oy4_ozet"]
-    m4 = oy["oy4_mtp4_at_1_2m"]
+def _verify_oy4_and_oy5(ck: CellChecker, oy14: dict[str, Any], oy56: dict[str, Any], oy: dict[str, Any]) -> None:
+    o4, m4 = oy14["ozet"]["oy4_ozet"], oy["oy4_mtp4_at_1_2m"]
     ck.close("oy4.lm_ntp", m4["byte_lm_ntp_bpb"], o4["byte_lm"]["OY4_NTP"]["t1_bpb"]["ort"])
     ck.close("oy4.lm_mtp4", m4["byte_lm_mtp4_bpb"], o4["byte_lm"]["OY4_MTP4"]["t1_bpb"]["ort"])
     ck.close("oy4.lm_tax", m4["byte_lm_tax_bpb"], o4["byte_lm"]["OY4_MTP4"]["t1_bpb"]["ort"] - o4["byte_lm"]["OY4_NTP"]["t1_bpb"]["ort"])
@@ -189,22 +185,19 @@ def _verify_oy4_mtp(ck: CellChecker, oy14: dict[str, Any], oy: dict[str, Any]) -
     for idx, fk in enumerate(("t2_acc", "t3_acc", "t4_acc")):
         ck.close(f"oy4.struct_{fk}", m4["structural_acc_t2_t3_t4"][idx], statistics.mean(r[fk] for r in s_rows), 0.01)
 
-
-def _verify_oy5_6(ck: CellChecker, oy56: dict[str, Any], oy: dict[str, Any]) -> None:
-    o5 = oy56["ozet"]["oy5_ozet"]
-    s5 = oy["oy5_prompt_self_correction"]
+    o5, s5 = oy56["ozet"]["oy5_ozet"], oy["oy5_prompt_self_correction"]
     ck.close("oy5.d0", s5["d0_draft_acc"], o5["D0_pass1"]["ort"], 0.01)
     ck.close("oy5.d1_rev", s5["d1_d2_after_revision_acc"][0], o5["D1_d0_taslak_revize"]["ort"], 0.01)
     ck.close("oy5.d2_rev", s5["d1_d2_after_revision_acc"][1], o5["D2_d0_taslak_revize"]["ort"], 0.01)
     ck.close("oy5.logp_auroc", s5["zero_param_logp_auroc"], o5["logp_auroc"]["ort"], 1e-4)
     ck.close("oy5.mlp_auroc", s5["mlp_verifier_auroc"], o5["oz_dog_auroc"]["ort"], 1e-4)
 
-    s6 = oy["oy6_fp32_slotcore"]
-    rows6 = oy56["oy6_kosular"]
+
+def _verify_oy6(ck: CellChecker, oy56: dict[str, Any], oy: dict[str, Any]) -> None:
+    s6, rows6, o6 = oy["oy6_fp32_slotcore"], oy56["oy6_kosular"], oy56["ozet"]["oy6_ozet"]
     ck.eq("oy6.total_runs", s6["total_runs"], len(rows6))
     ck.eq("oy6.zero_nan_runs", s6["runs_zero_nan"], sum(1 for r in rows6 if r["nan_kayip_adim"] == 0))
-    o6 = oy56["ozet"]["oy6_ozet"]
-    gr = o6["graf_izli"]
+    gr, lm = o6["graf_izli"], o6["byte_lm"]
     ck.close("oy6.mqar_mean", s6["mqar_acc_mean"], o6["mqar_overwrite"]["OY6_A6_SLOT4_FP32"]["genel_acc"]["ort"], 0.01)
     ck.close("oy6.mqar_std", s6["mqar_acc_std"], o6["mqar_overwrite"]["OY6_A6_SLOT4_FP32"]["genel_acc"]["std"], 0.01)
     ck.close("oy6.slot_graf_m", s6["graf_acc_mean"], gr["OY6_A6_SLOT4_FP32"]["genel_acc"]["ort"], 0.01)
@@ -216,7 +209,12 @@ def _verify_oy5_6(ck: CellChecker, oy56: dict[str, Any], oy: dict[str, Any]) -> 
     ck.close("oy6.titans_graf_m", s6["titans_a_graf_mean"], gr["OY6_A6_SASKINLIK_GDN"]["genel_acc"]["ort"], 0.01)
     ck.close("oy6.titans_graf_s", s6["titans_a_graf_std"], gr["OY6_A6_SASKINLIK_GDN"]["genel_acc"]["std"], 0.01)
     ck.close("oy6.std_red", s6["std_reduction_x"], gr["OY6_A6_TABAN"]["genel_acc"]["std"] / gr["OY6_A6_SLOT4_FP32"]["genel_acc"]["std"], 0.02)
-    ck.close("oy6.bdh_lm_delta", s6["bdh_vs_bdhless_byte_lm_delta_bpb"], o6["byte_lm"]["OY6_A6_TABAN"]["bpb"]["ort"] - o6["byte_lm"]["OY6_A6_BDHSIZ"]["bpb"]["ort"], 1e-4)
+    ck.close("oy6.bdh_lm_delta", s6["bdh_vs_bdhless_byte_lm_delta_bpb"], lm["OY6_A6_TABAN"]["bpb"]["ort"] - lm["OY6_A6_BDHSIZ"]["bpb"]["ort"], 1e-4)
+    ck.close("oy6.slot_lm_m", s6["slot_byte_lm_bpb_mean"], lm["OY6_A6_SLOT4_FP32"]["bpb"]["ort"], 1e-4)
+    ck.close("oy6.slot_lm_s", s6["slot_byte_lm_bpb_std"], lm["OY6_A6_SLOT4_FP32"]["bpb"]["std"], 1e-4)
+    ck.close("oy6.base_lm_m", s6["baseline_byte_lm_bpb_mean"], lm["OY6_A6_TABAN"]["bpb"]["ort"], 1e-4)
+    ck.close("oy6.base_lm_s", s6["baseline_byte_lm_bpb_std"], lm["OY6_A6_TABAN"]["bpb"]["std"], 1e-4)
+    ck.close("oy6.slot_lm_delta", s6["slot_vs_baseline_byte_lm_delta_bpb"], lm["OY6_A6_SLOT4_FP32"]["bpb"]["ort"] - lm["OY6_A6_TABAN"]["bpb"]["ort"], 1e-4)
 
     seeds = s6["graf_izli_per_seed"]["seeds"]
     by_ks = {(r["kol"], r["tohum"]): r["genel_acc"] for r in rows6 if r["gorev"] == "graf_izli"}
@@ -224,12 +222,13 @@ def _verify_oy5_6(ck: CellChecker, oy56: dict[str, Any], oy: dict[str, Any]) -> 
         ck.eq(f"oy6.seed.{arm}", s6["graf_izli_per_seed"][arm], [by_ks[(arm, sd)] for sd in seeds])
 
 
-def _verify_oy7_8(
+def _verify_oy7_8_10(
     ck: CellChecker,
     oy14: dict[str, Any],
     oy56: dict[str, Any],
     oy7: dict[str, Any],
     oy8: dict[str, Any],
+    base55: dict[str, Any],
     oy: dict[str, Any],
 ) -> None:
     vrams = [r["tepe_vram_mib"] for r in oy14["oy1_3_kosular"] + oy14["oy4_kosular"] + oy56["oy6_kosular"]]
@@ -238,8 +237,7 @@ def _verify_oy7_8(
     total_nans = sum(r["nan_kayip_adim"] for r in oy14["oy1_3_kosular"] + oy14["oy4_kosular"] + oy56["oy6_kosular"])
     ck.eq("oy.fp16_nans", oy["fp16_nans"], int(total_nans))
 
-    s7 = oy["oy7_bounded_rsi_75gens"]
-    o7 = oy7["ozet"]
+    s7, o7 = oy["oy7_bounded_rsi_75gens"], oy7["ozet"]
     ck.eq("oy7.total_gens", s7["total_generations"], oy7["meta"]["toplam_nesil"])
     ck.close("oy7.rsi1_lm", s7["blind_rsi1_lm_bpb"], o7["RSI1_KOR_COKUS"]["tur5_lm_bpb"]["ort"], 1e-4)
     ck.close("oy7.rsi1_id", s7["blind_rsi1_id_acc"], o7["RSI1_KOR_COKUS"]["tur5_id"]["ort"], 0.01)
@@ -261,71 +259,35 @@ def _verify_oy7_8(
     ck.eq("oy8.final_disk", s8["final_disk_mib"], oy8["halka_tampon_olcumu"]["son_aktif_disk_mib"])
     ck.eq("oy8.receipt", s8["receipt_lock"], oy8["halka_tampon_olcumu"]["makbuzsuz_silme_reddedildi"])
 
-
-def _verify_55m_gates(ck: CellChecker, s55: dict[str, Any]) -> None:
-    g55 = _load_json(RAW_DIR / "dogrulama_kapisi_55m.json")
-    mtp = _load_json(RAW_DIR / "saat1_mtp_kapisi.json")
-    base = _load_json(RAW_DIR / "taban_55m_degerlendirme.json")
-
-    ck.eq("55m.hash", s55["frozen_code_hash"], g55["kod_sha256"])
-    ck.eq("55m.hash_mtp", s55["frozen_code_hash"], mtp["kod_sha256"])
-    po = g55["matematik_ve_akis"]["param_ozeti"]
-    for sk, rk in (
-        ("base_55m", "taban_55m"),
-        ("rdfl_narrow", "rdfl_dar_gdn_bdh"),
-        ("fp32_slotcore", "oy6_fp32_slotcore"),
-        ("k3_decoupled", "oy1_k3_kopuk"),
-        ("mtp4_heads", "oy4_mtp4"),
-        ("new_total", "yeni_toplam"),
-        ("grand_total", "genel_toplam"),
-    ):
-        ck.eq(f"55m.param.{sk}", s55["parameters"][sk], po[rk])
-
-    g1, m_ak, fp_d = s55["gate1_pass"], g55["matematik_ve_akis"], g55["fp16_ve_vram_duman"]
-    ck.eq("55m.g1.logits", g1["step0_logits_diff"], m_ak["adim0_logits_maks_fark"])
-    ck.eq("55m.g1.hn", g1["step0_hn_diff"], m_ak["adim0_hn_maks_fark"])
-    ck.eq("55m.g1.cmem", g1["step0_cmem_diff"], m_ak["adim0_cmem_maks_fark"])
-    ck.eq("55m.g1.causal", g1["causality_diff"], m_ak["nedensel_maks_fark"])
-    ck.close("55m.g1.fwd_step", g1["forward_eq_step_fp32"], m_ak["forward_step_maks_fark"], 1e-10)
-    ck.eq("55m.g1.nan", g1["smoke_12steps_nan"], fp_d["nan_adim"])
-    ck.close("55m.g1.vram", g1["peak_vram_mib"], fp_d["tepe_vram_mib"], 0.1)
-    ck.eq("55m.g1.passed", g1["passed"], g55["kapi1_gecti"])
-
-    ab_m = s55["hour1_mtp4_ab_1500steps"]
-    for arm_s, arm_r in (("G0_control", "G0_kontrol"), ("G1_mtp4_full_55m_prop", "G1_mtp4_tam_yayilim")):
-        for fld in ("lm_bits_512", "r1_lm_bits_512", "lm_bits_2048", "sft_val_bits", "mtp_t2_acc", "mtp_t3_acc", "mtp_t4_acc"):
-            ck.close(f"55m.ab.{arm_s}.{fld}", ab_m[arm_s][fld], mtp[arm_r]["son_val"][fld], 1e-4)
-    ck.close("55m.ab.d_lm512", ab_m["delta_lm_512"], mtp["delta_lm_bits_512"], 1e-4)
-    ck.close("55m.ab.d_sft", ab_m["delta_sft_val"], mtp["delta_sft_val_bits"], 1e-4)
-    ck.close("55m.ab.d_lm2048", ab_m["delta_lm_2048"], mtp["delta_lm_bits_2048"], 1e-4)
-    ck.eq("55m.ab.winner", ab_m["winner"], mtp["secilen_kol"])
-
-    b_ev = s55["baseline_55m_eval"]
-    ck.close("55m.base.msp_mix", b_ev["msp_mix_val_auroc"], base["oy3_kalibrasyon"]["mix_val"]["auroc"], 1e-4)
-    ck.close("55m.base.msp_sft", b_ev["msp_sft_val_auroc"], base["oy3_kalibrasyon"]["sft_val"]["auroc"], 1e-4)
-    ck.close("55m.base.sft_full", b_ev["sft_acc_full"], base["oy3_kalibrasyon"]["sft_val"]["dogruluk_tam"], 1e-4)
-    ck.close("55m.base.sft_abs40", b_ev["sft_acc_abstain40"], base["oy3_kalibrasyon"]["sft_val"]["dogruluk_cekin40"], 1e-4)
-    ck.close("55m.base.lm2048", b_ev["baseline_lm_2048"], base["oy6_slotcore_ablasyon"]["slot_acik"]["mix_val_bpb_2048"], 1e-4)
+    s10, r10 = oy["oy10_toolrunner"], base55["oy10_toolrunner"]
+    ck.eq("oy10.n_q", s10["pretraining_55m_n_questions"], r10["n_soru"])
+    ck.close("oy10.no_tool", s10["pretraining_55m_no_tool_acc"], r10["aracsiz_dogruluk"], 1e-4)
+    ck.close("oy10.call_rate", s10["pretraining_55m_call_rate"], r10["toolrunner_cagri_orani"], 1e-4)
+    ck.close("oy10.tool_acc", s10["pretraining_55m_tool_acc"], r10["toolrunner_dogruluk"], 1e-4)
+    ck.close("oy10.gain", s10["pretraining_55m_gain_pp"], r10["kazanc_puan"], 1e-4)
 
 
 def main() -> int:
-    summary = _load_json(SUMMARY_PATH)
+    summary = load_json(SUMMARY_PATH)
     studies = summary["studies"]
     ck = CellChecker()
 
     _verify_arch_study(ck, studies["architecture_v2_1_2m"])
-    oy14 = _load_json(RAW_DIR / "oy1_4_sonuclari.json")
-    oy56 = _load_json(RAW_DIR / "oy5_6_sonuclari.json")
-    oy7 = _load_json(RAW_DIR / "oy7_rsi_sonuclari.json")
-    oy8 = _load_json(RAW_DIR / "oy8_halka_tampon.json")
-    oy_gate = _load_json(RAW_DIR / "dogrulama_kapisi_oy.json")
+    oy14 = load_json(RAW_DIR / "oy1_4_sonuclari.json")
+    oy56 = load_json(RAW_DIR / "oy5_6_sonuclari.json")
+    oy7 = load_json(RAW_DIR / "oy7_rsi_sonuclari.json")
+    oy8 = load_json(RAW_DIR / "oy8_halka_tampon.json")
+    oy_gate = load_json(RAW_DIR / "dogrulama_kapisi_oy.json")
+    base55 = load_json(RAW_DIR / "taban_55m_degerlendirme.json")
     oy = studies["self_capabilities_v2_1_2m"]
+
     _verify_oy1_k3(ck, oy14, oy_gate, oy)
-    _verify_oy3_cal(ck, oy14, oy)
-    _verify_oy4_mtp(ck, oy14, oy)
-    _verify_oy5_6(ck, oy56, oy)
-    _verify_oy7_8(ck, oy14, oy56, oy7, oy8, oy)
-    _verify_55m_gates(ck, studies["diogenes_rdfl_55m_gates"])
+    _verify_oy2(ck, oy14, oy)
+    _verify_oy3(ck, oy14, oy)
+    _verify_oy4_and_oy5(ck, oy14, oy56, oy)
+    _verify_oy6(ck, oy56, oy)
+    _verify_oy7_8_10(ck, oy14, oy56, oy7, oy8, base55, oy)
+    verify_55m_and_live(ck, RAW_DIR, studies["diogenes_rdfl_55m_gates"], summary["in_progress_live_observations"])
 
     if ck.errors:
         for err in ck.errors:

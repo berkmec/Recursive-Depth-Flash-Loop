@@ -96,6 +96,28 @@ def _log_y(val: float, my0: float, mph: float) -> float:
     return my0 - mph * (math.log10(max(1.0, val)) / 3.0)
 
 
+def _draw_memory_points(
+    s: list[str],
+    xs: list[float],
+    seq_lens: list[int],
+    kv_mibs: list[float],
+    gdn_mibs: list[float],
+    my0: float,
+    mph: float,
+) -> None:
+    for idx, (x, sl, kv, gd) in enumerate(zip(xs, seq_lens, kv_mibs, gdn_mibs, strict=True)):
+        s.append(f'  <circle cx="{x:.1f}" cy="{_log_y(kv, my0, mph):.1f}" r="4.4" fill="{AMBER_STROKE}"/>\n')
+        s.append(f'  <circle cx="{x:.1f}" cy="{_log_y(gd, my0, mph):.1f}" r="4.4" fill="{TEAL_STROKE}"/>\n')
+        lbl = f"{sl // 1024}K" if sl >= 1024 else str(sl)
+        s.append(txt(x, my0 + 22, lbl, 12, INK))
+        if idx < len(seq_lens) - 1:
+            lbl_x = x + 10 if idx == 0 else x
+            lbl_anchor = "start" if idx == 0 else "middle"
+            s.append(
+                txt(lbl_x, _log_y(kv, my0, mph) - 10, f"{kv:.0f} MiB", 11, AMBER_TEXT, anchor=lbl_anchor)
+            )
+
+
 def _draw_panel_b_memory(
     s: list[str],
     gpu_profile: dict[str, Any],
@@ -117,13 +139,7 @@ def _draw_panel_b_memory(
     gdn_pts = " ".join(f"{x:.1f},{_log_y(v, my0, mph):.1f}" for x, v in zip(xs, gdn_mibs, strict=True))
     s.append(f'  <polyline points="{kv_pts}" fill="none" stroke="{AMBER_STROKE}" stroke-width="2.4"/>\n')
     s.append(f'  <polyline points="{gdn_pts}" fill="none" stroke="{TEAL_STROKE}" stroke-width="2.4"/>\n')
-    for idx, (x, sl, kv, gd) in enumerate(zip(xs, seq_lens, kv_mibs, gdn_mibs, strict=True)):
-        s.append(f'  <circle cx="{x:.1f}" cy="{_log_y(kv, my0, mph):.1f}" r="4.4" fill="{AMBER_STROKE}"/>\n')
-        s.append(f'  <circle cx="{x:.1f}" cy="{_log_y(gd, my0, mph):.1f}" r="4.4" fill="{TEAL_STROKE}"/>\n')
-        lbl = f"{sl // 1024}K" if sl >= 1024 else str(sl)
-        s.append(txt(x, my0 + 22, lbl, 12, INK))
-        if idx < len(seq_lens) - 1:
-            s.append(txt(x, _log_y(kv, my0, mph) - 10, f"{kv:.0f} MiB", 11, AMBER_TEXT))
+    _draw_memory_points(s, xs, seq_lens, kv_mibs, gdn_mibs, my0, mph)
 
     ratio_x = float(mem_summary["decode_32k_reduction_factor_exact"])
     s.append(txt(mx0 + mpw / 2, my0 + 46, "Measured Sequence Length T (bytes; log axis)", 13, MUTED))

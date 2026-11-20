@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import cast
 
 import torch
 import torch.nn.functional as F
@@ -92,11 +93,12 @@ class RDFLModel(nn.Module):
         return h, new_gdn
 
     def _init_slot_state(self, batch: int, h0: Tensor, state: RDFLState | None) -> Tensor:
+        slot_dt = torch.float64 if h0.dtype == torch.float64 else torch.float32
         if state is not None:
-            return state.slot_state
+            return state.slot_state.to(device=h0.device, dtype=slot_dt)
         if self.boundary is not None:
-            return self.boundary.initial_state(batch).to(device=h0.device, dtype=h0.dtype)
-        return h0.new_zeros(batch, 1, self.cfg.d_model)
+            return self.boundary.initial_state(batch, dtype=slot_dt).to(device=h0.device)
+        return h0.new_zeros(batch, 1, self.cfg.d_model, dtype=slot_dt)
 
     def _run_chunk(
         self,
@@ -127,7 +129,9 @@ class RDFLModel(nn.Module):
         h0 = self.emb(x)
         anchor = self.n_anchor(h0)
         bas_pos = 0 if state is None else state.pos
-        gdn_in = [None] * self.cfg.num_loops if state is None else list(state.gdn_states)
+        gdn_in: list[tuple[Tensor, Tensor | None] | None] = (
+            [None] * self.cfg.num_loops if state is None else list(state.gdn_states)
+        )
         slot_st = self._init_slot_state(b, h0, state)
 
         r1_chunks, final_chunks = [], []
@@ -220,7 +224,8 @@ class ZeroDiffRDFLAdapter(nn.Module):
         b, t, _ = z_base.shape
         z0 = self.down(self.n_in(z_base))
         anchor = self.n_anchor(z0)
-        slot_st = self.boundary.initial_state(b).to(device=z_base.device, dtype=z0.dtype)
+        slot_dt = torch.float64 if z0.dtype == torch.float64 else torch.float32
+        slot_st = self.boundary.initial_state(b, dtype=slot_dt).to(device=z_base.device)
         gdn_states: list[tuple[Tensor, Tensor | None] | None] = [None] * self.num_loops
         chunks: list[Tensor] = []
         for start in range(0, t, self.chunk_size):
@@ -236,4 +241,4 @@ class ZeroDiffRDFLAdapter(nn.Module):
                 slot_st = self.boundary.commit_boundary(slot_st, h_seg[:, -1])
             chunks.append(h_seg)
         delta_z = self.up(self.n_out(torch.cat(chunks, dim=1)))
-        return z_base + delta_z
+        return cast(Tensor, z_base + delta_z)

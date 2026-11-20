@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "checkpoint_label": "artifacts/diogenes_rdfl_55m/ana_egitim/son.pt",
+    "checkpoint_step": 21000,
+    "eval_source": "mix/validation.bin[0:1024]",
+    "chunk_size": 64,
+    "chunks_evaluated": 16,
+    "bytes_evaluated": 1024,
+    "num_slots": 4,
+    "d_narrow": 384,
+    "device": "cpu"
+  },
+  "init_slots": {
+    "pairwise_cosine": {
+      "s0_s1": 0.632262,
+      "s0_s2": 0.751166,
+      "s0_s3": 0.644498,
+      "s1_s2": 0.664034,
+      "s1_s3": 0.501693,
+      "s2_s3": 0.674019
+    },
+    "cos_mean": 0.644612,
+    "cos_min": 0.501693,
+    "cos_max": 0.751166,
+    "slot_norms": [
+      0.7422,
+      0.6078,
+      0.6601,
+      0.7664
+    ],
+    "norm_mean": 0.6941
+  },
+  "post_16_chunks_slots": {
+    "pairwise_cosine": {
+      "s0_s1": 0.999998,
+      "s0_s2": 0.999999,
+      "s0_s3": 0.999959,
+      "s1_s2": 0.999999,
+      "s1_s3": 0.999972,
+      "s2_s3": 0.999965
+    },
+    "cos_mean": 0.999982,
+    "cos_min": 0.999959,
+    "cos_max": 0.999999,
+    "slot_norms": [
+      664.4394,
+      664.9257,
+      664.5238,
+      664.1828
+    ],
+    "norm_mean": 664.5179
+  }
+}

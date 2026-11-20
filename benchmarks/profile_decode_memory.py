@@ -46,7 +46,7 @@ def measure_gdn_6l_o1(
     num_layers: int = 6,
     d_model: int = 768,
     num_heads: int = 8,
-) -> dict[str, float | int]:
+) -> dict[str, float | int | str]:
     """Measure 6-layer GatedDeltaNet O(1) step() state (FP32 S + FP16 short-conv) on CPU."""
     layer = GatedDeltaNetLayer(d_model=d_model, num_heads=num_heads).eval().to(dtype=torch.float16)
     x_step = torch.zeros((1, 1, d_model), dtype=torch.float16, device="cpu")
@@ -75,12 +75,19 @@ def measure_default_rdfl_state(dtype: torch.dtype) -> dict[str, float | int | st
     model = RDFLModel(cfg).eval().to(dtype=dtype)
     x_step = torch.zeros((1, 1), dtype=torch.long, device="cpu")
     _, state = model.step(x_step)
-    gdn_s_bytes = sum(_tensor_nbytes(s) for s, _ in state.gdn_states if s is not None)
-    conv_bytes = sum(_tensor_nbytes(c) for _, c in state.gdn_states if c is not None)
+    gdn_s_bytes = sum(
+        _tensor_nbytes(item[0]) for item in state.gdn_states if item is not None
+    )
+    conv_bytes = sum(
+        _tensor_nbytes(item[1])
+        for item in state.gdn_states
+        if item is not None and item[1] is not None
+    )
     slot_bytes = _tensor_nbytes(state.slot_state)
     total_bytes = gdn_s_bytes + conv_bytes + slot_bytes
     return {
         "activation_dtype": str(dtype).replace("torch.", ""),
+        "slot_state_dtype": str(state.slot_state.dtype).replace("torch.", ""),
         "total_params": int(sum(p.numel() for p in model.parameters())),
         "num_loops": cfg.num_loops,
         "num_slots": cfg.num_slots,

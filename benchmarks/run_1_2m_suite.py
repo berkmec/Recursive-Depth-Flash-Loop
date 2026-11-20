@@ -7,6 +7,7 @@ import json
 import sys
 import time
 from pathlib import Path
+from typing import cast
 
 import torch
 import torch.nn.functional as F
@@ -44,7 +45,7 @@ class _RLT0Block(nn.Module):
         )
         y = F.scaled_dot_product_attention(q, k, v, is_causal=True)
         x = x + self.out_proj(y.transpose(1, 2).reshape(b, t, d))
-        return x + self.ffn(self.n_ffn(x))
+        return cast(Tensor, x + self.ffn(self.n_ffn(x)))
 
 
 class _RLT0Model(nn.Module):
@@ -64,7 +65,7 @@ class _RLT0Model(nn.Module):
         h = self.emb(x)
         for blk in self.blocks:
             h = blk(h)
-        return self.head(self.final_norm(h))
+        return cast(Tensor, self.head(self.final_norm(h)))
 
 
 class _PureGDNModel(nn.Module):
@@ -86,7 +87,7 @@ class _PureGDNModel(nn.Module):
         y, _ = self.gdn(self.n_gdn(h))
         h = h + y
         h = h + self.ffn(self.n_ffn(h))
-        return self.head(self.final_norm(h))
+        return cast(Tensor, self.head(self.final_norm(h)))
 
 
 def build_arm(arm: str, d_model: int, num_heads: int, ffn_dim: int, chunk_size: int) -> nn.Module:
@@ -189,7 +190,7 @@ def run_single_experiment(
         logits = model(x.to(device))
         loss, _ = _masked_loss_and_acc(logits, y.to(device), mask.to(device))
         opt.zero_grad(set_to_none=True)
-        loss.backward()
+        loss.backward()  # type: ignore[no-untyped-call]
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
         last_loss = float(loss.item())

@@ -13,6 +13,7 @@ Implements:
 from __future__ import annotations
 
 import math
+from typing import cast
 
 import torch
 import torch.nn.functional as F
@@ -42,7 +43,7 @@ class SwiGLU(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         a, b = self.up(x).chunk(2, dim=-1)
-        return self.out(F.silu(a) * b)
+        return cast(Tensor, self.out(F.silu(a) * b))
 
 
 class CausalShortConv(nn.Module):
@@ -209,7 +210,7 @@ class BdhSparseGate(nn.Module):
 
     def forward(self, x: Tensor, y: Tensor) -> Tensor:
         act = F.relu(self.enc_x(x)) * F.relu(self.enc_y(y))
-        return self.dec(act)
+        return cast(Tensor, self.dec(act))
 
 
 class Fp32SlotCoreBoundary(nn.Module):
@@ -231,35 +232,41 @@ class Fp32SlotCoreBoundary(nn.Module):
         self.slot_update = nn.Linear(2 * d_model, d_model, bias=True)
         self.init_slots = nn.Parameter(torch.randn(1, num_slots, d_model) * 0.02)
 
-    def initial_state(self, batch: int) -> Tensor:
-        return self.init_slots.expand(batch, -1, -1).clone()
+    def initial_state(self, batch: int, dtype: torch.dtype | None = None) -> Tensor:
+        dt = torch.float64 if dtype == torch.float64 else torch.float32
+        return self.init_slots.to(dtype=dt).expand(batch, -1, -1).clone()
 
     def apply_feedback(self, chunk: Tensor, slots: Tensor) -> Tensor:
-        pooled = slots.mean(dim=1)
+        pooled = slots.mean(dim=1).to(device=chunk.device, dtype=chunk.dtype)
         r = self.pn(pooled).unsqueeze(1).expand_as(chunk)
         g = torch.sigmoid(self.gate(torch.cat([chunk, r], dim=-1)))
-        return chunk + self.alpha * g * self.merge(r)
+        return cast(Tensor, chunk + self.alpha * g * self.merge(r))
 
-    def _slot_message_fp32(self, slots: Tensor) -> Tensor:
+    def _slot_message_fp32(self, slots: Tensor, dt: torch.dtype) -> Tensor:
         s = slots.shape[1]
-        dt = torch.float64 if slots.dtype == torch.float64 else torch.float32
-        with torch.autocast(device_type=slots.device.type, enabled=False):
-            yn = self.slot_norm(slots).to(dt)
-            q = F.linear(yn, self.q_proj.weight.to(dt))
-            k = F.linear(yn, self.k_proj.weight.to(dt))
-            v = F.linear(yn, self.v_proj.weight.to(dt))
-            scores = torch.matmul(q, k.transpose(-1, -2)) / math.sqrt(self.d_model)
-            diag = torch.eye(s, device=slots.device, dtype=torch.bool).unsqueeze(0)
-            weights = torch.softmax(scores.masked_fill(diag, -1e9), dim=-1)
-            out = F.linear(torch.matmul(weights, v), self.o_proj.weight.to(dt))
-        return out.to(slots.dtype)
+        norm = slots * torch.rsqrt(slots.pow(2).mean(dim=-1, keepdim=True) + self.slot_norm.eps)
+        yn = norm * self.slot_norm.weight.to(dt)
+        q = F.linear(yn, self.q_proj.weight.to(dt))
+        k = F.linear(yn, self.k_proj.weight.to(dt))
+        v = F.linear(yn, self.v_proj.weight.to(dt))
+        scores = torch.matmul(q, k.transpose(-1, -2)) / math.sqrt(self.d_model)
+        diag = torch.eye(s, device=slots.device, dtype=torch.bool).unsqueeze(0)
+        weights = torch.softmax(scores.masked_fill(diag, -1e9), dim=-1)
+        return F.linear(torch.matmul(weights, v), self.o_proj.weight.to(dt))
 
     def commit_boundary(self, slots: Tensor, chunk_end_state: Tensor) -> Tensor:
         b, s, d = slots.shape
-        summary = chunk_end_state.unsqueeze(1).expand(b, s, d)
-        updated = slots + 0.1 * torch.tanh(self.slot_update(torch.cat([slots, summary], dim=-1)))
-        if s > 1:
-            updated = updated + 0.15 * self._slot_message_fp32(updated)
+        is_f64 = slots.dtype == torch.float64 or chunk_end_state.dtype == torch.float64
+        dt = torch.float64 if is_f64 else torch.float32
+        with torch.autocast(device_type=slots.device.type, enabled=False):
+            sl_f = slots.to(dt)
+            summary = chunk_end_state.to(dt).unsqueeze(1).expand(b, s, d)
+            cat_in = torch.cat([sl_f, summary], dim=-1)
+            upd_bias = None if self.slot_update.bias is None else self.slot_update.bias.to(dt)
+            delta = torch.tanh(F.linear(cat_in, self.slot_update.weight.to(dt), upd_bias))
+            updated = sl_f + 0.1 * delta
+            if s > 1:
+                updated = updated + 0.15 * self._slot_message_fp32(updated, dt)
         return updated
 
 
@@ -275,4 +282,4 @@ class BottleneckAdapter(nn.Module):
         nn.init.zeros_(self.up.weight)
 
     def forward(self, z: Tensor) -> Tensor:
-        return z + self.up(F.silu(self.down(z)))
+        return cast(Tensor, z + self.up(F.silu(self.down(z))))

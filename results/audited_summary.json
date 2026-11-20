@@ -1,11 +1,11 @@
 {
   "project": "Recursive Depth Flash Loop (RDFL)",
-  "updated_at": "2026-11-20T07:40:00+03:00",
+  "updated_at": "2026-11-20T08:08:00+03:00",
   "hardware": "Single NVIDIA RTX 2060 SUPER (8 GiB Turing FP16)",
   "raw_artifacts_dir": "results/raw",
   "studies": {
     "architecture_v2_1_2m": {
-      "audit_status": "PASS (Independent Zero-Context Closure Audit, 411/411 cells verified)",
+      "audit_status": "PASS (Independent Zero-Context Closure Audit; 204 controlled runs)",
       "frozen_code_hash": "ab9e7db6220038a6",
       "total_gpu_runs": 204,
       "core_186_runs_fp16_nans": 0,
@@ -94,10 +94,14 @@
         }
       },
       "structural_ablations": {
-        "A6_R4_cipali": {"multihop_3hop_mean": 22.72, "multihop_3hop_std": 1.3, "byte_lm_bpb_mean": 2.2896, "byte_lm_kb_s": 19.0},
-        "A6_R2_cipali": {"multihop_3hop_mean": 23.28, "multihop_3hop_std": 0.92, "byte_lm_bpb_mean": 2.2903, "byte_lm_kb_s": 34.43},
-        "A6_R1_cipali": {"multihop_3hop_mean": 18.0, "multihop_3hop_std": 8.27, "byte_lm_bpb_mean": 2.3044, "byte_lm_kb_s": 59.2},
-        "A6_R4_rlt2siz": {"multihop_3hop_mean": 10.32, "multihop_3hop_std": 11.2, "byte_lm_bpb_mean": 2.279, "byte_lm_kb_s": 46.73}
+        "anchor_ablation_finding": "At 1.20M, unanchored A6_R4_cipasiz matches anchored A6_R4_cipali on Multi-Hop ICL (22.69+-1.76% vs 22.72+-1.30%) and is slightly better on Byte LM (2.2843 vs 2.2896 bpb); similarly A5_R4_cipasiz beats A5_R4_cipali on both metrics. RDFL's core gain comes from GatedDeltaNet + BDH + RLT-2 synergy rather than input anchoring alone.",
+        "A6_R4_cipali": {"multihop_3hop_mean": 22.72, "multihop_3hop_std": 1.3, "byte_lm_bpb_mean": 2.2896, "byte_lm_bpb_std": 0.006, "byte_lm_kb_s": 19.0},
+        "A6_R4_cipasiz": {"multihop_3hop_mean": 22.69, "multihop_3hop_std": 1.76, "byte_lm_bpb_mean": 2.2843, "byte_lm_bpb_std": 0.0065, "byte_lm_kb_s": 19.53},
+        "A6_R2_cipali": {"multihop_3hop_mean": 23.28, "multihop_3hop_std": 0.92, "byte_lm_bpb_mean": 2.2903, "byte_lm_bpb_std": 0.0019, "byte_lm_kb_s": 34.43},
+        "A6_R1_cipali": {"multihop_3hop_mean": 18.0, "multihop_3hop_std": 8.27, "byte_lm_bpb_mean": 2.3044, "byte_lm_bpb_std": 0.0055, "byte_lm_kb_s": 59.2},
+        "A6_R4_rlt2siz": {"multihop_3hop_mean": 10.32, "multihop_3hop_std": 11.2, "byte_lm_bpb_mean": 2.279, "byte_lm_bpb_std": 0.0059, "byte_lm_kb_s": 46.73},
+        "A5_R4_cipali": {"multihop_3hop_mean": 3.29, "multihop_3hop_std": 0.39, "byte_lm_bpb_mean": 2.4676, "byte_lm_bpb_std": 0.0041, "byte_lm_kb_s": 86.5},
+        "A5_R4_cipasiz": {"multihop_3hop_mean": 3.71, "multihop_3hop_std": 0.74, "byte_lm_bpb_mean": 2.4379, "byte_lm_bpb_std": 0.0145, "byte_lm_kb_s": 87.7}
       },
       "memory_scaling": {
         "backbone_spec": "L=6, d=768, H=8 (d_h=96)",
@@ -112,13 +116,14 @@
       }
     },
     "self_capabilities_v2_1_2m": {
-      "audit_status": "PASS (Independent Zero-Context Closure Audit, 662/662 cells verified)",
+      "audit_status": "PASS (Independent Zero-Context Closure Audit; OY-1..OY-8 audited in raw JSONs; OY-9 deferred; OY-10 pre-training 55M baseline only)",
       "frozen_code_hash": "c8c2744cd90baca1",
       "unseen_seeds": [42, 137, 2026],
       "calibration_seed_disjoint": 401,
       "fp16_nans": 0,
       "peak_vram_mib": 1705.7,
       "oy1_k3_early_exit": {
+        "verdict": "ADOPT",
         "r1_bpb_before": 2.8886,
         "r1_bpb_after": 2.4987,
         "r1_gain_bpb": -0.3899,
@@ -129,9 +134,22 @@
         "speculative_byte_diff": 0,
         "speculative_flop_speedup_k2_k4": [1.4812, 1.5357],
         "wall_speedup_k3_k2": 1.0881,
+        "wall_speedup_k3_k4": 0.991,
         "wall_speedup_k1_k4": 1.276
       },
+      "oy2_adaptive_depth": {
+        "verdict": "CONDITIONAL (Lossy early exit; superseded by lossless K3 speculative decode)",
+        "byte_lm_chunk_b32_flop_save_pct": 25.69,
+        "byte_lm_chunk_b32_delta_bpb": 0.0444,
+        "byte_lm_chunk_b32_delta_acc_pp": -0.94,
+        "byte_lm_step_flop_save_pct": 30.57,
+        "byte_lm_step_delta_bpb": 0.1234,
+        "graf_chunk_b32_flop_save_pct": 36.38,
+        "graf_chunk_b32_delta_bpb": 0.0662,
+        "graf_chunk_b32_delta_acc_pp": 0.23
+      },
       "oy3_msp_calibration": {
+        "verdict": "ADOPT",
         "byte_lm_auroc": 0.8424,
         "byte_lm_ece15": 0.01164,
         "abstain40_acc_before": 52.68,
@@ -142,6 +160,7 @@
         "graf_ece_reduction_x": 8.32
       },
       "oy4_mtp4_at_1_2m": {
+        "verdict": "ADOPT_AT_55M_PLUS",
         "byte_lm_ntp_bpb": 2.3626,
         "byte_lm_mtp4_bpb": 2.3949,
         "byte_lm_tax_bpb": 0.0323,
@@ -151,13 +170,14 @@
         "structural_acc_t2_t3_t4": [71.17, 71.69, 64.05]
       },
       "oy5_prompt_self_correction": {
-        "status": "REJECTED",
+        "verdict": "REJECT",
         "d0_draft_acc": 87.37,
         "d1_d2_after_revision_acc": [48.44, 49.22],
         "zero_param_logp_auroc": 0.9513,
         "mlp_verifier_auroc": 0.5867
       },
       "oy6_fp32_slotcore": {
+        "verdict": "ADOPT_WITH_CAVEATS (symmetry collapse + iso-param LM tax)",
         "runs_zero_nan": 36,
         "total_runs": 36,
         "mqar_acc_mean": 99.88,
@@ -172,6 +192,11 @@
         "titans_a_graf_std": 20.19,
         "std_reduction_x": 37.34,
         "bdh_vs_bdhless_byte_lm_delta_bpb": -0.0071,
+        "slot_byte_lm_bpb_mean": 2.3819,
+        "slot_byte_lm_bpb_std": 0.0055,
+        "baseline_byte_lm_bpb_mean": 2.3646,
+        "baseline_byte_lm_bpb_std": 0.0017,
+        "slot_vs_baseline_byte_lm_delta_bpb": 0.0173,
         "graf_izli_per_seed": {
           "seeds": [42, 137, 2026],
           "OY6_A6_TABAN": [99.6, 99.77, 4.89],
@@ -181,6 +206,7 @@
         }
       },
       "oy7_bounded_rsi_75gens": {
+        "verdict": "ADOPT_BOUNDED",
         "total_generations": 75,
         "blind_rsi1_lm_bpb": 7.5162,
         "blind_rsi1_id_acc": 63.54,
@@ -196,11 +222,25 @@
         "ood_far_l78_acc": 0.0
       },
       "oy8_zero_retention_ring": {
+        "verdict": "ADOPT",
         "vram_mib": 0.0,
         "stream_mib": 32.0,
         "peak_disk_mib": 4.0,
         "final_disk_mib": 0.0,
         "receipt_lock": true
+      },
+      "oy9_self_editing_seal": {
+        "verdict": "DEFERRED_OUT_OF_SCOPE",
+        "note": "Online weight self-editing (SEAL / E-SELF / E-PRED) was deferred to future work after literature review; no standalone experimental run is claimed."
+      },
+      "oy10_toolrunner": {
+        "verdict": "PRE_TRAINING_BASELINE_ONLY",
+        "note": "ToolRunner execution harness resides in the external training repository; the only raw measurement currently in this repo is the pre-training 55M baseline (0.0% call rate / 0.0% accuracy across 24 arithmetic prompts). Post-training 55M ToolRunner evaluation is pending completion of the ongoing 42K adaptation.",
+        "pretraining_55m_n_questions": 24,
+        "pretraining_55m_no_tool_acc": 0.0,
+        "pretraining_55m_call_rate": 0.0,
+        "pretraining_55m_tool_acc": 0.0,
+        "pretraining_55m_gain_pp": 0.0
       }
     },
     "diogenes_rdfl_55m_gates": {
@@ -223,6 +263,16 @@
         "smoke_12steps_nan": 0,
         "peak_vram_mib": 3438.7,
         "passed": true
+      },
+      "pretrained_base_step0_fast_val": {
+        "eval_protocol": "fast-val (n_mix=4 batches, n_sft=200 SFT lines)",
+        "lm_bits_512": 1.1268,
+        "r1_lm_bits_512": 1.1268,
+        "lm_bits_2048": 1.0419,
+        "sft_val_bits": 1.2416,
+        "mtp_t2_acc": 0.1006,
+        "mtp_t3_acc": 0.0922,
+        "mtp_t4_acc": 0.1071
       },
       "hour1_mtp4_ab_1500steps": {
         "control_scope_note": "G0 vs. G1 isolates MTP-4 (lam_mtp=0 vs 0.15) with RDFL enabled in both arms; a dedicated RDFL-off continued-pretraining control (G_BASE_ONLY, 1.5K steps) is scheduled immediately after the ongoing 42K run.",
@@ -249,17 +299,22 @@
         "delta_lm_2048": 0.0018,
         "winner": "G1_MTP4_TAM_YAYILIM"
       },
-      "baseline_55m_eval": {
+      "baseline_55m_full_battery": {
+        "eval_protocol": "full-val (n_mix=8 batches, n_sft=400 SFT lines; slotcore ablation inside same file uses fast-val n_mix=4)",
+        "mix_val_512_r2_bpb": 1.1549,
+        "mix_val_2048_r2_bpb": 1.0718,
+        "sft_val_bits": 1.2567,
+        "mtp4_step0_wall_speedup": 0.501,
         "msp_mix_val_auroc": 0.8994,
         "msp_sft_val_auroc": 0.9041,
         "sft_acc_full": 0.7465,
         "sft_acc_abstain40": 0.9535,
-        "baseline_lm_2048": 1.0419
+        "slotcore_fast_val_lm_2048": 1.0419
       }
     }
   },
   "in_progress_live_observations": {
-    "audit_status": "PRELIMINARY_IN_PROGRESS (live 42,000-step run on RTX 2060S; full post-training audit pending)",
+    "audit_status": "PRELIMINARY_IN_PROGRESS (live 42,000-step run on RTX 2060S; raw fast-val snapshot & CPU SlotCore probe verified against results/raw/)",
     "preliminary_step_7000": {
       "lm_bits_512": 1.1207,
       "k3_r1_bits_512": 1.1198,
@@ -280,14 +335,31 @@
       "mtp_t4_acc": 0.3447,
       "peak_vram_mib": 3442.7
     },
+    "preliminary_step_21000": {
+      "lm_bits_512": 1.1197,
+      "k3_r1_bits_512": 1.1201,
+      "lm_bits_2048": 1.0254,
+      "sft_val_bits": 1.2485,
+      "mtp_t2_acc": 0.5494,
+      "mtp_t3_acc": 0.4288,
+      "mtp_t4_acc": 0.3535,
+      "peak_vram_mib": 3442.7
+    },
     "mechanistic_finding_slotcore_symmetry_collapse": {
-      "checkpoint_step": 17500,
+      "raw_probe_file": "results/raw/slotcore_55m_cosine_probe.json",
+      "checkpoint_step": 21000,
       "chunks_evaluated": 16,
       "bytes_evaluated": 1024,
-      "init_slots_pairwise_cosine_range": [0.48, 0.69],
-      "post_16_chunks_pairwise_cosine": 1.0,
-      "post_16_chunks_slot_norm_approx": 577.0,
-      "interpretation": "In the live 55M checkpoint, symmetric broadcast of chunk_end_state into all S=4 slots without slot-axis competition or norm damping drives pairwise slot cosine similarity from 0.48-0.69 (init) to 1.0000 with norm ~577 after 16 chunks. Empirical gains therefore arise from an accumulative FP32 chunk-boundary residual state rather than 4 specialized slots.",
+      "init_slots_cos_min": 0.501693,
+      "init_slots_cos_max": 0.751166,
+      "init_slots_cos_mean": 0.644612,
+      "init_slots_norm_mean": 0.6941,
+      "post_16_chunks_cos_mean": 0.999982,
+      "post_16_chunks_cos_min": 0.999959,
+      "post_16_chunks_cos_max": 0.999999,
+      "post_16_chunks_norm_mean": 664.5179,
+      "earlier_step17500_observation": "cos 0.48-0.69 -> 1.0000, norm ~577 (continues growing to 664.5 at step 21,000 without damping)",
+      "interpretation": "In the live 55M checkpoint, symmetric broadcast of chunk_end_state into all S=4 slots without slot-axis competition or norm damping drives pairwise slot cosine similarity from 0.50-0.75 (init mean 0.6446) to 0.999982 (min 0.999959) with mean norm 664.5 after 16 real chunks. Empirical gains therefore arise from an accumulative FP32 chunk-boundary residual state rather than 4 specialized slots.",
       "planned_v0_3_design": "Competitive slot-axis SlotAttention routing with per-slot RMSNorm and learned contraction/damping."
     }
   }

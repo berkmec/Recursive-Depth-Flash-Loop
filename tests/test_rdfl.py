@@ -9,6 +9,7 @@ import torch
 import torch.nn.functional as F
 
 from rdfl import (
+    BottleneckAdapter,
     RDFLConfig,
     RDFLModel,
     ZeroDiffRDFLAdapter,
@@ -63,10 +64,12 @@ class TestRDFL(unittest.TestCase):
         x = torch.randint(0, 256, (2, 16))
         y = torch.randint(0, 256, (2, 16))
         _, logits_r1, _, _ = model.forward_stateful(x)
-        F.cross_entropy(logits_r1.reshape(-1, 256), y.reshape(-1)).backward()
+        F.cross_entropy(logits_r1.reshape(-1, 256), y.reshape(-1)).backward()  # type: ignore[no-untyped-call]
         self.assertIsNone(model.gdn.qkv.weight.grad)
         self.assertIsNone(model.emb.weight.grad)
-        self.assertGreater(float(model.k3_adapter.up.weight.grad.abs().sum().item()), 0.0)
+        k3_grad = model.k3_adapter.up.weight.grad
+        assert k3_grad is not None
+        self.assertGreater(float(k3_grad.abs().sum().item()), 0.0)
 
     def test_05_mtp4_propagation_vs_stop_grad(self) -> None:
         x = torch.randint(0, 256, (2, 16))
@@ -74,15 +77,21 @@ class TestRDFL(unittest.TestCase):
         m_full = RDFLModel(RDFLConfig(d_model=48, num_heads=4, ffn_dim=96, mtp_stop_grad=False))
         _, _, hn, _ = m_full.forward_stateful(x)
         mtp_lg = m_full.mtp_logits(hn)
-        F.cross_entropy(mtp_lg[0][:, :-1].reshape(-1, 256), y[:, 1:].reshape(-1)).backward()
-        self.assertGreater(float(m_full.gdn.qkv.weight.grad.abs().sum().item()), 0.0)
+        F.cross_entropy(mtp_lg[0][:, :-1].reshape(-1, 256), y[:, 1:].reshape(-1)).backward()  # type: ignore[no-untyped-call]
+        qkv_grad = m_full.gdn.qkv.weight.grad
+        assert qkv_grad is not None
+        self.assertGreater(float(qkv_grad.abs().sum().item()), 0.0)
 
         m_stop = RDFLModel(RDFLConfig(d_model=48, num_heads=4, ffn_dim=96, mtp_stop_grad=True))
         _, _, hn2, _ = m_stop.forward_stateful(x)
         mtp_lg2 = m_stop.mtp_logits(hn2)
-        F.cross_entropy(mtp_lg2[0][:, :-1].reshape(-1, 256), y[:, 1:].reshape(-1)).backward()
+        F.cross_entropy(mtp_lg2[0][:, :-1].reshape(-1, 256), y[:, 1:].reshape(-1)).backward()  # type: ignore[no-untyped-call]
         self.assertIsNone(m_stop.gdn.qkv.weight.grad)
-        self.assertGreater(float(m_stop.mtp_heads[0].up.weight.grad.abs().sum().item()), 0.0)
+        head0 = m_stop.mtp_heads[0]
+        assert isinstance(head0, BottleneckAdapter)
+        head_grad = head0.up.weight.grad
+        assert head_grad is not None
+        self.assertGreater(float(head_grad.abs().sum().item()), 0.0)
 
     def test_06_calibration_and_exact_3d_reverse_kl(self) -> None:
         gen = torch.Generator().manual_seed(42)
@@ -96,6 +105,11 @@ class TestRDFL(unittest.TestCase):
         t_star = fit_temperature(lg, torch.randint(0, 256, (4, 32), generator=gen))
         self.assertTrue(0.4 <= t_star <= 2.0)
         self.assertEqual(auroc(np.array([0.9, 0.8, 0.2, 0.1]), np.array([1, 1, 0, 0])), 1.0)
+        self.assertEqual(auroc(np.array([0.5, 0.5]), np.array([1, 0])), 0.5)
+        self.assertEqual(auroc(np.array([0.5, 0.5, 0.5, 0.5]), np.array([1, 0, 1, 0])), 0.5)
+        self.assertAlmostEqual(
+            auroc(np.array([0.9, 0.5, 0.5, 0.1]), np.array([1, 1, 0, 0])), 0.875, places=6
+        )
         self.assertLess(ece_15(np.array([0.9, 0.9, 0.1, 0.1]), np.array([1, 1, 0, 0])), 0.15)
 
     def test_07_lossless_speculative_k3_and_mtp4(self) -> None:
@@ -118,7 +132,6 @@ class TestRDFL(unittest.TestCase):
         self.assertGreater(res_mtp.verify_calls, 0)
         self.assertGreater(res_mtp.proposed_drafts, 0)
 
-        # R=1 model with zero-init K3 adapter must achieve 100% draft acceptance and 0 rollbacks.
         cfg_r1 = RDFLConfig(
             d_model=48, num_heads=4, ffn_dim=96, num_loops=1, chunk_size=8, num_slots=0
         )
@@ -128,6 +141,26 @@ class TestRDFL(unittest.TestCase):
         self.assertEqual(int((res_r1.tokens != ref_r1).sum().item()), 0)
         self.assertEqual(res_r1.rollbacks, 0)
         self.assertEqual(res_r1.acceptance_rate, 1.0)
+
+    def test_08_fp32_slotcore_lock_under_fp16_and_autocast(self) -> None:
+        torch.manual_seed(23)
+        cfg = RDFLConfig(
+            d_model=48, num_heads=4, ffn_dim=96, num_loops=2, chunk_size=8, num_slots=4
+        )
+        x = torch.randint(0, 256, (1, 32))
+        m_fp16 = RDFLModel(cfg).half().eval()
+        with torch.no_grad():
+            logits_16, _, _, st_16 = m_fp16.forward_stateful(x)
+        self.assertEqual(st_16.slot_state.dtype, torch.float32)
+        self.assertTrue(bool(torch.isfinite(st_16.slot_state).all().item()))
+        self.assertTrue(bool(torch.isfinite(logits_16).all().item()))
+
+        m_bf16 = RDFLModel(cfg).eval()
+        with torch.no_grad(), torch.autocast(device_type="cpu", dtype=torch.bfloat16):
+            logits_bf, _, _, st_bf = m_bf16.forward_stateful(x)
+        self.assertEqual(st_bf.slot_state.dtype, torch.float32)
+        self.assertTrue(bool(torch.isfinite(st_bf.slot_state).all().item()))
+        self.assertTrue(bool(torch.isfinite(logits_bf).all().item()))
 
 
 if __name__ == "__main__":

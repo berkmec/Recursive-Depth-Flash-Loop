@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "kod_sha256": "3c1a59a1dd2bb0f7",
+    "eval_protocol": "fast_val (n_mix=4 batches, seeds 12345/54321; n_sft=200 SFT lines)",
+    "full_battery_note": "taban_55m_degerlendirme.json uses full_val (n_mix=8 batches, n_sft=400 SFT lines) yielding step-0 1.1549/1.0718/1.2567, whereas oy6_slotcore_ablasyon inside that file uses fast_val n_mix=4 yielding 1.0419.",
+    "run_status": "IN_PROGRESS (42,000-step adaptation)",
+    "source_label": "artifacts/diogenes_rdfl_55m/ana_egitim/dogrulama.jsonl"
+  },
+  "pretrained_base_step0_fast_val": {
+    "step": 0,
+    "tepe_vram_mib": 968.9,
+    "lm_bits_512": 1.1268,
+    "r1_lm_bits_512": 1.1268,
+    "lm_bits_2048": 1.0419,
+    "sft_val_bits": 1.2416,
+    "bilesik_skor": 1.12,
+    "mtp_t2_acc": 0.1006,
+    "mtp_t3_acc": 0.0922,
+    "mtp_t4_acc": 0.1071
+  },
+  "g0_control_step1500_fast_val": {
+    "step": 1500,
+    "tepe_vram_mib": 2981.9,
+    "lm_bits_512": 1.1232,
+    "r1_lm_bits_512": 1.1233,
+    "lm_bits_2048": 1.0344,
+    "sft_val_bits": 1.2415,
+    "bilesik_skor": 1.1158,
+    "mtp_t2_acc": 0.1015,
+    "mtp_t3_acc": 0.0928,
+    "mtp_t4_acc": 0.1072
+  },
+  "live_g1_trajectory_fast_val": [
+    {
+      "step": 0,
+      "tepe_vram_mib": 968.9,
+      "lm_bits_512": 1.1242,
+      "r1_lm_bits_512": 1.1237,
+      "lm_bits_2048": 1.0362,
+      "sft_val_bits": 1.241,
+      "bilesik_skor": 1.1167,
+      "mtp_t2_acc": 0.3408,
+      "mtp_t3_acc": 0.2464,
+      "mtp_t4_acc": 0.214
+    },
+    {
+      "step": 3500,
+      "tepe_vram_mib": 3442.3,
+      "lm_bits_512": 1.1229,
+      "r1_lm_bits_512": 1.1219,
+      "lm_bits_2048": 1.0329,
+      "sft_val_bits": 1.2432,
+      "bilesik_skor": 1.1155,
+      "mtp_t2_acc": 0.4914,
+      "mtp_t3_acc": 0.3707,
+      "mtp_t4_acc": 0.2983
+    },
+    {
+      "step": 7000,
+      "tepe_vram_mib": 3442.3,
+      "lm_bits_512": 1.1207,
+      "r1_lm_bits_512": 1.1198,
+      "lm_bits_2048": 1.0277,
+      "sft_val_bits": 1.2442,
+      "bilesik_skor": 1.1129,
+      "mtp_t2_acc": 0.5158,
+      "mtp_t3_acc": 0.396,
+      "mtp_t4_acc": 0.3239
+    },
+    {
+      "step": 10500,
+      "tepe_vram_mib": 3442.3,
+      "lm_bits_512": 1.1211,
+      "r1_lm_bits_512": 1.12,
+      "lm_bits_2048": 1.0292,
+      "sft_val_bits": 1.2456,
+      "bilesik_skor": 1.1138,
+      "mtp_t2_acc": 0.5289,
+      "mtp_t3_acc": 0.4081,
+      "mtp_t4_acc": 0.3304
+    },
+    {
+      "step": 14000,
+      "tepe_vram_mib": 3442.7,
+      "lm_bits_512": 1.1196,
+      "r1_lm_bits_512": 1.1195,
+      "lm_bits_2048": 1.0296,
+      "sft_val_bits": 1.244,
+      "bilesik_skor": 1.113,
+      "mtp_t2_acc": 0.5407,
+      "mtp_t3_acc": 0.424,
+      "mtp_t4_acc": 0.3435
+    },
+    {
+      "step": 17500,
+      "tepe_vram_mib": 3442.7,
+      "lm_bits_512": 1.1188,
+      "r1_lm_bits_512": 1.1187,
+      "lm_bits_2048": 1.0278,
+      "sft_val_bits": 1.2492,
+      "bilesik_skor": 1.113,
+      "mtp_t2_acc": 0.5416,
+      "mtp_t3_acc": 0.4247,
+      "mtp_t4_acc": 0.3447
+    },
+    {
+      "step": 21000,
+      "tepe_vram_mib": 3442.7,
+      "lm_bits_512": 1.1197,
+      "r1_lm_bits_512": 1.1201,
+      "lm_bits_2048": 1.0254,
+      "sft_val_bits": 1.2485,
+      "bilesik_skor": 1.1124,
+      "mtp_t2_acc": 0.5494,
+      "mtp_t3_acc": 0.4288,
+      "mtp_t4_acc": 0.3535
+    }
+  ]
+}

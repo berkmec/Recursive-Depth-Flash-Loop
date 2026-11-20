@@ -10,9 +10,9 @@ Autoregressive sequence models face a structural trade-off between **context hor
 
 - **Full Self-Attention** provides exact random access over $x_{1:t}$ at the cost of $O(T)$ decode memory: for a 6-layer backbone with $d = 768,\, H = 8\, (d_h = 96)$, FP16 KV-cache scales as `9.0 / 72.0 / 576.0 MiB` across $T \in \{512,\, 4{,}096,\, 32{,}768\}$.
 - **Windowed Attention** bounds cache size to $O(M)$ but drops all state beyond window length $M$.
-- **Unanchored Weight-Tied Recurrence** reuses parameters across depth iterations $r = 1,\dots,R$, yet suffers from optimization drift when hidden states are not re-anchored to the input representation.
+- **Pure Linear Recurrence** achieves $O(1)$ memory but requires Householder-range write gates ($\beta_t \in (0, 2)$) for negative-eigenvalue state transitions (`Parity-64`, `S5-Perm32`) and structured nonlinear / boundary feedback for multi-hop associative reasoning.
 
-**`RDFL`** resolves this trade-off through four mutually reinforcing mechanisms: (i) input-anchored weight-tied depth, (ii) chunk-parallel Gated DeltaNet with Householder-range write gates (`1.7139 MiB` exact $O(1)$ decode state for $L=6,\, d=768,\, H=8$, **`336.1×`** smaller than Full-KV at $T = 32{,}768$), (iii) doubly-sparse associative gating (`BDH`), and (iv) chunk-boundary `FP32 SlotCore` memory.
+**`RDFL`** combines four mechanisms: (i) weight-tied recursive depth (with optional input anchoring; see Section 2.3 ablation note), (ii) chunk-parallel Gated DeltaNet with Householder-range write gates (`1.7139 MiB` exact $O(1)$ decode state for $L=6,\, d=768,\, H=8$, **`336.1×`** smaller than Full-KV at $T = 32{,}768$), (iii) doubly-sparse associative gating (`BDH`), and (iv) chunk-boundary `FP32 SlotCore` memory.
 
 ---
 
@@ -24,27 +24,28 @@ Given a raw byte prefix $x_{1:t} \in \{0, \dots, 255\}^t$, a causal input trunk 
 $$z_t^0 = W_{\downarrow}\,\mathrm{RMSNorm}(z_t^{\text{base}}) \in \mathbb{R}^d, \qquad e_t = \mathrm{RMSNorm}(z_t^0)$$
 
 ### 2.2 Chunk-Boundary `FP32 SlotCore` Feedback and Symmetry-Collapse Diagnosis
-The sequence is partitioned into causal chunks of length $B$ (e.g., $B = 64$). A bank of $S$ working-memory slots $M_{c-1} \in \mathbb{R}^{S \times d}$ summarizes prior chunks $1, \dots, c-1$. Before chunk $c$ enters the recursive loop, its mean-pooled summary injects gated boundary feedback:
+The sequence is partitioned into causal chunks of length $B$ (e.g., $B = 64$). A bank of $S$ working-memory slots $M_{c-1} \in \mathbb{R}^{S \times d}$ (stored strictly in `float32` / `float64`) summarizes prior chunks $1, \dots, c-1$. Before chunk $c$ enters the recursive loop, its mean-pooled summary injects gated boundary feedback:
 
 $$r_{c-1} = \mathrm{RMSNorm}\!\left(\frac{1}{S}\sum_{s=1}^S M_{c-1,s}\right), \qquad g_t = \sigma\!\left(W_g[z_t^0;\, r_{c-1}] + b_g\right), \qquad h_t^{(0)} = z_t^0 + \alpha\, g_t \odot W_m r_{c-1}$$
 
-Strictly at chunk boundaries $t \equiv 0 \pmod B$, the `v0.2` slot bank updates via residual `tanh` integration followed by off-diagonal slot-to-slot self-attention executed **strictly in `float32`** outside mixed-precision autocast (`0/36` FP16 NaN across unseen seeds; eliminating the `2/18` FP16 NaN failures observed in unguarded FP16 `A6_SLOT4_MESAJLI`):
+Strictly at chunk boundaries $t \equiv 0 \pmod B$, the `v0.2` slot bank executes both the residual `tanh` update (`slot_update`) and off-diagonal slot-to-slot self-attention **strictly in `float32` / `float64`** outside mixed-precision autocast (`rdfl/layers.py:Fp32SlotCoreBoundary.commit_boundary`), eliminating the `2/18` FP16 NaN failures observed in unguarded FP16 `A6_SLOT4_MESAJLI` (`0/36` NaN across unseen seeds):
 
 $$\tilde{M}_c = M_{c-1} + 0.1\,\tanh\!\big(W_u[M_{c-1};\, \mathbf{1}_S (h_{\text{end}}^{(R)})^\top]\big), \qquad M_c = \tilde{M}_c + 0.15\,\mathrm{SlotAttn}_{\text{FP32}}(\tilde{M}_c)$$
 
-#### Mechanistic Diagnosis (`v0.2` Symmetry Collapse) & Planned `v0.3` Fix
-Representation probing on the live trained `55M` checkpoint (step `17,500`, `16` real text chunks / `1,024` bytes) reveals that although `init_slots` begin with pairwise cosine similarity `0.48–0.69`, after `16` chunks all $S=4$ slots converge to pairwise cosine **`1.0000`** with L2 norm **`~577`**. The same convergence (`cos ≈ 0.988` after 8 chunks) is directly reproducible on CPU via `python benchmarks/run_1_2m_suite.py --smoke --measure-slot-cosine`.
-
-**Root cause:** Both the uniform broadcast $\mathbf{1}_S (h_{\text{end}}^{(R)})^\top$ into shared $W_u$ and the undamped additive recurrence $M_c = M_{c-1} + \Delta_c$ lack slot-axis competition and contraction. Consequently, `v0.2`'s stability and 3-hop graph gains (`68.09 ± 54.73% -> 96.89 ± 1.47%` across seeds `42/137/2026`, `37.3×` lower std) arise from an **accumulative FP32 chunk-boundary residual state** rather than `4` specialized slots.
-
-**Planned `v0.3` architecture:** Replace uniform broadcast with competitive **slot-axis `SlotAttention`** (following Locatello et al., 2020: attention weights softmax-normalized across the slot dimension $S$ over chunk keys/values) coupled with per-slot **`RMSNorm`** and learned scalar/vector contraction $\gamma_s \in (0, 1)$:
+#### Mechanistic Diagnosis (`v0.2` Symmetry Collapse), Iso-Param Tax & Planned `v0.3` Fix
+- **Iso-Param `Byte LM` Trade-Off:** Under the `1.20M` iso-parameter constraint (`ffn` shrunk from `512` to `128`), `OY6_A6_SLOT4_FP32` trades `+0.0173 bpb` on `Byte LM` (`2.3819 ± 0.0055` vs `2.3646 ± 0.0017`) for a `37.3×` std reduction on 3-hop `graf_izli` (`68.09 ± 54.73% -> 96.89 ± 1.47%`). At `55M`, `FP32 SlotCore` sits externally on the narrow `d=384` adapter so the base `ffn=3072` stays unshrunk.
+- **Symmetry Collapse (`results/raw/slotcore_55m_cosine_probe.json`):** Direct CPU probing of the live trained `55M` checkpoint (step `21,000`, `16` real chunks / `1,024` bytes from `mix/validation.bin`) reveals that although `init_slots` begin with pairwise cosine similarity `0.5017–0.7512` (`mean = 0.6446`, `norm = 0.6941`), after `16` chunks all $S=4$ slots converge to pairwise cosine **`0.999982`** (`min = 0.999959`, `max = 0.999999`) with mean L2 norm **`664.5`** (growing further from `~577` at step `17,500`). The same convergence (`cos ≈ 0.988` after 8 chunks) is directly reproducible on CPU via `python benchmarks/run_1_2m_suite.py --smoke --measure-slot-cosine`.
+- **Root Cause:** Both the uniform broadcast $\mathbf{1}_S (h_{\text{end}}^{(R)})^\top$ into shared $W_u$ and the undamped additive recurrence $M_c = M_{c-1} + \Delta_c$ lack slot-axis competition and contraction. Consequently, `v0.2`'s empirical gains arise from an **accumulative FP32 chunk-boundary residual state** rather than `4` specialized independent slots.
+- **Planned `v0.3` Architecture:** Replace uniform broadcast with competitive **slot-axis `SlotAttention`** (Locatello et al., 2020: attention weights softmax-normalized across the slot dimension $S$ over chunk keys/values) coupled with per-slot **`RMSNorm`** and learned contraction $\gamma \in (0, 1)$:
 
 $$A_c = \mathrm{softmax}_{\text{slot}}\!\left(\frac{Q(M_{c-1})\, K(H_c)^\top}{\sqrt{d}}\right), \qquad M_c = \mathrm{RMSNorm}\!\Big((1 - \gamma) \odot M_{c-1} + \gamma \odot \mathrm{GRU/MLP}\big(M_{c-1},\, \bar{A}_c V(H_c)\big)\Big)$$
 
-### 2.3 Input-Anchored Weight-Tied Recursive Core ($r = 1, \dots, R$)
-At each iteration $r \in \{1, \dots, R\}$, the shared core receives the previous hidden state re-anchored to $e_t$ with a learned step embedding $e_r \in \mathbb{R}^d$:
+### 2.3 Weight-Tied Recursive Core ($r = 1, \dots, R$) & Input-Anchoring Ablation
+At each iteration $r \in \{1, \dots, R\}$, the shared core receives the previous hidden state combined with an optional input anchor $e_t$ and learned step embedding $e_r \in \mathbb{R}^d$:
 
 $$\tilde{h}_t^{(r)} = \mathrm{RMSNorm}\!\left(h_t^{(r-1)} + \alpha_r\, e_t + e_r\right)$$
+
+> *Empirical Ablation Note (`results/raw/ablasyon_sonuclari.json`):* Controlled `1.20M` ablations comparing anchored vs. unanchored depth loops show that `A6_R4_cipasiz` (unanchored) matches `A6_R4_cipali` on `Multi-Hop ICL` (`22.69 ± 1.76%` vs `22.72 ± 1.30%`) and slightly improves `Byte LM` (`2.2843` vs `2.2896 bpb`), while `A5_R4_cipasiz` beats `A5_R4_cipali` on both (`3.71%` vs `3.29%`; `2.4379` vs `2.4676 bpb`). Input anchoring is therefore retained as a mild variance-regularizing option (`±1.30` vs `±1.76`), whereas `RDFL`'s primary gains originate from the `GatedDeltaNet + BDH + RLT-2` synergy.
 
 1. **Chunk-Parallel Gated DeltaNet (`WY` Solver):** After a depthwise causal short convolution ($k=4$), L2-normalized queries/keys ($q_t, k_t$), multi-scale slow decay gates ($\alpha_t = \sigma(W_\alpha x_c + b_\alpha)$ with biases initialized across $[3.0, 6.9]$, corresponding to $\alpha_0 \in [0.953, 0.999]$), and Householder-range write gates ($\beta_t = 2\sigma(W_\beta x_c) \in (0, 2)$) update the constant-size associative matrix state $S_t^{(r)} \in \mathbb{R}^{H \times d_h \times d_h}$:
 
@@ -52,20 +53,23 @@ $$S_t^{(r)} = \alpha_t S_{t-1}^{(r)} + \beta_t \left(v_t - \alpha_t S_{t-1}^{(r)
 
 Allowing $\beta_t \in (0, 2)$ permits negative eigenvalues in $(I - \beta_t k_t k_t^\top)$, which is algebraically necessary to execute bit-flips (`Parity-64`) and odd permutations (`S5-Perm32`). Within each chunk of length $B$, the recurrence is computed in parallel via unitriangular lower-triangular solve (`WY` representation), achieving exact equivalence with single-byte `step()` execution (`4.44e-16` max difference in FP64).
 
-2. **BDH Sparse Associative Interaction Gate:**
+2. **BDH Sparse Associative Interaction Gate & Standalone `SwiGLU` Sub-Block:**
 
-$$h_t^{(r)} = h_t^{(r-1)} + y_t^{(r)} + W_{\text{dec}}\!\left(\mathrm{ReLU}(W_x \tilde{h}_t^{(r)}) \odot \mathrm{ReLU}(W_y y_t^{(r)})\right)$$
+$$u_t^{(r)} = h_t^{(r-1)} + y_t^{(r)} + W_{\text{dec}}\!\left(\mathrm{ReLU}(W_x \tilde{h}_t^{(r)}) \odot \mathrm{ReLU}(W_y y_t^{(r)})\right)$$
+
+- In standalone **`RDFLModel`** (`rdfl/model.py`), each loop step appends a residual `SwiGLU` FFN sub-block: $h_t^{(r)} = u_t^{(r)} + \mathrm{SwiGLU}(\mathrm{RMSNorm}(u_t^{(r)}))$.
+- In **`ZeroDiffRDFLAdapter`** (`rdfl/model.py`, illustrated in Figure 1 for Path-1 warm adaptation), the internal `SwiGLU` sub-block is omitted ($h_t^{(r)} = u_t^{(r)}$) because the pretrained backbone already supplies unshrunk FFN layers (`ffn = 3072`).
 
 ### 2.4 Zero-Initialization Residual Fusion, Lossless Speculative Heads, and Bounded RSI
 After the final iteration $R$, a zero-initialized projection $W_{\uparrow}$ ($W_{\uparrow}|_0 = 0$) merges the recursive refinement back into the trunk stream:
 
-$$\Delta z_t = W_{\uparrow}\,\mathrm{RMSNorm}(h_t^{(R)}), \qquad \hat{z}_t = \mathrm{RMSNorm}(z_t^{\text{base}} + \Delta z_t), \qquad p_\Theta(x_{t+1} \mid x_{1:t}) = \mathrm{softmax}(W_{\text{out}}\hat{z}_t)$$
+$$\Delta z_t = W_{\uparrow}\,\mathrm{RMSNorm}(h_t^{(R)}), \qquad z_t^{\text{fused}} = z_t^{\text{base}} + \Delta z_t$$
 
-Because $\Delta z_t \equiv 0$ at step 0, warm adaptation preserves `100%` of the pretrained backbone and external episodic memory (`cmem`) behavior on initialization (`0.0` exact deviation).
+`ZeroDiffRDFLAdapter.forward(z_base)` returns $z_t^{\text{fused}} = z_t^{\text{base}} + \Delta z_t$ directly; the outer pretrained backbone's final `RMSNorm` and readout projection then produce $\hat{z}_t = \mathrm{RMSNorm}(z_t^{\text{fused}})$ and $p_\Theta(x_{t+1} \mid x_{1:t}) = \mathrm{softmax}(W_{\text{out}}\hat{z}_t)$. Because $\Delta z_t \equiv 0$ at step 0, warm adaptation preserves `100%` of the pretrained backbone and external episodic memory (`cmem`) behavior on initialization (`0.0` exact deviation).
 
 - **Decoupled Early-Exit (`K3`) & Lossless Speculative Decode:** Applies a lightweight bottleneck adapter to $\mathrm{sg}(h_t^{(1)})$ with frozen readout weights (`0.000` gradient interference on the main $R$-loop). During decoding ([`rdfl/speculative.py`](../rdfl/speculative.py)), $k$ draft bytes are proposed using only $r=1$, then verified in one chunk-parallel $R$-loop call with exact state rollback on mismatch, guaranteeing **`0`-byte deviation** from greedy $R$-loop decoding (`288/288` prompts audited).
 - **Multi-Byte Lookahead (`MTP-4`):** Attaches $3$ zero-initialized residual bottlenecks to $\hat{z}_t$ predicting $x_{t+2}, x_{t+3}, x_{t+4}$ with zero draft forward passes during speculative verification ([`speculative_decode_mtp4`](../rdfl/speculative.py)). At `55M`, the controlled `1,500`-step `G0` vs. `G1` gate isolates `MTP-4` ($\lambda_{\text{MTP}} = 0$ vs. $0.15$) with `RDFL` attached in both arms (`+0.0010 bpb` LM, `-0.0005 bpb` SFT); a dedicated RDFL-off continued-pretraining control (`G_BASE_ONLY`, `1,500` steps) is scheduled immediately post-`42K` run.
-- **Calibrated Uncertainty (`MSP + T*`):** Uses scalar temperature scaling $T^*$ fitted on a held-out split to produce selective abstention uncertainty $u_t = 1 - \max_v p_\Theta(v \mid x_{1:t}; T^*)$ with zero additional parameters.
+- **Calibrated Uncertainty (`MSP + T*`):** Uses scalar temperature scaling $T^*$ fitted on a held-out split to produce selective abstention uncertainty $u_t = 1 - \max_v p_\Theta(v \mid x_{1:t}; T^*)$ with zero additional parameters (evaluated via mid-rank tie-exact `auroc()` in `rdfl/calibration.py`).
 - **Bounded Verifier-Gated RSI:** Optimizes policy updates strictly over externally verified traces regularized by natural-language replay, a permanent `Tur 0` in-distribution anchor, a validation rollback gate, and exact per-token 3D reverse KL:
 
 $$D_{\text{KL}}(\pi_g \,\|\, \pi_0) = \frac{1}{BT}\sum_{b=1}^B\sum_{t=1}^T \sum_{v=0}^{255} \pi_g(v \mid x_{b,<t}) \log \frac{\pi_g(v \mid x_{b,<t})}{\pi_0(v \mid x_{b,<t})}$$
@@ -82,7 +86,7 @@ The reference PyTorch implementation executes chunk-parallel `WY` updates in exa
 
 1. **Gated DeltaNet:** Songlin Yang, Jan Kautz, and Ali Hatamizadeh. *Gated Delta Networks: Improving Mamba2 with Delta Rule.* ICLR 2025. [`arXiv:2412.06464`](https://arxiv.org/abs/2412.06464)
 2. **RLT:** Yifan Zhang et al. *Recurrent Looped Transformer.* 2026. [`arXiv:2610.07591`](https://arxiv.org/abs/2610.07591)
-3. **BDH & BDH-CQ:** Adrian Kosowski, Przemysław Uznański, Jan Chorowski, Zuzanna Stamirowska, and Michał Bartoszkiewicz. *The Dragon Hatchling: The Missing Link between the Transformer and Models of the Brain.* 2025. [`arXiv:2509.26507`](https://arxiv.org/abs/2509.26507) (and *BDH-CQ: In-Context Learning with Recurrent Latent Reasoning*, [`arXiv:2608.09888`](https://arxiv.org/abs/2608.09888))
+3. **BDH & BDH-CQ:** Adrian Kosowski, Przemysław Uznański, Jan Chorowski, Zuzanna Stamirowska, and Michał Bartoszkiewicz. *The Dragon Hatchling: The Missing Link between the Transformer and Models of the Brain.* 2025. [`arXiv:2509.26507`](https://arxiv.org/abs/2509.26507) · Björn Engdahl, Adrian Kosowski, Jan Chorowski, Zuzanna Stamirowska, Przemysław Uznański, Junlin Jiang, Rohan Phadke, Remigiusz Kinas, and Richard Zhong. *BDH-CQ: In-Context Learning with Recurrent Latent Reasoning.* 2026. [`arXiv:2608.09888`](https://arxiv.org/abs/2608.09888)
 4. **Slot Attention:** Francesco Locatello, Dirk Weissenborn, Thomas Unterthiner, Aravindh Mahendran, Georg Heigold, Jakob Uszkoreit, Alexey Dosovitskiy, and Thomas Kipf. *Object-Centric Learning with Slot Attention.* NeurIPS 2020. [`arXiv:2006.15055`](https://arxiv.org/abs/2006.15055)
 5. **Medusa:** Tianle Cai, Yuhong Li, Zhengyang Geng, Hongwu Peng, Jason D. Lee, Deming Chen, and Tri Dao. *Medusa: Simple LLM Inference Acceleration Framework with Multiple Decoding Heads.* ICML 2024. [`arXiv:2401.10774`](https://arxiv.org/abs/2401.10774)
 6. **MTP:** Fabian Gloeckle, Badr Youbi Idrissi, Baptiste Rozière, David Lopez-Paz, and Gabriel Synnaeve. *Better & Faster Large Language Models via Multi-token Prediction.* ICML 2024. [`arXiv:2404.19737`](https://arxiv.org/abs/2404.19737)

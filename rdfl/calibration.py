@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 import torch.nn.functional as F
+from numpy.typing import NDArray
 from torch import Tensor
 
 
@@ -26,7 +29,7 @@ def fit_temperature(logits: Tensor, targets: Tensor) -> float:
     return best_t
 
 
-def ece_15(confidence: np.ndarray, correct: np.ndarray) -> float:
+def ece_15(confidence: NDArray[Any], correct: NDArray[Any]) -> float:
     """15-bin Expected Calibration Error."""
     edges = np.linspace(0.0, 1.0, 16)
     n = max(1, len(confidence))
@@ -39,20 +42,28 @@ def ece_15(confidence: np.ndarray, correct: np.ndarray) -> float:
     return float(err)
 
 
-def auroc(scores: np.ndarray, labels: np.ndarray) -> float:
-    """Exact rank-based Area Under the ROC Curve (scores: higher = positive error)."""
-    pos = labels > 0.5
+def auroc(scores: NDArray[Any], labels: NDArray[Any]) -> float:
+    """Exact rank-based Area Under the ROC Curve with mid-rank tie handling."""
+    pos = np.asarray(labels) > 0.5
     n_pos = int(pos.sum())
-    n_neg = len(labels) - n_pos
+    n_neg = len(pos) - n_pos
     if n_pos == 0 or n_neg == 0:
         return 0.5
-    order = np.argsort(scores, kind="mergesort")
-    ranks = np.empty_like(order, dtype=np.float64)
-    ranks[order] = np.arange(1, len(scores) + 1, dtype=np.float64)
+    arr = np.asarray(scores, dtype=np.float64)
+    order = np.argsort(arr, kind="mergesort")
+    sorted_s = arr[order]
+    ranks = np.empty(len(arr), dtype=np.float64)
+    i, n = 0, len(arr)
+    while i < n:
+        j = i + 1
+        while j < n and sorted_s[j] == sorted_s[i]:
+            j += 1
+        ranks[order[i:j]] = 0.5 * (i + 1 + j)
+        i = j
     return float((ranks[pos].sum() - n_pos * (n_pos + 1) / 2.0) / (n_pos * n_neg))
 
 
-def aurc(uncertainty: np.ndarray, errors: np.ndarray) -> float:
+def aurc(uncertainty: NDArray[Any], errors: NDArray[Any]) -> float:
     """Area Under the Risk-Coverage curve (lower is better)."""
     order = np.argsort(uncertainty)
     err_sorted = errors[order]
