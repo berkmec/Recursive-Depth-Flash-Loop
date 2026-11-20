@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 560" width="1240" height="560" role="img" aria-label="RDFL Audited Self-Capabilities V2 and 46x MTP-4 Scale Crossover">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#F1F5F9"/>
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EEF2FF"/>
+      <stop offset="100%" stop-color="#E0E7FF"/>
+    </linearGradient>
+    <linearGradient id="darkHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowSlate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowIndigo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#4F46E5"/>
+    </marker>
+    <marker id="arrowEmerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#D97706"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1240" height="560" rx="16" fill="url(#bgGrad)" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="20" y="16" width="1200" height="58" rx="12" fill="url(#darkHeader)"/>
+  <text x="42" y="43" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF" text-anchor="start">Audited Self-Capabilities V2 &amp; Live 46x Scale Crossover (1.2M -&gt; 55M)</text>
+  <text x="42" y="63" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#CBD5E1" text-anchor="start">V2 Self-Capabilities Audit: PASS (662/662 cells, unseen seeds 42/137/2026, 0 NaN) · Live 55M Gate-1 &amp; Hour-1 A/B Verified</text>
+  <rect x="20" y="90" width="386" height="450" rx="12" fill="#FFFFFF" stroke="#D97706" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="20" y="90" width="386" height="30" rx="10" fill="#D97706"/>
+  <text x="213" y="110" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">A. OY-6 · FP32 SlotCore Stability (36/36 = 0 NaN)</text>
+  <text x="213" y="142" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">3-Hop Graph Reasoning Accuracy (graf_izli)</text>
+  <rect x="64" y="239.2" width="76" height="132.8" rx="6" fill="#94A3B8"/>
+  <text x="102" y="231.22449999999998" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="700" fill="#94A3B8" text-anchor="middle">68.09%</text>
+  <text x="102" y="390" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#0F172A" text-anchor="middle">RDFL Base</text>
+  <text x="102" y="406" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="500" fill="#64748B" text-anchor="middle">±54.7</text>
+  <rect x="176" y="213.2" width="76" height="158.8" rx="6" fill="#0EA5E9"/>
+  <text x="214" y="205.153" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="700" fill="#0EA5E9" text-anchor="middle">81.46%</text>
+  <text x="214" y="390" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#0F172A" text-anchor="middle">Titans-A</text>
+  <text x="214" y="406" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="500" fill="#64748B" text-anchor="middle">2x State</text>
+  <rect x="288" y="183.1" width="76" height="188.9" rx="6" fill="#D97706"/>
+  <text x="326" y="175.0645" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" font-weight="700" fill="#D97706" text-anchor="middle">96.89%</text>
+  <text x="326" y="390" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#0F172A" text-anchor="middle">FP32 SlotCore</text>
+  <text x="326" y="406" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="500" fill="#64748B" text-anchor="middle">±1.47</text>
+  <rect x="40" y="428" width="346" height="92" rx="8" fill="#FFFBEB" stroke="#F59E0B"/>
+  <text x="213" y="452" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#92400E" text-anchor="middle">Key Audited Gains:</text>
+  <text x="213" y="474" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#78350F" text-anchor="middle">• +28.80 pp mean · 37.2x lower std (1,386x lower var)</text>
+  <text x="213" y="494" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#78350F" text-anchor="middle">• MQAR Overwrite #1: 99.88% (0.0068 bpb)</text>
+  <text x="213" y="512" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="500" fill="#B45309" text-anchor="middle">• At 55M: base ffn=3072 kept unshrunk (zero LM tax)</text>
+  <rect x="426" y="90" width="388" height="450" rx="12" fill="#FFFFFF" stroke="#059669" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="426" y="90" width="388" height="30" rx="10" fill="#059669"/>
+  <text x="620" y="110" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">B. OY-7 · Blind RSI Collapse vs Verifier-Gated AZR</text>
+  <text x="620" y="142" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Natural LM Preservation (bpb, lower = healthier)</text>
+  <text x="444" y="173" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#0F172A" text-anchor="start">RSI1 Blind (No Verifier)</text>
+  <rect x="598" y="160" width="152.3" height="18" rx="4" fill="#DC2626"/>
+  <text x="757.28" y="173" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#DC2626" text-anchor="start">7.52</text>
+  <text x="444" y="205" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#0F172A" text-anchor="start">RSI0 Control</text>
+  <rect x="598" y="192" width="60.1" height="18" rx="4" fill="#64748B"/>
+  <text x="665.1425" y="205" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#64748B" text-anchor="start">2.97</text>
+  <text x="444" y="237" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#0F172A" text-anchor="start">RSI4 Oracle</text>
+  <rect x="598" y="224" width="59.7" height="18" rx="4" fill="#0284C7"/>
+  <text x="664.7375" y="237" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#0284C7" text-anchor="start">2.95</text>
+  <text x="444" y="269" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#0F172A" text-anchor="start">RSI3 AZR Verifier</text>
+  <rect x="598" y="256" width="59.3" height="18" rx="4" fill="#059669"/>
+  <text x="664.3325" y="269" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#059669" text-anchor="start">2.93</text>
+  <text x="620" y="306" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Invariant Algebraic Generalization (IPT Accuracy %)</text>
+  <text x="444" y="338" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#0F172A" text-anchor="start">RSI0 Control</text>
+  <rect x="598" y="325" width="109.9" height="18" rx="4" fill="#64748B"/>
+  <text x="714.8735" y="338" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#64748B" text-anchor="start">66.59%</text>
+  <text x="444" y="372" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#0F172A" text-anchor="start">RSI4 Oracle</text>
+  <rect x="598" y="359" width="117.6" height="18" rx="4" fill="#0284C7"/>
+  <text x="722.579" y="372" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#0284C7" text-anchor="start">71.26%</text>
+  <text x="444" y="406" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#0F172A" text-anchor="start">RSI3 AZR (0 rollbacks)</text>
+  <rect x="598" y="393" width="132.7" height="18" rx="4" fill="#059669"/>
+  <text x="737.7425000000001" y="406" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#059669" text-anchor="start">80.45%</text>
+  <rect x="444" y="434" width="352" height="86" rx="8" fill="#ECFDF5" stroke="#10B981"/>
+  <text x="620" y="456" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#065F46" text-anchor="middle">5 Audited Safeguards (75 Live Gens, 0 NaN):</text>
+  <text x="620" y="476" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="500" fill="#047857" text-anchor="middle">• External verifier + 30% LM + Exact 3D Reverse KL</text>
+  <text x="620" y="494" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="500" fill="#047857" text-anchor="middle">• Permanent Tur-0 ID anchor (rollbacks 6 -&gt; 0)</text>
+  <text x="620" y="512" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#B45309" text-anchor="middle">• Honest limit @ 1.2M: OOD-Far L=7,8 = 0% -&gt; testing 55M</text>
+  <rect x="834" y="90" width="386" height="450" rx="12" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="834" y="90" width="386" height="30" rx="10" fill="#7C3AED"/>
+  <text x="1027" y="110" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">C. OY-4 · MTP-4 46x Scale Crossover (1.2M -&gt; 55M)</text>
+  <text x="1027" y="142" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">t+1 Capacity Tax vs Matched Control (bpb)</text>
+  <text x="856" y="178" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#DC2626" text-anchor="start">1.20M (LM)</text>
+  <rect x="970" y="164" width="180" height="20" rx="4" fill="#EF4444"/>
+  <text x="1156" y="178" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#DC2626" text-anchor="start">+0.0323</text>
+  <text x="856" y="214" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#7C3AED" text-anchor="start">55M A/B (LM)</text>
+  <rect x="970" y="200" width="8" height="20" rx="3" fill="#7C3AED"/>
+  <text x="986" y="214" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#7C3AED" text-anchor="start">+0.0010 (32x smaller!)</text>
+  <text x="856" y="250" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#059669" text-anchor="start">55M A/B (SFT)</text>
+  <rect x="962" y="236" width="8" height="20" rx="3" fill="#059669"/>
+  <text x="986" y="250" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#059669" text-anchor="start">-0.0005 (Beats Control!)</text>
+  <rect x="854" y="276" width="346" height="136" rx="8" fill="#F5F3FF" stroke="#8B5CF6"/>
+  <text x="1027" y="298" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#5B21B6" text-anchor="middle">Live Diogenes-RDFL-55M Trajectory (Step 0 -&gt; 7K)</text>
+  <text x="1027" y="322" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="600" fill="#4C1D95" text-anchor="middle">MTP t+2 Acc:  10.1% -&gt; 34.1% (1.5K) -&gt; 51.6% (7K)</text>
+  <text x="1027" y="344" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="500" fill="#5B21B6" text-anchor="middle">MTP t+3 / t+4: 9.2/10.7% -&gt; 39.6% / 32.4% (7K)</text>
+  <text x="1027" y="366" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#059669" text-anchor="middle">Long-Context T=2048: 1.0419 -&gt; 1.0277 (-0.0142)</text>
+  <text x="1027" y="388" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Peak VRAM: 3.36 GiB (RTX 2060S 8 GB) · 0 NaN</text>
+  <rect x="854" y="428" width="346" height="92" rx="8" fill="#F0F9FF" stroke="#0284C7"/>
+  <text x="1027" y="450" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#0369A1" text-anchor="middle">OY-3 Calibrated Uncertainty (Zero Extra Params):</text>
+  <text x="1027" y="472" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#0C4A6E" text-anchor="middle">• 55M Mix Val: AUROC 0.8994 · +20.79 pp @ 40% abstain</text>
+  <text x="1027" y="492" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#0C4A6E" text-anchor="middle">• 55M SFT Val: AUROC 0.9041 · 74.7% -&gt; 95.4% acc</text>
+  <text x="1027" y="510" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="500" fill="#64748B" text-anchor="middle">• OY-5 Prompt Self-Correction: REJECTED -&gt; log-p 0.9513</text>
+</svg>

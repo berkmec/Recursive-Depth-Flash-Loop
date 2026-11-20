@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: "Recursive Depth Flash Loop (RDFL): O(1)-Memory Byte-Level Hybrid Architecture and Audited Self-Capabilities"
+message: "If you use RDFL or its empirical benchmarks in your research, please cite this repository."
+type: software
+authors:
+  - alias: "berkmec"
+repository-code: "https://github.com/berkmec/Recursive-Depth-Flash-Loop"
+license: MIT
+version: "0.2.0"
+date-released: "2026-11-20"
+keywords:
+  - gated-deltanet
+  - recursive-depth
+  - byte-level-language-model
+  - constant-memory
+  - slot-attention
+  - multi-token-prediction
+  - speculative-decoding
+  - uncertainty-calibration
+  - verifier-gated-rsi

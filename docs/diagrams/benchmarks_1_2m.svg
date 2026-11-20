@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 560" width="1240" height="560" role="img" aria-label="RDFL Audited 1.20M Benchmarks and O(1) Memory Scaling">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#F1F5F9"/>
+    </linearGradient>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EEF2FF"/>
+      <stop offset="100%" stop-color="#E0E7FF"/>
+    </linearGradient>
+    <linearGradient id="darkHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowSlate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowIndigo" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#4F46E5"/>
+    </marker>
+    <marker id="arrowEmerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#D97706"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1240" height="560" rx="16" fill="url(#bgGrad)" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="20" y="16" width="1200" height="58" rx="12" fill="url(#darkHeader)"/>
+  <text x="42" y="43" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF" text-anchor="start">Audited 1.20M Iso-Parameter Benchmarks (204 GPU Runs, 3 Seeds, 0 NaN)</text>
+  <text x="42" y="63" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="400" fill="#CBD5E1" text-anchor="start">Independent Zero-Context Audit: PASS (411/411 cells verified) · Single Frozen Hash ab9e7db6220038a6</text>
+  <rect x="20" y="90" width="710" height="450" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="44" y="120" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0F172A" text-anchor="start">A. Algorithmic State &amp; Memory Accuracy (%) — Same 1.20M Budget (Except A4B: 2.57M)</text>
+  <rect x="44" y="134" width="12" height="12" rx="3" fill="#94A3B8"/>
+  <text x="61" y="145" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#334155" text-anchor="start">RLT-0 (1.20M)</text>
+  <rect x="176" y="134" width="12" height="12" rx="3" fill="#60A5FA"/>
+  <text x="193" y="145" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#334155" text-anchor="start">RLT-1 (1.20M)</text>
+  <rect x="308" y="134" width="12" height="12" rx="3" fill="#F59E0B"/>
+  <text x="325" y="145" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#334155" text-anchor="start">RLT-2 (1.20M)</text>
+  <rect x="440" y="134" width="12" height="12" rx="3" fill="#A78BFA"/>
+  <text x="457" y="145" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#334155" text-anchor="start">GDN IsoFLOP (2.57M)</text>
+  <rect x="572" y="134" width="12" height="12" rx="3" fill="#4F46E5"/>
+  <text x="589" y="145" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#334155" text-anchor="start">RDFL (1.20M)</text>
+  <line x1="72" y1="466.0" x2="708" y2="466.0" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="62" y="470.0" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="500" fill="#64748B" text-anchor="end">0%</text>
+  <line x1="72" y1="394.8" x2="708" y2="394.8" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="62" y="398.75" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="500" fill="#64748B" text-anchor="end">25%</text>
+  <line x1="72" y1="323.5" x2="708" y2="323.5" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="62" y="327.5" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="500" fill="#64748B" text-anchor="end">50%</text>
+  <line x1="72" y1="252.2" x2="708" y2="252.2" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="62" y="256.25" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="500" fill="#64748B" text-anchor="end">75%</text>
+  <line x1="72" y1="181.0" x2="708" y2="181.0" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="62" y="185.0" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="500" fill="#64748B" text-anchor="end">100%</text>
+  <text x="153.0" y="490" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1E293B" text-anchor="middle">Parity-64</text>
+  <rect x="90.0" y="323.0" width="22" height="143.0" rx="4" fill="#94A3B8"/>
+  <rect x="116.0" y="238.6" width="22" height="227.4" rx="4" fill="#60A5FA"/>
+  <rect x="142.0" y="323.1" width="22" height="142.9" rx="4" fill="#F59E0B"/>
+  <rect x="168.0" y="181.0" width="22" height="285.0" rx="4" fill="#A78BFA"/>
+  <text x="179.0" y="175.0" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="700" fill="#A78BFA" text-anchor="middle">100</text>
+  <rect x="194.0" y="181.0" width="22" height="285.0" rx="4" fill="#4F46E5"/>
+  <text x="205.0" y="175.0" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="700" fill="#4F46E5" text-anchor="middle">100</text>
+  <text x="312.0" y="490" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1E293B" text-anchor="middle">S5-Perm32</text>
+  <rect x="249.0" y="410.6" width="22" height="55.4" rx="4" fill="#94A3B8"/>
+  <rect x="275.0" y="181.2" width="22" height="284.8" rx="4" fill="#60A5FA"/>
+  <text x="286.0" y="175.1995" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="700" fill="#60A5FA" text-anchor="middle">100</text>
+  <rect x="301.0" y="408.2" width="22" height="57.8" rx="4" fill="#F59E0B"/>
+  <rect x="327.0" y="181.0" width="22" height="285.0" rx="4" fill="#A78BFA"/>
+  <text x="338.0" y="175.0" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="700" fill="#A78BFA" text-anchor="middle">100</text>
+  <rect x="353.0" y="181.0" width="22" height="285.0" rx="4" fill="#4F46E5"/>
+  <text x="364.0" y="175.0" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="700" fill="#4F46E5" text-anchor="middle">100</text>
+  <text x="471.0" y="490" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1E293B" text-anchor="middle">MQAR Overwrite</text>
+  <rect x="408.0" y="402.2" width="22" height="63.8" rx="4" fill="#94A3B8"/>
+  <rect x="434.0" y="403.4" width="22" height="62.6" rx="4" fill="#60A5FA"/>
+  <rect x="460.0" y="406.4" width="22" height="59.6" rx="4" fill="#F59E0B"/>
+  <rect x="486.0" y="398.7" width="22" height="67.3" rx="4" fill="#A78BFA"/>
+  <rect x="512.0" y="181.0" width="22" height="285.0" rx="4" fill="#4F46E5"/>
+  <text x="523.0" y="175.0" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="700" fill="#4F46E5" text-anchor="middle">100</text>
+  <text x="630.0" y="490" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#1E293B" text-anchor="middle">Multi-Hop ICL</text>
+  <rect x="567.0" y="445.7" width="22" height="20.3" rx="4" fill="#94A3B8"/>
+  <rect x="593.0" y="445.1" width="22" height="20.9" rx="4" fill="#60A5FA"/>
+  <rect x="619.0" y="446.0" width="22" height="20.0" rx="4" fill="#F59E0B"/>
+  <rect x="645.0" y="454.7" width="22" height="11.3" rx="4" fill="#A78BFA"/>
+  <rect x="671.0" y="401.2" width="22" height="64.8" rx="4" fill="#4F46E5"/>
+  <text x="682.0" y="395.248" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="700" fill="#4F46E5" text-anchor="middle">22.7</text>
+  <text x="375" y="522" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#475569" text-anchor="middle">RDFL achieves 100.0% on Parity-64, S5-Perm32 &amp; MQAR Overwrite (4.5x over RLT), and 5.7x over 2.57M GDN on Multi-Hop ICL.</text>
+  <rect x="748" y="90" width="472" height="250" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="770" y="118" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0F172A" text-anchor="start">B. Decode State Memory vs Sequence Length (Log Scale)</text>
+  <line x1="812" y1="294.0" x2="1196" y2="294.0" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="804" y="298.0" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="500" fill="#64748B" text-anchor="end">1</text>
+  <line x1="812" y1="245.3" x2="1196" y2="245.3" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="804" y="249.33333333333334" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="500" fill="#64748B" text-anchor="end">10</text>
+  <line x1="812" y1="196.7" x2="1196" y2="196.7" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="804" y="200.66666666666669" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="500" fill="#64748B" text-anchor="end">100</text>
+  <line x1="812" y1="148.0" x2="1196" y2="148.0" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="804" y="152.0" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="500" fill="#64748B" text-anchor="end">1000</text>
+  <text x="764" y="224" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">MiB</text>
+  <polyline points="812.0,247.6 940.0,218.3 1068.0,189.0 1196.0,159.7" fill="none" stroke="#EF4444" stroke-width="3"/>
+  <polyline points="812.0,282.7 940.0,282.7 1068.0,282.7 1196.0,282.7" fill="none" stroke="#059669" stroke-width="3"/>
+  <circle cx="812.0" cy="247.6" r="4.5" fill="#EF4444"/>
+  <circle cx="812.0" cy="282.7" r="4.5" fill="#059669"/>
+  <text x="812.0" y="312" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="600" fill="#475569" text-anchor="middle">512</text>
+  <circle cx="940.0" cy="218.3" r="4.5" fill="#EF4444"/>
+  <circle cx="940.0" cy="282.7" r="4.5" fill="#059669"/>
+  <text x="940.0" y="312" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="600" fill="#475569" text-anchor="middle">2K</text>
+  <circle cx="1068.0" cy="189.0" r="4.5" fill="#EF4444"/>
+  <circle cx="1068.0" cy="282.7" r="4.5" fill="#059669"/>
+  <text x="1068.0" y="312" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="600" fill="#475569" text-anchor="middle">8K</text>
+  <circle cx="1196.0" cy="159.7" r="4.5" fill="#EF4444"/>
+  <circle cx="1196.0" cy="282.7" r="4.5" fill="#059669"/>
+  <text x="1196.0" y="312" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="10" font-weight="600" fill="#475569" text-anchor="middle">32K</text>
+  <text x="1190.0" y="149.65943914007036" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#DC2626" text-anchor="end">Transformer 6L KV: 576 MiB</text>
+  <text x="1190.0" y="272.66085596091517" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#059669" text-anchor="end">RDFL / GDN O(1): 1.71 MiB (337x smaller!)</text>
+  <text x="984" y="330" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#1E293B" text-anchor="middle">55M Training @ T=8192: RLT-2 OOM (&gt;3 GiB) vs RDFL 1,877 MiB (1.83 GiB)</text>
+  <rect x="748" y="356" width="472" height="184" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="770" y="384" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#0F172A" text-anchor="start">C. Byte-Level Language Modeling (bpb, Lower is Better)</text>
+  <text x="770" y="419" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#0F172A" text-anchor="start">RLT-2 (1.20M)</text>
+  <rect x="884" y="406" width="257.7" height="18" rx="4" fill="#F59E0B"/>
+  <text x="1149.732" y="419" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="500" fill="#F59E0B" text-anchor="start">2.4207</text>
+  <text x="770" y="449" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#0F172A" text-anchor="start">RLT-0 (1.20M)</text>
+  <rect x="884" y="436" width="243.4" height="18" rx="4" fill="#94A3B8"/>
+  <text x="1135.4439999999997" y="449" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="500" fill="#94A3B8" text-anchor="start">2.4019</text>
+  <text x="770" y="479" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#0F172A" text-anchor="start">RLT-1 (1.20M)</text>
+  <rect x="884" y="466" width="215.2" height="18" rx="4" fill="#60A5FA"/>
+  <text x="1107.2479999999996" y="479" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="500" fill="#60A5FA" text-anchor="start">2.3648</text>
+  <text x="770" y="509" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#0F172A" text-anchor="start">RDFL (1.20M)</text>
+  <rect x="884" y="496" width="158.1" height="18" rx="4" fill="#4F46E5"/>
+  <text x="1050.096" y="509" font-family="'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" font-weight="700" fill="#4F46E5" text-anchor="start">2.2896  (-0.1123 vs RLT-0)</text>
+</svg>

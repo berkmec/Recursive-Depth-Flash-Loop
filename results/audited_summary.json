@@ -1,0 +1,57 @@
+{
+  "project": "Recursive Depth Flash Loop (RDFL)",
+  "updated_at": "2026-11-20T06:00:00+03:00",
+  "hardware": "Single NVIDIA RTX 2060 SUPER (8 GiB Turing FP16)",
+  "studies": {
+    "architecture_v2_1_2m": {
+      "audit_status": "PASS (Independent Zero-Context Closure Audit, 411/411 cells verified)",
+      "frozen_code_hash": "ab9e7db6220038a6",
+      "total_gpu_runs": 204,
+      "fp16_nans": 0,
+      "forward_eq_step_fp64_max_diff": 4.44e-16,
+      "iso_param_1_20m": {
+        "RLT-0": {"parity64": 50.18, "s5_perm32": 19.45, "mqar_overwrite": 22.40, "multihop_icl": 7.13, "byte_lm_bpb": 2.4019},
+        "RLT-1": {"parity64": 79.78, "s5_perm32": 99.93, "mqar_overwrite": 21.96, "multihop_icl": 7.32, "byte_lm_bpb": 2.3648},
+        "RLT-2": {"parity64": 50.15, "s5_perm32": 20.27, "mqar_overwrite": 20.92, "multihop_icl": 7.03, "byte_lm_bpb": 2.4207},
+        "GDN_IsoFLOP_2_57M": {"parity64": 100.00, "s5_perm32": 100.00, "mqar_overwrite": 23.63, "multihop_icl": 3.97, "byte_lm_bpb": 2.2786},
+        "RDFL_1_20M": {"parity64": 100.00, "s5_perm32": 100.00, "mqar_overwrite": 100.00, "multihop_icl": 22.72, "byte_lm_bpb": 2.2896}
+      },
+      "memory_scaling": {
+        "decode_32k_transformer_6l_kv_mib": 576.0,
+        "decode_32k_rdfl_gdn_o1_mib": 1.71,
+        "decode_32k_reduction_factor": 337.0,
+        "train_55m_t8192_rlt2": "OOM (>3072 MiB)",
+        "train_55m_t8192_rdfl_mib": 1877.0
+      }
+    },
+    "self_capabilities_v2_1_2m": {
+      "audit_status": "PASS (Independent Zero-Context Closure Audit, 662/662 cells verified)",
+      "frozen_code_hash": "c8c2744cd90baca1",
+      "unseen_seeds": [42, 137, 2026],
+      "calibration_seed_disjoint": 401,
+      "fp16_nans": 0,
+      "peak_vram_mib": 1705.7,
+      "oy1_k3_early_exit": {"r1_bpb_before": 2.8886, "r1_bpb_after": 2.4987, "r4_tax_bpb": 0.0041, "speculative_byte_diff": 0, "speculative_flop_speedup": [1.48, 1.54], "wall_speedup_k3_k2": 1.09, "wall_speedup_k1_k4": 1.28},
+      "oy3_msp_calibration": {"byte_lm_auroc": 0.8424, "byte_lm_ece15": 0.0116, "abstain40_acc_before": 52.68, "abstain40_acc_after": 72.81, "graf_ece_reduction_x": 8.3},
+      "oy4_mtp4_at_1_2m": {"byte_lm_tax_bpb": 0.0323, "rsi_l34_tax_bpb": 0.0272, "structural_acc_t2_t3_t4": [71.2, 71.7, 64.1]},
+      "oy5_prompt_self_correction": {"status": "REJECTED", "d0_draft_acc": 87.37, "d1_d2_after_revision_acc": [48.44, 49.22], "zero_param_logp_auroc": 0.9513, "mlp_verifier_auroc": 0.5867},
+      "oy6_fp32_slotcore": {"runs_zero_nan": "36/36", "mqar_acc": 99.88, "graf_acc_mean": 96.89, "graf_acc_std": 1.47, "baseline_graf_mean": 68.09, "baseline_graf_std": 54.73, "std_reduction_x": 37.2},
+      "oy7_bounded_rsi_75gens": {"blind_rsi1_lm_bpb": 7.52, "blind_rsi1_id_acc": 63.54, "azr_rsi3_lm_bpb": 2.9301, "azr_rsi3_rollbacks": 0, "azr_rsi3_ipt_acc": 80.45, "oracle_rsi4_ipt_acc": 71.26, "control_rsi0_ipt_acc": 66.59, "ood_far_l78_acc": 0.0},
+      "oy8_zero_retention_ring": {"vram_mib": 0.0, "stream_mib": 32.0, "peak_disk_mib": 4.0, "final_disk_mib": 0.0, "receipt_lock": true}
+    },
+    "diogenes_rdfl_55m_live": {
+      "status": "IN_PROGRESS (42,000-step full adaptation + 8-gen RSI running on RTX 2060S)",
+      "frozen_code_hash": "3c1a59a1dd2bb0f7",
+      "parameters": {"base_55m": 55078145, "rdfl_narrow": 2812430, "fp32_slotcore": 1330560, "k3_decoupled": 737664, "mtp4_heads": 2359296, "cmem_reader": 858436},
+      "gate1_pass": {"step0_logits_diff": 0.0, "step0_hn_diff": 0.0, "step0_cmem_diff": 0.0, "causality_diff": 0.0, "forward_eq_step_fp32": 1.335e-05, "smoke_12steps_nan": 0, "peak_vram_mib": 3438.7},
+      "hour1_mtp4_ab_1500steps": {
+        "G0_control": {"lm_bits_512": 1.1232, "lm_bits_2048": 1.0344, "sft_val_bits": 1.2415, "mtp_t2_acc": 0.1015},
+        "G1_mtp4_full_55m_prop": {"lm_bits_512": 1.1242, "lm_bits_2048": 1.0362, "sft_val_bits": 1.2410, "mtp_t2_acc": 0.3408, "mtp_t3_acc": 0.2464, "mtp_t4_acc": 0.2140},
+        "delta_lm_512": 0.0010,
+        "delta_sft_val": -0.0005,
+        "winner": "G1_MTP4_TAM_YAYILIM"
+      },
+      "preliminary_step_7000": {"lm_bits_512": 1.1207, "k3_r1_bits_512": 1.1198, "lm_bits_2048": 1.0277, "baseline_lm_2048": 1.0419, "mtp_t2_acc": 0.5158, "mtp_t3_acc": 0.3960, "mtp_t4_acc": 0.3239, "peak_vram_mib": 3442.3}
+    }
+  }
+}
