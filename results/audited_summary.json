@@ -1,6 +1,6 @@
 {
   "project": "Recursive Depth Flash Loop (RDFL)",
-  "updated_at": "2026-11-20T08:08:00+03:00",
+  "updated_at": "2026-11-20T15:30:00+03:00",
   "hardware": "Single NVIDIA RTX 2060 SUPER (8 GiB Turing FP16)",
   "raw_artifacts_dir": "results/raw",
   "studies": {
@@ -17,97 +17,272 @@
         "s5_perm32": "alt_metrik: kuyruk_24_31_acc (%)",
         "mqar_overwrite": "alt_metrik: uzerine_yazilan_acc (%)",
         "multihop_icl": "alt_metrik: 3hop_acc (%)",
-        "byte_lm_bpb": "birincil_metrik: bits_per_byte (lower is better)"
+        "byte_lm_bpb": "birincil_metrik: bits_per_byte (lower is better)",
+        "multihop_icl_caveat": "KPN-Y01: 3-hop accuracy 22.72% lies within the structural degree-filtering ceiling (1/4 = 25.0% / 1/8 = 12.5%, combined 18.75%); represents in-context structural node-role tracking."
       },
       "all_8_arms_1_20m": {
         "A0_RLT0": {
           "label": "RLT-0 (Feedback-Off)",
           "params": 1196352,
-          "parity64": {"mean": 50.18, "std": 0.37},
-          "s5_perm32": {"mean": 19.45, "std": 0.65},
-          "mqar_overwrite": {"mean": 22.4, "std": 1.28},
-          "multihop_icl": {"mean": 7.13, "std": 0.88},
-          "byte_lm_bpb": {"mean": 2.4019, "std": 0.0065}
+          "parity64": {
+            "mean": 50.18,
+            "std": 0.37
+          },
+          "s5_perm32": {
+            "mean": 19.45,
+            "std": 0.65
+          },
+          "mqar_overwrite": {
+            "mean": 22.4,
+            "std": 1.28
+          },
+          "multihop_icl": {
+            "mean": 7.13,
+            "std": 0.88
+          },
+          "byte_lm_bpb": {
+            "mean": 2.4019,
+            "std": 0.0065
+          }
         },
         "A1_RLT1": {
           "label": "RLT-1 (Token-Step Feedback)",
           "params": 1196928,
-          "parity64": {"mean": 79.78, "std": 26.25},
-          "s5_perm32": {"mean": 99.93, "std": 0.12},
-          "mqar_overwrite": {"mean": 21.96, "std": 1.32},
-          "multihop_icl": {"mean": 7.32, "std": 0.49},
-          "byte_lm_bpb": {"mean": 2.3648, "std": 0.0174}
+          "parity64": {
+            "mean": 79.78,
+            "std": 26.25
+          },
+          "s5_perm32": {
+            "mean": 99.93,
+            "std": 0.12
+          },
+          "mqar_overwrite": {
+            "mean": 21.96,
+            "std": 1.32
+          },
+          "multihop_icl": {
+            "mean": 7.32,
+            "std": 0.49
+          },
+          "byte_lm_bpb": {
+            "mean": 2.3648,
+            "std": 0.0174
+          }
         },
         "A2_RLT2": {
           "label": "RLT-2 (Chunk Boundary)",
           "params": 1196928,
-          "parity64": {"mean": 50.15, "std": 0.43},
-          "s5_perm32": {"mean": 20.27, "std": 1.86},
-          "mqar_overwrite": {"mean": 20.92, "std": 1.31},
-          "multihop_icl": {"mean": 7.03, "std": 0.29},
-          "byte_lm_bpb": {"mean": 2.4207, "std": 0.0217}
+          "parity64": {
+            "mean": 50.15,
+            "std": 0.43
+          },
+          "s5_perm32": {
+            "mean": 20.27,
+            "std": 1.86
+          },
+          "mqar_overwrite": {
+            "mean": 20.92,
+            "std": 1.31
+          },
+          "multihop_icl": {
+            "mean": 7.03,
+            "std": 0.29
+          },
+          "byte_lm_bpb": {
+            "mean": 2.4207,
+            "std": 0.0217
+          }
         },
         "A3_FLASH_HEBBIAN_RAW": {
           "label": "Flash Hebbian (Raw)",
           "params": 1201932,
-          "parity64": {"mean": 64.68, "std": 23.05},
-          "s5_perm32": {"mean": 92.75, "std": 3.73},
-          "mqar_overwrite": {"mean": 3.21, "std": 0.48},
-          "multihop_icl": {"mean": 5.63, "std": 2.48},
-          "byte_lm_bpb": {"mean": 2.3504, "std": 0.0028}
+          "parity64": {
+            "mean": 64.68,
+            "std": 23.05
+          },
+          "s5_perm32": {
+            "mean": 92.75,
+            "std": 3.73
+          },
+          "mqar_overwrite": {
+            "mean": 3.21,
+            "std": 0.48
+          },
+          "multihop_icl": {
+            "mean": 5.63,
+            "std": 2.48
+          },
+          "byte_lm_bpb": {
+            "mean": 2.3504,
+            "std": 0.0028
+          }
         },
         "A4_GDN_DELTA": {
           "label": "GatedDeltaNet (Iso-Param)",
           "params": 1200216,
-          "parity64": {"mean": 100.0, "std": 0.0},
-          "s5_perm32": {"mean": 73.13, "std": 3.54},
-          "mqar_overwrite": {"mean": 19.27, "std": 7.73},
-          "multihop_icl": {"mean": 6.12, "std": 3.03},
-          "byte_lm_bpb": {"mean": 2.2786, "std": 0.005}
+          "parity64": {
+            "mean": 100.0,
+            "std": 0.0
+          },
+          "s5_perm32": {
+            "mean": 73.13,
+            "std": 3.54
+          },
+          "mqar_overwrite": {
+            "mean": 19.27,
+            "std": 7.73
+          },
+          "multihop_icl": {
+            "mean": 6.12,
+            "std": 3.03
+          },
+          "byte_lm_bpb": {
+            "mean": 2.2786,
+            "std": 0.005
+          }
         },
         "A4B_GDN_ISOFLOP": {
           "label": "GatedDeltaNet (Iso-FLOP)",
           "params": 2572272,
-          "parity64": {"mean": 100.0, "std": 0.0},
-          "s5_perm32": {"mean": 95.17, "std": 3.93},
-          "mqar_overwrite": {"mean": 23.63, "std": 1.31},
-          "multihop_icl": {"mean": 3.97, "std": 0.5},
-          "byte_lm_bpb": {"mean": 2.1893, "std": 0.0064}
+          "parity64": {
+            "mean": 100.0,
+            "std": 0.0
+          },
+          "s5_perm32": {
+            "mean": 95.17,
+            "std": 3.93
+          },
+          "mqar_overwrite": {
+            "mean": 23.63,
+            "std": 1.31
+          },
+          "multihop_icl": {
+            "mean": 3.97,
+            "std": 0.5
+          },
+          "byte_lm_bpb": {
+            "mean": 2.1893,
+            "std": 0.0064
+          }
         },
         "A5_BDH_CQ_LOOP": {
           "label": "BDH-CQ Loop",
           "params": 1200586,
-          "parity64": {"mean": 49.88, "std": 0.4},
-          "s5_perm32": {"mean": 72.09, "std": 5.39},
-          "mqar_overwrite": {"mean": 3.36, "std": 0.23},
-          "multihop_icl": {"mean": 3.29, "std": 0.39},
-          "byte_lm_bpb": {"mean": 2.4676, "std": 0.0041}
+          "parity64": {
+            "mean": 49.88,
+            "std": 0.4
+          },
+          "s5_perm32": {
+            "mean": 72.09,
+            "std": 5.39
+          },
+          "mqar_overwrite": {
+            "mean": 3.36,
+            "std": 0.23
+          },
+          "multihop_icl": {
+            "mean": 3.29,
+            "std": 0.39
+          },
+          "byte_lm_bpb": {
+            "mean": 2.4676,
+            "std": 0.0041
+          }
         },
         "A6_DELTA_BDH_RLT": {
           "label": "RDFL (Delta+BDH+RLT2)",
           "params": 1201564,
-          "parity64": {"mean": 100.0, "std": 0.0},
-          "s5_perm32": {"mean": 100.0, "std": 0.0},
-          "mqar_overwrite": {"mean": 100.0, "std": 0.0},
-          "multihop_icl": {"mean": 22.72, "std": 1.3},
-          "byte_lm_bpb": {"mean": 2.2896, "std": 0.006}
+          "parity64": {
+            "mean": 100.0,
+            "std": 0.0
+          },
+          "s5_perm32": {
+            "mean": 100.0,
+            "std": 0.0
+          },
+          "mqar_overwrite": {
+            "mean": 100.0,
+            "std": 0.0
+          },
+          "multihop_icl": {
+            "mean": 22.72,
+            "std": 1.3
+          },
+          "byte_lm_bpb": {
+            "mean": 2.2896,
+            "std": 0.006
+          }
         }
       },
       "structural_ablations": {
         "anchor_ablation_finding": "At 1.20M, unanchored A6_R4_cipasiz matches anchored A6_R4_cipali on Multi-Hop ICL (22.69+-1.76% vs 22.72+-1.30%) and is slightly better on Byte LM (2.2843 vs 2.2896 bpb); similarly A5_R4_cipasiz beats A5_R4_cipali on both metrics. RDFL's core gain comes from GatedDeltaNet + BDH + RLT-2 synergy rather than input anchoring alone.",
-        "A6_R4_cipali": {"multihop_3hop_mean": 22.72, "multihop_3hop_std": 1.3, "byte_lm_bpb_mean": 2.2896, "byte_lm_bpb_std": 0.006, "byte_lm_kb_s": 19.0},
-        "A6_R4_cipasiz": {"multihop_3hop_mean": 22.69, "multihop_3hop_std": 1.76, "byte_lm_bpb_mean": 2.2843, "byte_lm_bpb_std": 0.0065, "byte_lm_kb_s": 19.53},
-        "A6_R2_cipali": {"multihop_3hop_mean": 23.28, "multihop_3hop_std": 0.92, "byte_lm_bpb_mean": 2.2903, "byte_lm_bpb_std": 0.0019, "byte_lm_kb_s": 34.43},
-        "A6_R1_cipali": {"multihop_3hop_mean": 18.0, "multihop_3hop_std": 8.27, "byte_lm_bpb_mean": 2.3044, "byte_lm_bpb_std": 0.0055, "byte_lm_kb_s": 59.2},
-        "A6_R4_rlt2siz": {"multihop_3hop_mean": 10.32, "multihop_3hop_std": 11.2, "byte_lm_bpb_mean": 2.279, "byte_lm_bpb_std": 0.0059, "byte_lm_kb_s": 46.73},
-        "A5_R4_cipali": {"multihop_3hop_mean": 3.29, "multihop_3hop_std": 0.39, "byte_lm_bpb_mean": 2.4676, "byte_lm_bpb_std": 0.0041, "byte_lm_kb_s": 86.5},
-        "A5_R4_cipasiz": {"multihop_3hop_mean": 3.71, "multihop_3hop_std": 0.74, "byte_lm_bpb_mean": 2.4379, "byte_lm_bpb_std": 0.0145, "byte_lm_kb_s": 87.7}
+        "A6_R4_cipali": {
+          "multihop_3hop_mean": 22.72,
+          "multihop_3hop_std": 1.3,
+          "byte_lm_bpb_mean": 2.2896,
+          "byte_lm_bpb_std": 0.006,
+          "byte_lm_kb_s": 19.0
+        },
+        "A6_R4_cipasiz": {
+          "multihop_3hop_mean": 22.69,
+          "multihop_3hop_std": 1.76,
+          "byte_lm_bpb_mean": 2.2843,
+          "byte_lm_bpb_std": 0.0065,
+          "byte_lm_kb_s": 19.53
+        },
+        "A6_R2_cipali": {
+          "multihop_3hop_mean": 23.28,
+          "multihop_3hop_std": 0.92,
+          "byte_lm_bpb_mean": 2.2903,
+          "byte_lm_bpb_std": 0.0019,
+          "byte_lm_kb_s": 34.43
+        },
+        "A6_R1_cipali": {
+          "multihop_3hop_mean": 18.0,
+          "multihop_3hop_std": 8.27,
+          "byte_lm_bpb_mean": 2.3044,
+          "byte_lm_bpb_std": 0.0055,
+          "byte_lm_kb_s": 59.2
+        },
+        "A6_R4_rlt2siz": {
+          "multihop_3hop_mean": 10.32,
+          "multihop_3hop_std": 11.2,
+          "byte_lm_bpb_mean": 2.279,
+          "byte_lm_bpb_std": 0.0059,
+          "byte_lm_kb_s": 46.73
+        },
+        "A5_R4_cipali": {
+          "multihop_3hop_mean": 3.29,
+          "multihop_3hop_std": 0.39,
+          "byte_lm_bpb_mean": 2.4676,
+          "byte_lm_bpb_std": 0.0041,
+          "byte_lm_kb_s": 86.5
+        },
+        "A5_R4_cipasiz": {
+          "multihop_3hop_mean": 3.71,
+          "multihop_3hop_std": 0.74,
+          "byte_lm_bpb_mean": 2.4379,
+          "byte_lm_bpb_std": 0.0145,
+          "byte_lm_kb_s": 87.7
+        }
       },
       "memory_scaling": {
         "backbone_spec": "L=6, d=768, H=8 (d_h=96)",
-        "measured_seq_lens": [512, 4096, 32768],
-        "decode_transformer_6l_kv_mib": [9.0, 72.0, 576.0],
-        "decode_gdn_6l_o1_measured_mib": [1.71, 1.71, 1.71],
+        "measured_seq_lens": [
+          512,
+          4096,
+          32768
+        ],
+        "decode_transformer_6l_kv_mib": [
+          9.0,
+          72.0,
+          576.0
+        ],
+        "decode_gdn_6l_o1_measured_mib": [
+          1.71,
+          1.71,
+          1.71
+        ],
         "decode_gdn_6l_o1_exact_mib": 1.7139,
         "decode_32k_reduction_factor_exact": 336.1,
         "vram_ceiling_mib": 3072.0,
@@ -118,7 +293,11 @@
     "self_capabilities_v2_1_2m": {
       "audit_status": "PASS (Independent Zero-Context Closure Audit; OY-1..OY-8 audited in raw JSONs; OY-9 deferred; OY-10 pre-training 55M baseline only)",
       "frozen_code_hash": "c8c2744cd90baca1",
-      "unseen_seeds": [42, 137, 2026],
+      "unseen_seeds": [
+        42,
+        137,
+        2026
+      ],
       "calibration_seed_disjoint": 401,
       "fp16_nans": 0,
       "peak_vram_mib": 1705.7,
@@ -132,7 +311,10 @@
         "r4_tax_bpb": 0.0041,
         "speculative_prompts_total": 288,
         "speculative_byte_diff": 0,
-        "speculative_flop_speedup_k2_k4": [1.4812, 1.5357],
+        "speculative_flop_speedup_k2_k4": [
+          1.4812,
+          1.5357
+        ],
         "wall_speedup_k3_k2": 1.0881,
         "wall_speedup_k3_k4": 0.991,
         "wall_speedup_k1_k4": 1.276
@@ -167,17 +349,24 @@
         "rsi_l34_ntp_bpb": 0.6259,
         "rsi_l34_mtp4_bpb": 0.6531,
         "rsi_l34_tax_bpb": 0.0272,
-        "structural_acc_t2_t3_t4": [71.17, 71.69, 64.05]
+        "structural_acc_t2_t3_t4": [
+          71.17,
+          71.69,
+          64.05
+        ]
       },
       "oy5_prompt_self_correction": {
         "verdict": "REJECT",
         "d0_draft_acc": 87.37,
-        "d1_d2_after_revision_acc": [48.44, 49.22],
+        "d1_d2_after_revision_acc": [
+          48.44,
+          49.22
+        ],
         "zero_param_logp_auroc": 0.9513,
         "mlp_verifier_auroc": 0.5867
       },
       "oy6_fp32_slotcore": {
-        "verdict": "ADOPT_WITH_CAVEATS (symmetry collapse + iso-param LM tax)",
+        "verdict": "DEFERRED_REPLACED_IN_V0_3 (1.20M stability gain vs. 55M delta_durum=0.0 + symmetry collapse cos=0.999982)",
         "runs_zero_nan": 36,
         "total_runs": 36,
         "mqar_acc_mean": 99.88,
@@ -198,11 +387,31 @@
         "baseline_byte_lm_bpb_std": 0.0017,
         "slot_vs_baseline_byte_lm_delta_bpb": 0.0173,
         "graf_izli_per_seed": {
-          "seeds": [42, 137, 2026],
-          "OY6_A6_TABAN": [99.6, 99.77, 4.89],
-          "OY6_A6_BDHSIZ": [5.97, 99.34, 99.92],
-          "OY6_A6_SLOT4_FP32": [95.3, 98.19, 97.17],
-          "OY6_A6_SASKINLIK_GDN": [99.61, 59.72, 85.06]
+          "seeds": [
+            42,
+            137,
+            2026
+          ],
+          "OY6_A6_TABAN": [
+            99.6,
+            99.77,
+            4.89
+          ],
+          "OY6_A6_BDHSIZ": [
+            5.97,
+            99.34,
+            99.92
+          ],
+          "OY6_A6_SLOT4_FP32": [
+            95.3,
+            98.19,
+            97.17
+          ],
+          "OY6_A6_SASKINLIK_GDN": [
+            99.61,
+            59.72,
+            85.06
+          ]
         }
       },
       "oy7_bounded_rsi_75gens": {
@@ -234,13 +443,19 @@
         "note": "Online weight self-editing (SEAL / E-SELF / E-PRED) was deferred to future work after literature review; no standalone experimental run is claimed."
       },
       "oy10_toolrunner": {
-        "verdict": "PRE_TRAINING_BASELINE_ONLY",
-        "note": "ToolRunner execution harness resides in the external training repository; the only raw measurement currently in this repo is the pre-training 55M baseline (0.0% call rate / 0.0% accuracy across 24 arithmetic prompts). Post-training 55M ToolRunner evaluation is pending completion of the ongoing 42K adaptation.",
+        "verdict": "ADOPT_IN_TEMPLATE_SCOPE (100% on 24 prompts; base core also reaches 100% in 1.5K steps)",
+        "note": "ToolRunner execution harness resides in the external training repository. Pre-training 55M baseline is 0.0% across 24 arithmetic prompts; post-training 55M Ana (21K), RSI (8-gen), and RDFL-off G_BASE_ONLY (1.5K) all reach 100.0% call rate and 100.0% accuracy (0.0% without tool), while RDFL-off inference on co-adapted 21K en_iyi.pt drops to 54.17%.",
         "pretraining_55m_n_questions": 24,
         "pretraining_55m_no_tool_acc": 0.0,
         "pretraining_55m_call_rate": 0.0,
         "pretraining_55m_tool_acc": 0.0,
-        "pretraining_55m_gain_pp": 0.0
+        "pretraining_55m_gain_pp": 0.0,
+        "posttraining_55m_ana_call_rate": 1.0,
+        "posttraining_55m_ana_tool_acc": 1.0,
+        "posttraining_55m_ana_no_tool_acc": 0.0,
+        "posttraining_55m_rsi_tool_acc": 1.0,
+        "posttraining_55m_base_only_1500_tool_acc": 1.0,
+        "posttraining_55m_rdfl_off_21k_tool_acc": 0.5417
       }
     },
     "diogenes_rdfl_55m_gates": {
@@ -275,7 +490,7 @@
         "mtp_t4_acc": 0.1071
       },
       "hour1_mtp4_ab_1500steps": {
-        "control_scope_note": "G0 vs. G1 isolates MTP-4 (lam_mtp=0 vs 0.15) with RDFL enabled in both arms; a dedicated RDFL-off continued-pretraining control (G_BASE_ONLY, 1.5K steps) is scheduled immediately after the ongoing 42K run.",
+        "control_scope_note": "G0 vs. G1 isolates MTP-4 (lam_mtp=0 vs 0.15) with RDFL enabled in both arms. The dedicated RDFL-off continued-pretraining control (G_BASE_ONLY, 1,500 steps) is now completed in studies.diogenes_rdfl_55m_final.g_base_only_kontrol.",
         "G0_control": {
           "lm_bits_512": 1.1232,
           "r1_lm_bits_512": 1.1233,
@@ -311,56 +526,549 @@
         "sft_acc_abstain40": 0.9535,
         "slotcore_fast_val_lm_2048": 1.0419
       }
-    }
-  },
-  "in_progress_live_observations": {
-    "audit_status": "PRELIMINARY_IN_PROGRESS (live 42,000-step run on RTX 2060S; raw fast-val snapshot & CPU SlotCore probe verified against results/raw/)",
-    "preliminary_step_7000": {
-      "lm_bits_512": 1.1207,
-      "k3_r1_bits_512": 1.1198,
-      "lm_bits_2048": 1.0277,
-      "sft_val_bits": 1.2442,
-      "mtp_t2_acc": 0.5158,
-      "mtp_t3_acc": 0.396,
-      "mtp_t4_acc": 0.3239,
-      "peak_vram_mib": 3442.3
     },
-    "preliminary_step_17500": {
-      "lm_bits_512": 1.1188,
-      "k3_r1_bits_512": 1.1187,
-      "lm_bits_2048": 1.0278,
-      "sft_val_bits": 1.2492,
-      "mtp_t2_acc": 0.5416,
-      "mtp_t3_acc": 0.4247,
-      "mtp_t4_acc": 0.3447,
-      "peak_vram_mib": 3442.7
-    },
-    "preliminary_step_21000": {
-      "lm_bits_512": 1.1197,
-      "k3_r1_bits_512": 1.1201,
-      "lm_bits_2048": 1.0254,
-      "sft_val_bits": 1.2485,
-      "mtp_t2_acc": 0.5494,
-      "mtp_t3_acc": 0.4288,
-      "mtp_t4_acc": 0.3535,
-      "peak_vram_mib": 3442.7
-    },
-    "mechanistic_finding_slotcore_symmetry_collapse": {
-      "raw_probe_file": "results/raw/slotcore_55m_cosine_probe.json",
-      "checkpoint_step": 21000,
-      "chunks_evaluated": 16,
-      "bytes_evaluated": 1024,
-      "init_slots_cos_min": 0.501693,
-      "init_slots_cos_max": 0.751166,
-      "init_slots_cos_mean": 0.644612,
-      "init_slots_norm_mean": 0.6941,
-      "post_16_chunks_cos_mean": 0.999982,
-      "post_16_chunks_cos_min": 0.999959,
-      "post_16_chunks_cos_max": 0.999999,
-      "post_16_chunks_norm_mean": 664.5179,
-      "earlier_step17500_observation": "cos 0.48-0.69 -> 1.0000, norm ~577 (continues growing to 664.5 at step 21,000 without damping)",
-      "interpretation": "In the live 55M checkpoint, symmetric broadcast of chunk_end_state into all S=4 slots without slot-axis competition or norm damping drives pairwise slot cosine similarity from 0.50-0.75 (init mean 0.6446) to 0.999982 (min 0.999959) with mean norm 664.5 after 16 real chunks. Empirical gains therefore arise from an accumulative FP32 chunk-boundary residual state rather than 4 specialized slots.",
-      "planned_v0_3_design": "Competitive slot-axis SlotAttention routing with per-slot RMSNorm and learned contraction/damping."
+    "diogenes_rdfl_55m_final": {
+      "audit_status": "Pending Carbon closure audit for 55M final artifacts",
+      "frozen_code_hash": "3c1a59a1dd2bb0f7",
+      "training_42k_summary": {
+        "toplam_adim": 42000,
+        "en_iyi_adim": 21000,
+        "en_iyi_bilesik": 1.1124,
+        "atlanan_adim": 15,
+        "sure_sn": 41894.8,
+        "tepe_vram_mib": 3443.5,
+        "son_val_42k": {
+          "lm_bits_512": 1.1169,
+          "r1_lm_bits_512": 1.1185,
+          "lm_bits_2048": 1.0231,
+          "sft_val_bits": 1.2998,
+          "bilesik_skor": 1.1207,
+          "mtp_t2_acc": 0.5594,
+          "mtp_t3_acc": 0.4398,
+          "mtp_t4_acc": 0.3576
+        }
+      },
+      "trajectory_fast_val": {
+        "step_7000": {
+          "lm_bits_512": 1.1207,
+          "k3_r1_bits_512": 1.1198,
+          "lm_bits_2048": 1.0277,
+          "sft_val_bits": 1.2442,
+          "bilesik_skor": 1.1129,
+          "mtp_t2_acc": 0.5158,
+          "mtp_t3_acc": 0.396,
+          "mtp_t4_acc": 0.3239,
+          "peak_vram_mib": 3442.3
+        },
+        "step_17500": {
+          "lm_bits_512": 1.1188,
+          "k3_r1_bits_512": 1.1187,
+          "lm_bits_2048": 1.0278,
+          "sft_val_bits": 1.2492,
+          "bilesik_skor": 1.113,
+          "mtp_t2_acc": 0.5416,
+          "mtp_t3_acc": 0.4247,
+          "mtp_t4_acc": 0.3447,
+          "peak_vram_mib": 3442.7
+        },
+        "step_21000": {
+          "lm_bits_512": 1.1197,
+          "k3_r1_bits_512": 1.1201,
+          "lm_bits_2048": 1.0254,
+          "sft_val_bits": 1.2485,
+          "bilesik_skor": 1.1124,
+          "mtp_t2_acc": 0.5494,
+          "mtp_t3_acc": 0.4288,
+          "mtp_t4_acc": 0.3535,
+          "peak_vram_mib": 3442.7
+        },
+        "step_42000": {
+          "lm_bits_512": 1.1169,
+          "k3_r1_bits_512": 1.1185,
+          "lm_bits_2048": 1.0231,
+          "sft_val_bits": 1.2998,
+          "bilesik_skor": 1.1207,
+          "mtp_t2_acc": 0.5594,
+          "mtp_t3_acc": 0.4398,
+          "mtp_t4_acc": 0.3576,
+          "peak_vram_mib": 3443.5
+        }
+      },
+      "ana_55m": {
+        "dil": {
+          "mix_val_512_r2_bpb": 1.1467,
+          "mix_val_512_r1_bpb": 1.1476,
+          "mix_val_2048_r2_bpb": 1.0566,
+          "web_val_2048_r2_bpb": 1.3878
+        },
+        "sft": {
+          "sft_val_bits": 1.263,
+          "sft_val_satir": 400.0,
+          "completion_rate": 0.78,
+          "repetition_rate": 0.4
+        },
+        "cmem_battery": {
+          "single_held_d4000": 1.0,
+          "single_natural_d4000": 1.0,
+          "chain2_held": 1.0,
+          "chain3_held": 0.9062,
+          "chain4_held": 1.0,
+          "chain5_held": 1.0,
+          "absent_held": 1.0,
+          "cross_forward": 1.0,
+          "cross_backward": 0.9688,
+          "cross_natural": 0.9375,
+          "cross_absent": 0.9688,
+          "broken_chain2": 1.0,
+          "single_held_off": 0.0,
+          "natural_bits_on": 1.3274,
+          "natural_bits_off": 1.4311
+        },
+        "real_qa_d4000": {
+          "mesafe": 4000,
+          "gecerli_soru": 128,
+          "qa": {
+            "n": 128,
+            "on_tf_exact": 0.1328,
+            "on_tf_first": 0.1875,
+            "on_bits": 1.1366,
+            "off_tf_exact": 0.0,
+            "off_bits": 2.7291,
+            "gen_on_exact": 0.1328
+          },
+          "plain": {
+            "n": 128,
+            "on_tf_exact": 0.0,
+            "on_tf_first": 0.0156,
+            "on_bits": 2.2672,
+            "off_tf_exact": 0.0,
+            "off_bits": 3.4394,
+            "gen_on_exact": 0.0
+          }
+        },
+        "oy1b_ve_oy4_spekulatif": {
+          "n_istem": 8,
+          "maks_yeni_bayt": 32,
+          "duz_r2_ms_ort": 1409.46,
+          "duz_r2_ms_std": 40.45,
+          "oy1b_k3_uyusmaz_istem": 0,
+          "oy1b_k3_kabul_orani": 0.99,
+          "oy1b_k3_cagri_basina_bayt": 3.475,
+          "oy1b_k3_ms_ort": 1353.06,
+          "oy1b_k3_ms_std": 87.44,
+          "oy1b_k3_duvar_hizlanma": 1.042,
+          "oy4_mtp4_uyusmaz_istem": 0,
+          "oy4_mtp4_kabul_orani": 0.4276,
+          "oy4_mtp4_cagri_basina_bayt": 1.277,
+          "oy4_mtp4_ms_ort": 1455.97,
+          "oy4_mtp4_ms_std": 81.15,
+          "oy4_mtp4_duvar_hizlanma": 0.968
+        },
+        "oy3_kalibrasyon": {
+          "t_yildiz": 1.0,
+          "mix_val": {
+            "dogruluk_tam": 0.7402,
+            "dogruluk_cekin20": 0.857,
+            "dogruluk_cekin40": 0.9457,
+            "cekin40_kazanc_puan": 20.55,
+            "auroc": 0.8995,
+            "aurc": 0.0651,
+            "ece15_ham": 0.0089,
+            "ece15_kalibre": 0.0089
+          },
+          "sft_val": {
+            "dogruluk_tam": 0.7499,
+            "dogruluk_cekin20": 0.8657,
+            "dogruluk_cekin40": 0.9541,
+            "cekin40_kazanc_puan": 20.42,
+            "auroc": 0.9031,
+            "aurc": 0.0602,
+            "ece15_ham": 0.0287,
+            "ece15_kalibre": 0.0287
+          }
+        },
+        "oy6_slotcore_ablasyon": {
+          "slot_acik": {
+            "mix_val_bpb_2048": 1.0254,
+            "durum_izleme_dogruluk": 0.5938
+          },
+          "slot_kapali": {
+            "mix_val_bpb_2048": 1.0259,
+            "durum_izleme_dogruluk": 0.5938
+          },
+          "delta_bpb_2048": -0.0005,
+          "delta_durum_puan": 0.0
+        },
+        "oy10_toolrunner": {
+          "n_soru": 24,
+          "aracsiz_dogruluk": 0.0,
+          "toolrunner_cagri_orani": 1.0,
+          "toolrunner_dogruluk": 1.0,
+          "kazanc_puan": 100.0
+        }
+      },
+      "oy7_rsi_55m": {
+        "nesil_sayisi": 8,
+        "nesil_adim": 100,
+        "sure_sn": 745.9,
+        "tepe_vram_mib": 2262.2,
+        "rollback_sayisi": 0,
+        "toplam_atlanan": 0,
+        "tur0": {
+          "id_pass1": 1.0,
+          "ara_pass1": 0.0,
+          "ara_logp_best4": 0.0,
+          "ood_uzak_pass1": 0.0,
+          "ipt_pass1": 0.5,
+          "lm_bits_512": 1.1197
+        },
+        "son_nesil": {
+          "nesil": 8,
+          "l_cur": 5,
+          "sonraki_l_cur": 4,
+          "hakem_kabul_orani": 0.0,
+          "kabul_iz_sayisi": 0,
+          "rollback": false,
+          "atlanan_adim": 0,
+          "id_pass1": 1.0,
+          "ara_pass1": 0.0,
+          "ara_logp_best4": 0.0,
+          "ood_uzak_pass1": 0.0,
+          "ipt_pass1": 0.5,
+          "lm_bits_512": 1.1176
+        },
+        "l4_kabul_orani": 1.0,
+        "l5_kabul_orani": 0.0
+      },
+      "rsi_55m": {
+        "dil": {
+          "mix_val_512_r2_bpb": 1.1452,
+          "mix_val_512_r1_bpb": 1.1464,
+          "mix_val_2048_r2_bpb": 1.0547,
+          "web_val_2048_r2_bpb": 1.3859
+        },
+        "sft": {
+          "sft_val_bits": 1.2543,
+          "sft_val_satir": 400.0,
+          "completion_rate": 0.58,
+          "repetition_rate": 0.6
+        },
+        "cmem_battery": {
+          "single_held_d4000": 1.0,
+          "single_natural_d4000": 1.0,
+          "chain2_held": 1.0,
+          "chain3_held": 0.9375,
+          "chain4_held": 1.0,
+          "chain5_held": 1.0,
+          "absent_held": 1.0,
+          "cross_forward": 1.0,
+          "cross_backward": 0.9688,
+          "cross_natural": 0.9375,
+          "cross_absent": 0.9688,
+          "broken_chain2": 1.0,
+          "single_held_off": 0.0,
+          "natural_bits_on": 1.3265,
+          "natural_bits_off": 1.4291
+        },
+        "real_qa_d4000": {
+          "mesafe": 4000,
+          "gecerli_soru": 128,
+          "qa": {
+            "n": 128,
+            "on_tf_exact": 0.125,
+            "on_tf_first": 0.1875,
+            "on_bits": 1.135,
+            "off_tf_exact": 0.0,
+            "off_bits": 2.7277,
+            "gen_on_exact": 0.125
+          },
+          "plain": {
+            "n": 128,
+            "on_tf_exact": 0.0,
+            "on_tf_first": 0.0156,
+            "on_bits": 2.262,
+            "off_tf_exact": 0.0,
+            "off_bits": 3.4346,
+            "gen_on_exact": 0.0
+          }
+        },
+        "oy1b_ve_oy4_spekulatif": {
+          "n_istem": 8,
+          "maks_yeni_bayt": 32,
+          "duz_r2_ms_ort": 1300.23,
+          "duz_r2_ms_std": 19.71,
+          "oy1b_k3_uyusmaz_istem": 0,
+          "oy1b_k3_kabul_orani": 1.0,
+          "oy1b_k3_cagri_basina_bayt": 3.556,
+          "oy1b_k3_ms_ort": 1290.77,
+          "oy1b_k3_ms_std": 27.39,
+          "oy1b_k3_duvar_hizlanma": 1.007,
+          "oy4_mtp4_uyusmaz_istem": 0,
+          "oy4_mtp4_kabul_orani": 0.3723,
+          "oy4_mtp4_cagri_basina_bayt": 1.176,
+          "oy4_mtp4_ms_ort": 1503.04,
+          "oy4_mtp4_ms_std": 17.64,
+          "oy4_mtp4_duvar_hizlanma": 0.865
+        },
+        "oy3_kalibrasyon": {
+          "t_yildiz": 1.0,
+          "mix_val": {
+            "dogruluk_tam": 0.7399,
+            "dogruluk_cekin20": 0.8572,
+            "dogruluk_cekin40": 0.947,
+            "cekin40_kazanc_puan": 20.71,
+            "auroc": 0.9005,
+            "aurc": 0.0649,
+            "ece15_ham": 0.0078,
+            "ece15_kalibre": 0.0078
+          },
+          "sft_val": {
+            "dogruluk_tam": 0.7515,
+            "dogruluk_cekin20": 0.8675,
+            "dogruluk_cekin40": 0.956,
+            "cekin40_kazanc_puan": 20.45,
+            "auroc": 0.9034,
+            "aurc": 0.0595,
+            "ece15_ham": 0.0221,
+            "ece15_kalibre": 0.0221
+          }
+        },
+        "oy6_slotcore_ablasyon": {
+          "slot_acik": {
+            "mix_val_bpb_2048": 1.0244,
+            "durum_izleme_dogruluk": 0.5938
+          },
+          "slot_kapali": {
+            "mix_val_bpb_2048": 1.0247,
+            "durum_izleme_dogruluk": 0.5938
+          },
+          "delta_bpb_2048": -0.0003,
+          "delta_durum_puan": 0.0
+        },
+        "oy10_toolrunner": {
+          "n_soru": 24,
+          "aracsiz_dogruluk": 0.0,
+          "toolrunner_cagri_orani": 1.0,
+          "toolrunner_dogruluk": 1.0,
+          "kazanc_puan": 100.0
+        }
+      },
+      "g_base_only_kontrol": {
+        "toplam_adim": 1500,
+        "tohum": 42,
+        "sure_sn": 437.9,
+        "tepe_vram_mib": 2770.6,
+        "atlanan_adim": 0,
+        "nan_sayisi": 0,
+        "param_sayim": {
+          "egitilen_core_param": 55078145,
+          "egitilen_reader_param": 858436,
+          "egitilen_adaptor_param": 0,
+          "egitilen_mtp_param": 0,
+          "dondurulmus_adaptor_mtp_param": 7239950
+        },
+        "adim0_maks_abs_delta_r2": 0.0,
+        "son_maks_abs_delta_r2": 0.0,
+        "son_val": {
+          "lm_bits_512": 1.1231,
+          "r1_lm_bits_512": 1.1231,
+          "lm_bits_2048": 1.0346,
+          "sft_val_bits": 1.241,
+          "bilesik_skor": 1.1157,
+          "mtp_t2_acc": 0.1014,
+          "mtp_t3_acc": 0.0929,
+          "mtp_t4_acc": 0.1071
+        },
+        "delta_g0_eksi_base_only": {
+          "lm_bits_512": 0.0001,
+          "r1_lm_bits_512": 0.0002,
+          "lm_bits_2048": -0.0002,
+          "sft_val_bits": 0.0005,
+          "bilesik_skor": 0.0001
+        },
+        "delta_g1_eksi_base_only": {
+          "lm_bits_512": 0.0011,
+          "r1_lm_bits_512": 0.0006,
+          "lm_bits_2048": 0.0016,
+          "sft_val_bits": 0.0,
+          "bilesik_skor": 0.001,
+          "mtp_t2_acc": 0.2394,
+          "mtp_t3_acc": 0.1535,
+          "mtp_t4_acc": 0.1069
+        },
+        "dil": {
+          "mix_val_512_r2_bpb": 1.1524,
+          "mix_val_512_r1_bpb": 1.1524,
+          "mix_val_2048_r2_bpb": 1.0645,
+          "web_val_2048_r2_bpb": 1.3949
+        },
+        "sft": {
+          "sft_val_bits": 1.255,
+          "sft_val_satir": 400.0,
+          "completion_rate": 0.74,
+          "repetition_rate": 0.48
+        },
+        "real_qa_d4000_qa": {
+          "n": 128,
+          "on_tf_exact": 0.0625,
+          "on_tf_first": 0.1797,
+          "on_bits": 1.1947,
+          "off_tf_exact": 0.0,
+          "off_bits": 2.778,
+          "gen_on_exact": 0.0625
+        },
+        "durum_izleme_dogruluk": 0.25,
+        "oy10_toolrunner": {
+          "n_soru": 24,
+          "aracsiz_dogruluk": 0.0,
+          "toolrunner_cagri_orani": 1.0,
+          "toolrunner_dogruluk": 1.0,
+          "kazanc_puan": 100.0
+        }
+      },
+      "rdfl_on_off_21k": {
+        "ckpt_adim": 21000,
+        "rdfl_acik_delta_z_tani": {
+          "maks_abs_delta_r2": 22.390625,
+          "maks_abs_delta_r1": 9.7890625,
+          "rms_delta_r2": 1.140985,
+          "rms_z_taban": 8.089656,
+          "goreli_delta_rms": 0.141042,
+          "maks_abs_logits_fark_taban": 3.7890625
+        },
+        "rdfl_kapali_delta_z_tani": {
+          "maks_abs_delta_r2": 0.0,
+          "maks_abs_delta_r1": 0.0,
+          "rms_delta_r2": 0.0,
+          "rms_z_taban": 8.089656,
+          "goreli_delta_rms": 0.0,
+          "maks_abs_logits_fark_taban": 0.0
+        },
+        "rdfl_acik": {
+          "hizli_val": {
+            "lm_bits_512": 1.1197,
+            "r1_lm_bits_512": 1.1201,
+            "lm_bits_2048": 1.0254,
+            "sft_val_bits": 1.2485,
+            "bilesik_skor": 1.1124,
+            "mtp_t2_acc": 0.5494,
+            "mtp_t3_acc": 0.4288,
+            "mtp_t4_acc": 0.3535
+          },
+          "dil": {
+            "mix_val_512_r2_bpb": 1.1467,
+            "mix_val_512_r1_bpb": 1.1476,
+            "mix_val_2048_r2_bpb": 1.0566,
+            "web_val_2048_r2_bpb": 1.3878
+          },
+          "sft": {
+            "sft_val_bits": 1.263,
+            "sft_val_satir": 400.0,
+            "completion_rate": 0.78,
+            "repetition_rate": 0.4
+          },
+          "real_qa_d4000_qa": {
+            "n": 128,
+            "on_tf_exact": 0.1328,
+            "on_tf_first": 0.1875,
+            "on_bits": 1.1366,
+            "off_tf_exact": 0.0,
+            "off_bits": 2.7291,
+            "gen_on_exact": 0.1328
+          },
+          "real_qa_d4000_plain_on_bits": 2.2672,
+          "durum_izleme_dogruluk": 0.5938,
+          "oy10_toolrunner": {
+            "n_soru": 24,
+            "aracsiz_dogruluk": 0.0,
+            "toolrunner_cagri_orani": 1.0,
+            "toolrunner_dogruluk": 1.0,
+            "kazanc_puan": 100.0
+          }
+        },
+        "rdfl_kapali": {
+          "hizli_val": {
+            "lm_bits_512": 1.1197,
+            "r1_lm_bits_512": 1.1197,
+            "lm_bits_2048": 1.026,
+            "sft_val_bits": 1.2412,
+            "bilesik_skor": 1.1112,
+            "mtp_t2_acc": 0.4351,
+            "mtp_t3_acc": 0.3173,
+            "mtp_t4_acc": 0.2724
+          },
+          "dil": {
+            "mix_val_512_r2_bpb": 1.1477,
+            "mix_val_512_r1_bpb": 1.1477,
+            "mix_val_2048_r2_bpb": 1.0568,
+            "web_val_2048_r2_bpb": 1.3878
+          },
+          "sft": {
+            "sft_val_bits": 1.2564,
+            "sft_val_satir": 400.0,
+            "completion_rate": 0.34,
+            "repetition_rate": 0.78
+          },
+          "real_qa_d4000_qa": {
+            "n": 128,
+            "on_tf_exact": 0.1094,
+            "on_tf_first": 0.1953,
+            "on_bits": 1.1532,
+            "off_tf_exact": 0.0,
+            "off_bits": 2.7331,
+            "gen_on_exact": 0.1094
+          },
+          "real_qa_d4000_plain_on_bits": 2.3454,
+          "durum_izleme_dogruluk": 0.5938,
+          "oy10_toolrunner": {
+            "n_soru": 24,
+            "aracsiz_dogruluk": 0.0,
+            "toolrunner_cagri_orani": 0.5417,
+            "toolrunner_dogruluk": 0.5417,
+            "kazanc_puan": 54.17
+          }
+        },
+        "delta_acik_eksi_kapali": {
+          "mix_val_512_r2_bpb": -0.001,
+          "mix_val_512_r1_bpb": -0.0001,
+          "mix_val_2048_r2_bpb": -0.0002,
+          "web_val_2048_r2_bpb": 0.0,
+          "sft_val_bits": 0.0066,
+          "sft_completion_rate": 0.44,
+          "sft_repetition_rate": -0.38,
+          "real_qa_qa_gen_on_exact": 0.0234,
+          "real_qa_qa_on_tf_exact": 0.0234,
+          "real_qa_qa_on_bits": -0.0166,
+          "real_qa_plain_on_bits": -0.0782,
+          "durum_izleme_dogruluk": 0.0,
+          "oy10_aracsiz_dogruluk": 0.0,
+          "oy10_toolrunner_cagri_orani": 0.4583,
+          "oy10_toolrunner_dogruluk": 0.4583,
+          "hizli_bilesik_skor": 0.0012
+        }
+      },
+      "mechanistic_finding_slotcore_symmetry_collapse": {
+        "raw_probe_file": "results/raw/slotcore_55m_cosine_probe.json",
+        "checkpoint_step": 21000,
+        "chunks_evaluated": 16,
+        "bytes_evaluated": 1024,
+        "init_slots_cos_min": 0.501693,
+        "init_slots_cos_max": 0.751166,
+        "init_slots_cos_mean": 0.644612,
+        "init_slots_norm_mean": 0.6941,
+        "post_16_chunks_cos_mean": 0.999982,
+        "post_16_chunks_cos_min": 0.999959,
+        "post_16_chunks_cos_max": 0.999999,
+        "post_16_chunks_norm_mean": 664.5179,
+        "earlier_step17500_observation": "cos 0.48-0.69 -> 1.0000, norm ~577 (continues growing to 664.5 at step 21,000 without damping)",
+        "interpretation": "In the live 55M checkpoint, symmetric broadcast of chunk_end_state into all S=4 slots without slot-axis competition or norm damping drives pairwise slot cosine similarity from 0.50-0.75 (init mean 0.6446) to 0.999982 (min 0.999959) with mean norm 664.5 after 16 real chunks. Empirical gains therefore arise from an accumulative FP32 chunk-boundary residual state rather than 4 specialized slots.",
+        "planned_v0_3_design": "Competitive slot-axis SlotAttention routing with per-slot RMSNorm and learned contraction/damping.",
+        "ana_55m_delta_bpb_2048": -0.0005,
+        "ana_55m_delta_durum_puan": 0.0,
+        "rsi_55m_delta_bpb_2048": -0.0003,
+        "rsi_55m_delta_durum_puan": 0.0,
+        "verdict_55m": "DEFERRED_REPLACED_IN_V0_3 (zero state-tracking gain delta_durum=0.0 + cos=0.999982 collapse)"
+      }
     }
   }
 }

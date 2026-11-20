@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from benchmarks.verify_55m import CellChecker, load_json, verify_55m_and_live
+from benchmarks.verify_55m import CellChecker, load_json, verify_55m_and_final
 
 RAW_DIR = ROOT / "results" / "raw"
 SUMMARY_PATH = ROOT / "results" / "audited_summary.json"
@@ -287,7 +287,13 @@ def main() -> int:
     _verify_oy4_and_oy5(ck, oy14, oy56, oy)
     _verify_oy6(ck, oy56, oy)
     _verify_oy7_8_10(ck, oy14, oy56, oy7, oy8, base55, oy)
-    verify_55m_and_live(ck, RAW_DIR, studies["diogenes_rdfl_55m_gates"], summary["in_progress_live_observations"])
+    verify_55m_and_final(
+        ck,
+        RAW_DIR,
+        studies["diogenes_rdfl_55m_gates"],
+        studies["diogenes_rdfl_55m_final"],
+        oy["oy10_toolrunner"],
+    )
 
     if ck.errors:
         for err in ck.errors:

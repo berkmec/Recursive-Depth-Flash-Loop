@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-EE4C2C.svg)](pyproject.toml)
-[![Raw JSON Verification](https://img.shields.io/badge/Verified_Cells-320%2F320_(0_mismatches)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
+[![Raw JSON Verification](https://img.shields.io/badge/Verified_Cells-698%2F698_(0_mismatches)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
 
 **[English](README.md)** · **[Türkçe](README.tr.md)** · **[Architectural Specification](docs/ARCHITECTURE.md)** · **[Audited Summary JSON](results/audited_summary.json)** · **[Raw Audited JSONs](results/raw/)**
 
@@ -18,7 +18,7 @@ We introduce **Recursive Depth Flash Loop (`RDFL`)**, a tokenizer-free, byte-lev
 
 1. **Weight-Tied Recursive Depth (with Optional Input Anchoring):** Iterates a shared recurrent block $R$ times ($h_t^{(r-1)} + \alpha_r e_t + e_r$). Controlled `1.20M` ablations (Section 2) show that `RDFL`'s primary capability gain stems from the synergy of `GatedDeltaNet + BDH + RLT-2` rather than input anchoring alone (unanchored `A6_R4_cipasiz` matches anchored `A6_R4_cipali` on `Multi-Hop ICL` and slightly improves `Byte LM` at marginally higher variance).
 2. **Chunk-Parallel Gated DeltaNet with Householder Write Gates:** Combines causal short convolution ($k=4$), multi-scale slow decay ($\alpha_0 \in [0.953, 0.999]$), and Householder-range write gates ($\beta_t = 2\sigma(\cdot) \in (0,2)$), maintaining an exact $O(1)$ matrix state $S_t^{(r)} \in \mathbb{R}^{H \times d_h \times d_h}$ with chunk-parallel WY and single-step equivalence (`4.44e-16` max error in FP64).
-3. **Sparse Associative Gating (`BDH`) & Chunk-Boundary `FP32 SlotCore`:** Pairs Gated DeltaNet with a doubly-sparse ReLU interaction gate and a chunk-boundary `float32`-locked memory bank ($S=4$), eliminating mixed-precision NaN crashes (`0/36` NaN across unseen seeds; see Section 3.1 for both its iso-param `Byte LM` trade-off and our mechanistic symmetry-collapse finding).
+3. **Sparse Associative Gating (`BDH`) & Chunk-Boundary `FP32 SlotCore` (Deferred in `v0.3`):** Pairs Gated DeltaNet with a doubly-sparse ReLU interaction gate and a chunk-boundary `float32`-locked memory bank ($S=4$), eliminating mixed-precision NaN crashes (`0/36` NaN at `1.20M`). However, direct `55M` ablation shows zero state-tracking gain (`delta_durum = 0.0`, `delta_bpb = -0.0005 / -0.0003`) alongside symmetric slot collapse (`cos = 0.999982`, Section 3.1), so symmetric `SlotCore` is **deferred / replaced in `v0.3`**.
 4. **Zero-Initialization Residual Adaptation & Lossless Auxiliary Heads:** A zero-initialized output projection ($W_{\uparrow}|_0 = 0$) attaches `RDFL` onto pretrained backbones with exact `0.0` step-0 deviation, alongside lossless speculative decoding (`K3` and `MTP-4` in [`rdfl/speculative.py`](rdfl/speculative.py)), zero-parameter calibrated uncertainty (`MSP + T*`), zero-retention ring streaming, and verifier-gated bounded self-improvement (`AZR` RSI).
 
 ---
@@ -50,6 +50,7 @@ All 8 controlled arms (`mean ± sample std` across 3 seeds, verified programmati
 | `A5` | `BDH-CQ Loop` | `1.20M` | `49.88 ± 0.40` | `72.09 ± 5.39` | `3.36 ± 0.23` | `3.29 ± 0.39` | `2.4676 ± 0.0041` |
 | **`A6`** | **`RDFL` (`Delta+BDH+RLT2`)** | **`1.20M`** | **`100.00 ± 0.00`** | **`100.00 ± 0.00`** | **`100.00 ± 0.00`** | **`22.72 ± 1.30`** | `2.2896 ± 0.0060` |
 
+- **Multi-Hop ICL Degree-Filtering Caveat (`KPN-Y01`):** On this synthetic `Multi-Hop ICL` split, `RDFL`'s `22.72 ± 1.30%` 3-hop accuracy outperforms `A4B` (`3.97%`, `5.7×`) and `A0` (`7.13%`), **but lies within the structural degree-filtering ceiling (`1/4 = 25.0%` / `1/8 = 12.5%`, combined `18.75%`)** — evidencing in-context structural node-role tracking rather than unbounded multi-hop graph traversal.
 - **State Memory Complexity (`L=6, d=768, H=8`, `d_h=96`):** At measured context lengths $T \in \{512,\, 4{,}096,\, 32{,}768\}$, FP16 Full-KV Transformer decode cache scales linearly as `9.0 / 72.0 / 576.0 MiB`, whereas `GatedDeltaNet` maintains a constant **`1.7139 MiB`** (`1.71 MiB` measured in [`results/raw/gpu_profil_55m.json`](results/raw/gpu_profil_55m.json)) — an exact **`336.1×`** reduction at $T = 32{,}768$ (reproducible on CPU via `python benchmarks/profile_decode_memory.py`). At `55M` training context $T = 8{,}192$, `RLT-2` OOMs above the `3,072 MiB` ceiling while `RDFL (R=2)` trains in `1,877.4 MiB`.
 - **Structural & Input-Anchoring Ablations (`dongu_cipa_rlt2_ablasyonu`):**
   - *Chunk-Boundary Feedback (`RLT-2`):* Removing boundary feedback (`A6_R4_rlt2siz`) drops `Multi-Hop ICL` 3-hop accuracy from `22.72 ± 1.30%` to `10.32 ± 11.20%` (`-12.40 pp`, `8.6×` higher std), while slightly lowering `Byte LM` (`2.2790` vs `2.2896 bpb`).
@@ -71,11 +72,11 @@ All 8 controlled arms (`mean ± sample std` across 3 seeds, verified programmati
 | **`ÖY-3`: Calibrated `MSP + T*` Uncertainty** | **Adopt** | Zero extra parameters: `1.2M` `AUROC = 0.8424`, `ECE15 = 0.0116`, `+20.13 pp` accuracy at `40%` abstention (`52.68% -> 72.81%`), `8.32×` lower graph ECE; at `55M`, **`AUROC = 0.8994 / 0.9041`** with `74.65% -> 95.35%` SFT byte accuracy at `40%` abstention. |
 | **`ÖY-4`: `MTP-4` Multi-Byte Lookahead** | **Adopt (`55M+`)** | Sharp **`46×` scale crossover**: `+0.0323 bpb` LM capacity tax (`+0.0272 bpb` on `rsi_zincir_L34`) at `1.20M` diminishes **`32×`** to `+0.0010 bpb` LM (`-0.0005 bpb` SFT) under full `55M` weight propagation (Section 4). Before MTP training (step 0), untrained heads slow speculative wall-clock (`0.501×`). |
 | **`ÖY-5`: Prompt Self-Correction & MLP Verifier** | **Reject** | Under symmetric `T = 0.0` evaluation, prompt revision corrupted equal-step `D0` drafts (`87.37% -> 48.44% / 49.22%`). Zero-parameter sequence **`log p` (`AUROC = 0.9513`)** decisively outperformed a 25K-parameter MLP verifier (`0.5867`). |
-| **`ÖY-6`: `FP32 SlotCore` Chunk-Boundary Memory** | **Adopt (with Caveats 3.1)** | Locking updates to `float32` yields **`0/36` NaN**, lifts 3-hop `graf_izli` from `68.09 ± 54.73%` to **`96.89 ± 1.47%`** (`37.3×` lower std), and reaches `99.88 ± 0.09%` on `MQAR Overwrite`. **Caveats:** `+0.0173 bpb` iso-param `Byte LM` tax (`2.3819` vs `2.3646`, `ffn 512->128`) and live slot symmetry collapse (Section 3.1). `BDH` beats `BDH-less` on `3/3` seeds (`-0.0071 bpb`). |
-| **`ÖY-7`: Verifier-Gated Bounded `AZR` RSI** | **Adopt (Bounded)** | Over `75` live generations, unverified blind RSI collapsed (`LM: 7.5162 bpb`, `ID: 63.54%`). External deterministic verifier + permanent `Tur 0` ID anchor + `30%` LM replay + exact 3D per-token reverse KL + rollback yielded **best `LM = 2.9301 bpb`**, `0` rollbacks, `ID = 98.44%`, and highest `IPT = 80.45%` (vs Oracle `71.26%`, Control `66.59%`). |
+| **`ÖY-6`: `FP32 SlotCore` Chunk-Boundary Memory** | **Deferred / Replaced in `v0.3`** | At `1.20M`, `0/36` NaN and 3-hop `graf_izli` `68.09 ± 54.73% -> 96.89 ± 1.47%` (`37.3×` lower std), `MQAR 99.88%`, at `+0.0173 bpb` LM tax (`ffn 512->128`). **At `55M` (`1.33M` params):** `slot_on == slot_off` on state tracking (`59.38%` vs `59.38%`, `delta_durum = 0.0`), `delta_bpb = -0.0005` (Ana) / `-0.0003` (RSI), and all 4 slots collapse to **`cos = 0.999982`** (Section 3.1). `BDH` beats `BDH-less` on `3/3` seeds (`-0.0071 bpb`). |
+| **`ÖY-7`: Verifier-Gated Bounded `AZR` RSI** | **Adopt (Bounded + SFT Guard)** | Over `75` `1.20M` generations, blind RSI collapsed (`LM: 7.5162 bpb`, `ID: 63.54%`) while bounded `AZR` achieved best `LM = 2.9301 bpb`, `0` rollbacks, `ID = 98.44%`, `IPT = 80.45%`. At `55M` (`8` gens, `0` rollbacks), RSI hit a hard `L=4 <-> L=5` wall (`96/96` vs `0/96` accepted) and degraded SFT generation (`completion 0.78 -> 0.58`, `repetition 0.40 -> 0.60`) due to missing SFT/`EOT` replay under entropy bonus (Section 4). |
 | **`ÖY-8`: Zero-Retention Ring Stream** | **Adopt** | Receipt-locked streaming ring buffer enforces `0.0 MiB` residual disk (`32.0 MiB` stream, `4.0 MiB` peak disk, `0.0 MiB` VRAM). |
 | **`ÖY-9`: Online Weight Self-Editing (`SEAL` / `E-SELF`)** | **Deferred (Out of Scope)** | Evaluated via literature review only; deferred from the `1.20M` / `55M` V2 experimental matrix (no standalone experiment claimed). |
-| **`ÖY-10`: `ToolRunner` (`<calc>` / `<check>` / `<note>`)** | **Pre-Training Baseline Only** | Harness code resides in the external training repository (not bundled in this package). The only raw measurement in `results/raw/taban_55m_degerlendirme.json` is the pre-training `55M` baseline (`n=24` prompts: `0.0%` tool calls, `0.0%` accuracy). Post-training `55M` evaluation is pending completion of the ongoing `42K` run. |
+| **`ÖY-10`: `ToolRunner` (`<calc>` / `<check>` / `<note>`)** | **Adopt (Template Scope)** | Harness code resides in the external training repository. Across `n=24` arithmetic prompts: pre-training `55M` baseline `0.0%` -> post-training `55M` Ana (`21K`), RSI (`8`-gen), and RDFL-off `G_BASE_ONLY` (`1.5K`) all reach **`100.0%` call rate / `100.0%` accuracy** (`0.0%` without tool), whereas turning `RDFL` off on co-adapted `en_iyi.pt` (`21K`) drops accuracy to `54.17%`. |
 
 ### 3.1 Seed-Level Breakdown (`graf_izli`), Iso-Param `Byte LM` Trade-Off & Mechanistic Honesty Finding
 
@@ -89,39 +90,60 @@ Per-seed `graf_izli` accuracy and `Byte LM` (`bpb` ↓) across unseen seeds `(42
 | **`OY6_A6_SLOT4_FP32` (`ffn=128`, `FP32 SlotCore`)** | **`95.30% / 98.19% / 97.17%`** | **`96.89 ± 1.47%`** | `2.3819 ± 0.0055` (`+0.0173`) |
 
 - **Iso-Parameter `Byte LM` Trade-Off (`+0.0173 bpb`):** Keeping `OY6_A6_SLOT4_FP32` iso-parameter at `1.20M` required shrinking its FFN from `512` to `128`, which caused a `+0.0173 bpb` regression on `Byte LM` (`2.3819` vs `2.3646`, worst of the 4 `ÖY-6` arms) despite dramatically stabilizing 3-hop graph tracking (`37.3×` lower std). At `55M`, `FP32 SlotCore` is attached externally onto the unshrunk `ffn=3072` backbone to avoid cannibalizing FFN width.
-- **Mechanistic Honesty Finding — Symmetric Collapse of `FP32 SlotCore` Slots ([`results/raw/slotcore_55m_cosine_probe.json`](results/raw/slotcore_55m_cosine_probe.json)):** Direct CPU probing of the live trained `55M` checkpoint (step `21,000`, `16` real text chunks / `1,024` bytes from `mix/validation.bin`) shows that while `init_slots` start at pairwise cosine **`0.5017–0.7512`** (`mean = 0.6446`, `norm = 0.6941`), after `16` chunks all $S=4$ slots collapse to pairwise cosine **`0.999982`** (`min = 0.999959`, `max = 0.999999`) with mean L2 norm **`664.5`** (growing further from `~577` observed at step `17,500`; reproducible on CPU via `python benchmarks/run_1_2m_suite.py --smoke --measure-slot-cosine`, which reaches `cos ≈ 0.988` after 8 chunks). Because `commit_boundary` broadcasts the identical `chunk_end_state` through shared weights without slot-axis competition or norm damping, **`FP32 SlotCore`'s empirical stability gain arises from an accumulative FP32 chunk-boundary residual state — not from "4 specialized independent slots."** For **`v0.3`**, we plan competitive slot-axis `SlotAttention` routing (softmax normalized across slots) paired with per-slot `RMSNorm` and learned contraction/damping.
+- **Mechanistic Honesty Finding — Symmetric Collapse & Zero `55M` Gain of `FP32 SlotCore` ([`results/raw/slotcore_55m_cosine_probe.json`](results/raw/slotcore_55m_cosine_probe.json), [`ana_55m_degerlendirme.json`](results/raw/ana_55m_degerlendirme.json)):** Direct CPU probing of the trained `55M` checkpoint (step `21,000`, `16` real text chunks / `1,024` bytes from `mix/validation.bin`) shows that while `init_slots` start at pairwise cosine **`0.5017–0.7512`** (`mean = 0.6446`, `norm = 0.6941`), after `16` chunks all $S=4$ slots collapse to pairwise cosine **`0.999982`** (`min = 0.999959`, `max = 0.999999`) with mean L2 norm **`664.5`** (reproducible on CPU via `python benchmarks/run_1_2m_suite.py --smoke --measure-slot-cosine`). Moreover, full `55M` ablation confirms **`delta_durum = 0.0`** (`59.38%` ON vs `59.38%` OFF) and negligible `delta_bpb_2048 = -0.0005` (Ana) / `-0.0003` (RSI). Consequently, symmetric `FP32 SlotCore` is **deferred / replaced in `v0.3`** (planned competitive slot-axis `SlotAttention` + per-slot `RMSNorm` + contraction damping, gated on cosine separation).
 
 ---
 
-## 4. `55M` Warm Adaptation & Scale Crossover (`Diogenes-RDFL-55M`)
+## 4. Completed `55M` Adaptation, `G_BASE_ONLY` Causal Control & `ÖY-7` RSI (`Diogenes-RDFL-55M`)
 
-We attach `RDFL` (`d = 384`, `R = 2`, `2.81M`), `FP32 SlotCore` (`S = 4`, `1.33M`), `K3` (`0.74M`), and `MTP-4` (`2.36M`) (`7.24M` total adapter parameters) onto a pretrained `55.08M` byte-level windowed-attention backbone (`M = 512`, `d_base = 1536`, `ffn = 3072` preserved unshrunk; `62.32M` grand total) paired with an episodic content-memory reader (`cmem`).
+> **Audit Status:** All `55M` final artifacts below are verified cell-by-cell (`698/698`, `0` mismatches) against [`results/raw/`](results/raw/) (`kod_sha256 = 3c1a59a1dd2bb0f7`) and are **pending independent zero-context Carbon closure audit**.
 
-- **Gate-1 Verification ([`results/raw/dogrulama_kapisi_55m.json`](results/raw/dogrulama_kapisi_55m.json), `kod_sha256 = 3c1a59a1dd2bb0f7`):** Exact step-0 deviation `0.0` across logits, normalized hidden state, and `cmem` outputs; strict causality error `0.0`; `forward() == step()` parity `1.335e-05` (FP32); `0/12` smoke NaNs (`3,438.7 MiB` peak VRAM).
-- **Controlled `1,500`-Step `MTP-4` A/B Gate ([`results/raw/saat1_mtp_kapisi.json`](results/raw/saat1_mtp_kapisi.json)) & Preliminary Live Trajectory ([`results/raw/diogenes_55m_live_val_snapshot.json`](results/raw/diogenes_55m_live_val_snapshot.json)):**
+We attach `RDFL` (`d = 384`, `R = 2`, `2.81M`), `FP32 SlotCore` (`S = 4`, `1.33M`), `K3` (`0.74M`), and `MTP-4` (`2.36M`) (`7.24M` total adapter parameters) onto a pretrained `55.08M` byte-level windowed-attention backbone (`M = 512`, `d_base = 1536`, `ffn = 3072` preserved unshrunk; `62.32M` grand total) paired with an episodic content-memory reader (`cmem`, `0.86M`).
 
-| Model State (`fast-val` protocol*) | `LM (T=512)` ↓ | `K3 R=1 (T=512)` ↓ | `LM (T=2048)` ↓ | `SFT Val` ↓ | `MTP t+2 / t+3 / t+4` ↑ |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| Pretrained `55M` Base (Step 0) | `1.1268` | `1.1268` | `1.0419` | `1.2416` | `10.1% / 9.2% / 10.7%` |
-| Control `G0` ($\lambda_{\text{MTP}} = 0$, 1.5K; `RDFL` on) | `1.1232` | `1.1233` | `1.0344` | `1.2415` | `10.2% / 9.3% / 10.7%` |
-| Full `55M` Prop `G1` ($\lambda_{\text{MTP}} = 0.15$, 1.5K; `RDFL` on) | **`1.1242`** (`+0.0010`) | **`1.1237`** | **`1.0362`** | **`1.2410`** (`-0.0005`) | **`34.1% / 24.6% / 21.4%`** |
-| *Preliminary* Live `G1` (Step 7,000 / 42,000) | `1.1207` | `1.1198` | `1.0277` (`-0.0142`) | `1.2442` | `51.6% / 39.6% / 32.4%` |
-| *Preliminary* Live `G1` (Step 17,500 / 42,000) | `1.1188` | `1.1187` | `1.0278` (`-0.0141`) | `1.2492` | `54.2% / 42.5% / 34.5%` |
-| *Preliminary* Live `G1` (Step 21,000 / 42,000) | `1.1197` | `1.1201` | `1.0254` (`-0.0165`) | `1.2485` | `54.9% / 42.9% / 35.4%` |
+- **Gate-1 Verification ([`dogrulama_kapisi_55m.json`](results/raw/dogrulama_kapisi_55m.json)):** Exact step-0 deviation `0.0` across logits, normalized hidden state, and `cmem` outputs; strict causality error `0.0`; `forward() == step()` parity `1.335e-05` (FP32); `0/12` smoke NaNs (`3,438.7 MiB` peak VRAM).
+- **Controlled `1,500`-Step `G_BASE_ONLY` vs. `G0` vs. `G1` & `42K` Trajectory (`fast-val` protocol\*, [`g_base_only_kontrol.json`](results/raw/g_base_only_kontrol.json), [`saat1_mtp_kapisi.json`](results/raw/saat1_mtp_kapisi.json), [`ana_egitim_ozet.json`](results/raw/ana_egitim_ozet.json)):**
 
-> *\*Evaluation Protocol Footnote:* The table above uses **`fast-val`** (`4` validation batches, `200` SFT lines; stored in [`results/raw/diogenes_55m_live_val_snapshot.json`](results/raw/diogenes_55m_live_val_snapshot.json)), yielding Step-0 `1.1268 / 1.0419 / 1.2416`. By contrast, the pre-training full battery in [`results/raw/taban_55m_degerlendirme.json`](results/raw/taban_55m_degerlendirme.json) uses **`full-val`** (`8` validation batches, `400` SFT lines), yielding Step-0 `1.1549 / 1.0718 / 1.2567` (while its internal `oy6_slotcore_ablasyon` sub-check uses `fast-val` `4` batches -> `1.0419`).
->
-> **Control Scope Note:** The `1,500`-step `G0` vs. `G1` gate specifically **isolates `MTP-4`** ($\lambda_{\text{MTP}} = 0$ vs. $0.15$) with `RDFL` attached in both arms. To isolate `RDFL`'s incremental contribution over plain continued pretraining on the identical data mixture, a dedicated **RDFL-off continued-pretraining control (`G_BASE_ONLY`, `1,500` steps)** will run immediately after the ongoing `42,000`-step adaptation finishes, followed by the full post-training `55M` evaluation battery (including `ToolRunner`, `cmem`, real-document QA, speculative wall-clock speedups, and `8`-generation `AZR` RSI).
+| Model State (`fast-val` protocol\*) | `LM (T=512)` ↓ | `K3 R=1 (T=512)` ↓ | `LM (T=2048)` ↓ | `SFT Val` ↓ | Composite ↓ | `MTP t+2 / t+3 / t+4` ↑ | Time / VRAM |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| Pretrained `55M` Base (Step 0) | `1.1268` | `1.1268` | `1.0419` | `1.2416` | `1.1200` | `10.1% / 9.2% / 10.7%` | — / `968.9 MiB` |
+| **`G_BASE_ONLY` (`1.5K`, `RDFL` OFF, `delta_z=0`)** | **`1.1231`** | **`1.1231`** | `1.0346` | **`1.2410`** | **`1.1157`** | `10.1% / 9.3% / 10.7%` | **`437.9s` / `2,770.6 MiB`** |
+| `G0` ($\lambda_{\text{MTP}} = 0$, `1.5K`, `RDFL` ON) | `1.1232` | `1.1233` | **`1.0344`** | `1.2415` | `1.1158` | `10.2% / 9.3% / 10.7%` | `1,448.9s` / `2,981.9 MiB` |
+| `G1` ($\lambda_{\text{MTP}} = 0.15$, `1.5K`, `RDFL` ON) | `1.1242` | `1.1237` | `1.0362` | `1.2410` | `1.1167` | **`34.1% / 24.6% / 21.4%`** | `1,517.0s` / `3,833.9 MiB` |
+| Final Best `en_iyi.pt` (`21K`, `RDFL` ON) | `1.1197` | `1.1201` | `1.0254` | `1.2485` | `1.1124` | `54.9% / 42.9% / 35.4%` | — / `3,442.7 MiB` |
+| Final `en_iyi.pt` (`21K`, **`RDFL` OFF, `delta_z=0`**) | `1.1197` | `1.1197` | `1.0260` | **`1.2412`** | **`1.1112`** | `43.5% / 31.7% / 27.2%` | — |
+| Final `son.pt` (`42K`, `RDFL` ON) | **`1.1169`** | **`1.1185`** | **`1.0231`** | `1.2998` | `1.1207` | **`55.9% / 44.0% / 35.8%`** | `41,894.8s` / `3,443.5 MiB` |
+
+- **Full-Battery Evaluation & `en_iyi.pt` (`21K`) `RDFL ON vs. OFF` Ablation (`full-val` protocol: `8` batches, `400` SFT lines, `50` generations, `128` real-document QA, `24` ToolRunner prompts; [`taban_55m_degerlendirme.json`](results/raw/taban_55m_degerlendirme.json), [`ana_55m_degerlendirme.json`](results/raw/ana_55m_degerlendirme.json), [`rsi_55m_degerlendirme.json`](results/raw/rsi_55m_degerlendirme.json), [`g_base_only_kontrol.json`](results/raw/g_base_only_kontrol.json)):**
+
+| Full-Battery Metric | Base (`0`) | `G_BASE_ONLY` (`1.5K`) | `Ana 21K` (`RDFL` ON) | `Ana 21K` (`RDFL` OFF) | `Δ(ON - OFF)` | `RSI` (`8` Gens) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| `mix_val_512_r2_bpb` ↓ | `1.1549` | `1.1524` | `1.1467` | `1.1477` | `-0.0010` | **`1.1452`** |
+| `mix_val_2048_r2_bpb` ↓ | `1.0718` | `1.0645` | `1.0566` | `1.0568` | `-0.0002` | **`1.0547`** |
+| `web_val_2048_r2_bpb` ↓ | `1.4067` | `1.3949` | `1.3878` | `1.3878` | `0.0000` | **`1.3859`** |
+| `sft_val_bits` (`400` lines) ↓ | `1.2567` | `1.2550` | `1.2630` | `1.2564` | `+0.0066` | **`1.2543`** |
+| `sft.completion_rate` (`50`) ↑ | `0.7200` | `0.7400` | **`0.7800`** | `0.3400` | `+0.4400` | `0.5800` |
+| `sft.repetition_rate` (`50`) ↓ | `0.4200` | `0.4800` | **`0.4000`** | `0.7800` | `-0.3800` | `0.6000` |
+| `real_qa_d4000.qa.gen_on_exact` ↑ | `0.0703` | `0.0625` | **`0.1328`** | `0.1094` | `+0.0234` | `0.1250` |
+| `real_qa_d4000.qa.on_bits` ↓ | `1.2049` | `1.1947` | `1.1366` | `1.1532` | `-0.0166` | **`1.1350`** |
+| State Tracking (`32` prompts) ↑ | `0.0000` | `0.2500` | **`0.5938`** | **`0.5938`** | **`0.0000`** | **`0.5938`** |
+| `ÖY-10 ToolRunner` (`24` prompts) ↑ | `0.0000` | **`1.0000`** | **`1.0000`** | `0.5417` | `+0.4583` | **`1.0000`** |
+| `cmem chain3_held` / `natural_bits_on` | `0.8750` / `1.3392` | — | `0.9062` / `1.3274` | — | — | **`0.9375` / `1.3265`** |
+| Speculative `K3` / `MTP-4` wall (`0` diff) | `1.060×` / `0.501×` | — | `1.042×` / `0.968×` | — | — | `1.007×` / `0.865×` |
+
+> **Honest Causal Takeaways (`G_BASE_ONLY`, `RDFL ON/OFF` & `ÖY-7` `55M` RSI):**
+> 1. **`G_BASE_ONLY` (`1.5K`):** Training only the `55.08M` `core` + `0.86M` `reader` (`maks|delta_z| == 0.0` verified at steps `0` and `1,500`) runs **`3.3×` faster** (`437.9s` vs `1,448.9s`), matches/beats `G0` and `G1` on composite `bpb` (`1.1157` vs `1.1158 / 1.1167`), and already achieves `100%` `<calc>` `ToolRunner` (`G1` only adds `MTP-4` lookahead accuracy).
+> 2. **`en_iyi.pt` (`21K`) `RDFL ON vs. OFF`:** Although `RDFL` produces a strong active residual (`rms(delta_r2) / rms(z) = 14.1%`, `max|delta_r2| = 22.39`), zeroing `delta_z` yields negligible pure LM `bpb` change (`-0.0010 / -0.0002 / 0.0000`), lower teacher-forced `sft_val_bits` (`1.2564` vs `1.2630`), and `0.0000` change in state tracking (`59.38%`), while severely degrading co-adapted generative outputs (`completion 0.78 -> 0.34`, `repetition 0.40 -> 0.78`, `OY-10 1.00 -> 0.5417`, `real_qa 13.28% -> 10.94%`). This confirms `core + RDFL` co-adaptation rather than a standalone pure-LM `bpb` advantage for the hybrid side-branch.
+> 3. **`ÖY-7` `8`-Gen `55M` RSI ([`oy7_rsi_55m.json`](results/raw/oy7_rsi_55m.json)):** `0` rollbacks (`745.9s`, `2,262.2 MiB`), `lm_bits_512: 1.1197 -> 1.1176`, `cmem chain3_held: 0.9062 -> 0.9375`, **but** hit a hard `L=4 <-> L=5` wall (`96/96` accepted on `L=4`, `0/96` on `L=5`, `ara_pass1 = 0.0`, `ipt_pass1 = 0.50`) and degraded SFT generation (`completion 0.78 -> 0.58`, `repetition 0.40 -> 0.60`) because the entropy bonus lacked an SFT/`EOT` replay guard.
 
 ---
 
 ## 5. Methodological Limitations
 
-1. **Reference Kernel Implementation:** All current experiments execute exact pure-PyTorch chunk-parallel WY and PyTorch SDPA. While Path-1 warm adaptation trains efficiently, large-scale from-scratch pretraining (`200M+`) requires fusing the `GatedDeltaNet` WY recurrence into a Triton / Flash Linear Attention kernel.
-2. **Slot Symmetry Collapse & Iso-Param LM Tax (`v0.2`):** As detailed in Section 3.1, `Fp32SlotCoreBoundary` collapses its $S=4$ slots to pairwise cosine `0.99998` with growing norm (`664.5` at step `21K`) over long streams, and incurs a `+0.0173 bpb` LM tax when constrained to iso-param `ffn=128` at `1.20M`; competitive slot-axis routing with per-slot `RMSNorm` and damping is scheduled for `v0.3`.
-3. **Input Anchoring Null Effect at `1.20M`:** Controlled ablations (Section 2) show that input anchoring does not drive `RDFL`'s core gains (`A6_R4_cipasiz` matches `A6_R4_cipali` on `Multi-Hop ICL` and slightly beats it on `Byte LM`).
-4. **Far-OOD Extrapolation & Pending `55M` Post-Training Evaluation:** At `1.20M`, `OOD-Far` (`L = 7, 8`) remained `0.0%` across all RSI arms including Oracle supervision; `55M` post-training metrics (including `ToolRunner` `ÖY-10` and `G_BASE_ONLY` control) await completion of the ongoing `42K` run.
-5. **Hardware & Verification Protocol:** All experiments ran on a single consumer 8 GiB Turing GPU with strict train/validation/test separation; **`320/320`** cells in `results/audited_summary.json` are programmatically verified against `results/raw/*.json` in CI.
+1. **Pure-PyTorch Reference Kernel & Speculative Overhead:** Pure-PyTorch chunk-parallel WY + SDPA hits a kernel-launch ceiling on consumer GPUs: at `55M`, lossless `K3` (`99.0–100%` accept) yields only `1.042×` (`1.007×` RSI) and `MTP-4` (`42.8%` accept) yields `0.968×` (`0.865×` RSI). From-scratch scaling requires a fused Triton / Flash Linear Attention (`fla`) `GatedDeltaNet` kernel.
+2. **Hybrid `55M` Side-Branch vs. Pure `RDFL`:** Our `G_BASE_ONLY` (`1.5K`) and `en_iyi.pt` `RDFL ON/OFF` (`21K`) controls show that attaching `RDFL` as a warm side-branch onto a `55M` windowed-attention backbone yields negligible pure-LM `bpb` gain (`-0.0010 / -0.0002 / 0.0000`) and `0.0` state-tracking gain; evaluating `RDFL` at scale therefore requires from-scratch **Pure `RDFL`** pretraining against iso-FLOP baselines.
+3. **`SlotCore` Collapse (`Deferred / Replaced in v0.3`) & `Multi-Hop ICL` Ceiling (`KPN-Y01`):** Symmetric `FP32 SlotCore` collapses to `cos = 0.999982` (`norm = 664.5`) with `0.0` `55M` state-tracking gain and is deferred for competitive `v0.3` `SlotAttention`. At `1.20M`, `Multi-Hop ICL` `22.72%` lies within the `1/4 = 25.0%` (`1/8 = 12.5%`) degree-filtering ceiling (`KPN-Y01`), and input anchoring showed a null effect (`A6_R4_cipasiz` matched `A6_R4_cipali`).
+4. **OOD Extrapolation & RSI SFT Guard:** Both `1.20M` (`OOD-Far L=7,8 = 0.0%`) and `55M` RSI (`L=4 <-> L=5` wall, `0/96` accepted on `L=5`) show that verifier-gated RSI cannot bootstrap past a zero-acceptance length wall without curriculum bridges, and requires explicit SFT/`EOT` replay to prevent completion/repetition drift.
+5. **Hardware & Verification Protocol:** All experiments ran on a single consumer 8 GiB Turing GPU with strict train/validation/test separation; **`698/698`** cells in `results/audited_summary.json` are programmatically verified against `results/raw/*.json` in CI (`55M` final artifacts are pending independent Carbon closure audit).
 
 ---
 
@@ -135,7 +157,7 @@ pip install -e ".[dev]"
 # 1. Mathematical invariant unit tests (chunk==step FP64, causality, zero-diff, K3/MTP-4 lossless speculative, FP32 SlotCore lock, AUROC ties)
 python -m unittest discover -s tests -v
 
-# 2. Programmatically verify all 320 audited cells in results/audited_summary.json against results/raw/*.json
+# 2. Programmatically verify all 698 audited cells in results/audited_summary.json against results/raw/*.json
 python benchmarks/verify_audited_results.py
 
 # 3. Measure O(1) decode state vs. FP16 full-KV cache directly from CPU PyTorch tensors
@@ -194,6 +216,7 @@ assert (adapter(z_base) - z_base).abs().max().item() == 0.0
 10. **SEAL:** Adam Zweiger, Jyothish Pari, Han Guo, Ekin Akyürek, Yoon Kim, and Pulkit Agrawal. *Self-Adapting Language Models.* 2025. [`arXiv:2506.10943`](https://arxiv.org/abs/2506.10943)
 11. **MSP:** Dan Hendrycks and Kevin Gimpel. *A Baseline for Detecting Misclassified and Out-of-Distribution Examples in Neural Networks.* ICLR 2017. [`arXiv:1610.02136`](https://arxiv.org/abs/1610.02136)
 12. **Temperature Scaling:** Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q. Weinberger. *On Calibration of Modern Neural Networks.* ICML 2017. [`arXiv:1706.04599`](https://arxiv.org/abs/1706.04599)
+13. **Sleep Consolidation:** Ali Behrouz et al. *Language Models Need Sleep.* 2026. [`arXiv:2606.03979`](https://arxiv.org/abs/2606.03979)
 
 ---
 

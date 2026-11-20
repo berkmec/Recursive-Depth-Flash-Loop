@@ -1,0 +1,124 @@
+{
+  "kod_sha256": "3c1a59a1dd2bb0f7",
+  "etiket": "Diogenes-RDFL-55M_Ana",
+  "param_ozeti": {
+    "taban_55m": 55078145,
+    "rdfl_dar_gdn_bdh": 2812430,
+    "oy6_fp32_slotcore": 1330560,
+    "oy1_k3_kopuk": 737664,
+    "oy4_mtp4": 2359296,
+    "yeni_toplam": 7239950,
+    "genel_toplam": 62318095
+  },
+  "dil": {
+    "mix_val_512_r2_bpb": 1.1467,
+    "mix_val_512_r1_bpb": 1.1476,
+    "mix_val_2048_r2_bpb": 1.0566,
+    "web_val_2048_r2_bpb": 1.3878
+  },
+  "sft": {
+    "sft_val_bits": 1.263,
+    "sft_val_satir": 400.0,
+    "completion_rate": 0.78,
+    "repetition_rate": 0.4
+  },
+  "cmem_battery": {
+    "single_held_d4000": 1.0,
+    "single_natural_d4000": 1.0,
+    "chain2_held": 1.0,
+    "chain3_held": 0.9062,
+    "chain4_held": 1.0,
+    "chain5_held": 1.0,
+    "absent_held": 1.0,
+    "cross_forward": 1.0,
+    "cross_backward": 0.9688,
+    "cross_natural": 0.9375,
+    "cross_absent": 0.9688,
+    "broken_chain2": 1.0,
+    "single_held_off": 0.0,
+    "natural_bits_on": 1.3274,
+    "natural_bits_off": 1.4311
+  },
+  "real_qa_d4000": {
+    "mesafe": 4000,
+    "gecerli_soru": 128,
+    "qa": {
+      "n": 128,
+      "on_tf_exact": 0.1328,
+      "on_tf_first": 0.1875,
+      "on_bits": 1.1366,
+      "off_tf_exact": 0.0,
+      "off_bits": 2.7291,
+      "gen_on_exact": 0.1328
+    },
+    "plain": {
+      "n": 128,
+      "on_tf_exact": 0.0,
+      "on_tf_first": 0.0156,
+      "on_bits": 2.2672,
+      "off_tf_exact": 0.0,
+      "off_bits": 3.4394,
+      "gen_on_exact": 0.0
+    }
+  },
+  "oy1b_ve_oy4_spekulatif": {
+    "n_istem": 8,
+    "maks_yeni_bayt": 32,
+    "duz_r2_ms_ort": 1409.46,
+    "duz_r2_ms_std": 40.45,
+    "oy1b_k3_uyusmaz_istem": 0,
+    "oy1b_k3_kabul_orani": 0.99,
+    "oy1b_k3_cagri_basina_bayt": 3.475,
+    "oy1b_k3_ms_ort": 1353.06,
+    "oy1b_k3_ms_std": 87.44,
+    "oy1b_k3_duvar_hizlanma": 1.042,
+    "oy4_mtp4_uyusmaz_istem": 0,
+    "oy4_mtp4_kabul_orani": 0.4276,
+    "oy4_mtp4_cagri_basina_bayt": 1.277,
+    "oy4_mtp4_ms_ort": 1455.97,
+    "oy4_mtp4_ms_std": 81.15,
+    "oy4_mtp4_duvar_hizlanma": 0.968
+  },
+  "oy3_kalibrasyon": {
+    "t_yildiz": 1.0,
+    "mix_val": {
+      "dogruluk_tam": 0.7402,
+      "dogruluk_cekin20": 0.857,
+      "dogruluk_cekin40": 0.9457,
+      "cekin40_kazanc_puan": 20.55,
+      "auroc": 0.8995,
+      "aurc": 0.0651,
+      "ece15_ham": 0.0089,
+      "ece15_kalibre": 0.0089
+    },
+    "sft_val": {
+      "dogruluk_tam": 0.7499,
+      "dogruluk_cekin20": 0.8657,
+      "dogruluk_cekin40": 0.9541,
+      "cekin40_kazanc_puan": 20.42,
+      "auroc": 0.9031,
+      "aurc": 0.0602,
+      "ece15_ham": 0.0287,
+      "ece15_kalibre": 0.0287
+    }
+  },
+  "oy6_slotcore_ablasyon": {
+    "slot_acik": {
+      "mix_val_bpb_2048": 1.0254,
+      "durum_izleme_dogruluk": 0.5938
+    },
+    "slot_kapali": {
+      "mix_val_bpb_2048": 1.0259,
+      "durum_izleme_dogruluk": 0.5938
+    },
+    "delta_bpb_2048": -0.0005,
+    "delta_durum_puan": 0.0
+  },
+  "oy10_toolrunner": {
+    "n_soru": 24,
+    "aracsiz_dogruluk": 0.0,
+    "toolrunner_cagri_orani": 1.0,
+    "toolrunner_dogruluk": 1.0,
+    "kazanc_puan": 100.0
+  }
+}

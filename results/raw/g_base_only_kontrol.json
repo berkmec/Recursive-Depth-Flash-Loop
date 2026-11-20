@@ -1,0 +1,361 @@
+{
+  "kod_sha256": "3c1a59a1dd2bb0f7",
+  "kod_sha256_eslesti": true,
+  "cihaz": "cuda",
+  "baslangic_agirlik": "artifacts/sft-380k-eot10/latest.pt",
+  "bolum_a_g_base_only": {
+    "ayar": {
+      "toplam_adim": 1500,
+      "warmup_adim": 100,
+      "lr_taban": 2e-05,
+      "lr_adaptor": 0.0,
+      "lr_mtp": 0.0,
+      "lr_reader": 0.0001,
+      "lam_mtp": 0.0,
+      "mtp_stop_grad": false,
+      "eot_agirlik": 5.0,
+      "batch_replay": 8,
+      "uzunluk_replay": 1024,
+      "batch_mem": 2,
+      "mem_toplam": 8192,
+      "mem_kuyruk": 1024,
+      "batch_sft": 8,
+      "batch_mantik": 8,
+      "deger_aralik": 1500,
+      "kayit_aralik": 1500,
+      "gunluk_aralik": 100,
+      "tohum": 42,
+      "amp": true,
+      "cihaz": "cuda"
+    },
+    "param_sayim": {
+      "egitilen_core_param": 55078145,
+      "egitilen_reader_param": 858436,
+      "egitilen_adaptor_param": 0,
+      "egitilen_mtp_param": 0,
+      "dondurulmus_adaptor_mtp_param": 7239950
+    },
+    "kayit_yolu": "artifacts/diogenes_rdfl_55m/kapi_base_only/son.pt",
+    "baslangic_val": {
+      "lm_bits_512": 1.1268,
+      "r1_lm_bits_512": 1.1268,
+      "lm_bits_2048": 1.0419,
+      "sft_val_bits": 1.2416,
+      "bilesik_skor": 1.12,
+      "mtp_t2_acc": 0.1006,
+      "mtp_t3_acc": 0.0922,
+      "mtp_t4_acc": 0.1071
+    },
+    "adim0_delta_z": {
+      "maks_abs_delta_r2": 0.0,
+      "maks_abs_delta_r1": 0.0,
+      "rms_delta_r2": 0.0,
+      "rms_z_taban": 8.503777,
+      "goreli_delta_rms": 0.0,
+      "maks_abs_logits_fark_taban": 0.0
+    },
+    "son_delta_z": {
+      "maks_abs_delta_r2": 0.0,
+      "maks_abs_delta_r1": 0.0,
+      "rms_delta_r2": 0.0,
+      "rms_z_taban": 8.375682,
+      "goreli_delta_rms": 0.0,
+      "maks_abs_logits_fark_taban": 0.0
+    },
+    "param_degisim_dogrulama": {
+      "adaptor_maks_abs_degisim": 0.0,
+      "mtp_maks_abs_degisim": 0.0,
+      "core_maks_abs_degisim": 0.0075282,
+      "reader_maks_abs_degisim": 0.01804075
+    },
+    "sure_sn": 437.9,
+    "tepe_vram_mib": 2770.6,
+    "atlanan_adim": 0,
+    "nan_sayisi": 0,
+    "son_val": {
+      "lm_bits_512": 1.1231,
+      "r1_lm_bits_512": 1.1231,
+      "lm_bits_2048": 1.0346,
+      "sft_val_bits": 1.241,
+      "bilesik_skor": 1.1157,
+      "mtp_t2_acc": 0.1014,
+      "mtp_t3_acc": 0.0929,
+      "mtp_t4_acc": 0.1071
+    },
+    "tam_degerlendirme": {
+      "hizli_val": {
+        "lm_bits_512": 1.1231,
+        "r1_lm_bits_512": 1.1231,
+        "lm_bits_2048": 1.0346,
+        "sft_val_bits": 1.241,
+        "bilesik_skor": 1.1157,
+        "mtp_t2_acc": 0.1014,
+        "mtp_t3_acc": 0.0929,
+        "mtp_t4_acc": 0.1071
+      },
+      "dil": {
+        "mix_val_512_r2_bpb": 1.1524,
+        "mix_val_512_r1_bpb": 1.1524,
+        "mix_val_2048_r2_bpb": 1.0645,
+        "web_val_2048_r2_bpb": 1.3949
+      },
+      "sft": {
+        "sft_val_bits": 1.255,
+        "sft_val_satir": 400.0,
+        "completion_rate": 0.74,
+        "repetition_rate": 0.48
+      },
+      "real_qa_d4000": {
+        "mesafe": 4000,
+        "gecerli_soru": 128,
+        "qa": {
+          "n": 128,
+          "on_tf_exact": 0.0625,
+          "on_tf_first": 0.1797,
+          "on_bits": 1.1947,
+          "off_tf_exact": 0.0,
+          "off_bits": 2.778,
+          "gen_on_exact": 0.0625
+        },
+        "plain": {
+          "n": 128,
+          "on_tf_exact": 0.0,
+          "on_tf_first": 0.0156,
+          "on_bits": 2.3167,
+          "off_tf_exact": 0.0,
+          "off_bits": 3.4762,
+          "gen_on_exact": 0.0
+        }
+      },
+      "durum_izleme_dogruluk": 0.25,
+      "oy10_toolrunner": {
+        "n_soru": 24,
+        "aracsiz_dogruluk": 0.0,
+        "toolrunner_cagri_orani": 1.0,
+        "toolrunner_dogruluk": 1.0,
+        "kazanc_puan": 100.0
+      },
+      "delta_z_tani": {
+        "maks_abs_delta_r2": 0.0,
+        "maks_abs_delta_r1": 0.0,
+        "rms_delta_r2": 0.0,
+        "rms_z_taban": 8.375682,
+        "goreli_delta_rms": 0.0,
+        "maks_abs_logits_fark_taban": 0.0
+      }
+    }
+  },
+  "bolum_b_en_iyi_rdfl_ablasyon": {
+    "ckpt_yolu": "artifacts/diogenes_rdfl_55m/ana_egitim/en_iyi.pt",
+    "ckpt_adim": 21000,
+    "ablasyon_yontemi": "adaptor.yukari.weight=0 ve adaptor.yukari_r1.weight=0 (delta_z=0)",
+    "rdfl_acik": {
+      "hizli_val": {
+        "lm_bits_512": 1.1197,
+        "r1_lm_bits_512": 1.1201,
+        "lm_bits_2048": 1.0254,
+        "sft_val_bits": 1.2485,
+        "bilesik_skor": 1.1124,
+        "mtp_t2_acc": 0.5494,
+        "mtp_t3_acc": 0.4288,
+        "mtp_t4_acc": 0.3535
+      },
+      "dil": {
+        "mix_val_512_r2_bpb": 1.1467,
+        "mix_val_512_r1_bpb": 1.1476,
+        "mix_val_2048_r2_bpb": 1.0566,
+        "web_val_2048_r2_bpb": 1.3878
+      },
+      "sft": {
+        "sft_val_bits": 1.263,
+        "sft_val_satir": 400.0,
+        "completion_rate": 0.78,
+        "repetition_rate": 0.4
+      },
+      "real_qa_d4000": {
+        "mesafe": 4000,
+        "gecerli_soru": 128,
+        "qa": {
+          "n": 128,
+          "on_tf_exact": 0.1328,
+          "on_tf_first": 0.1875,
+          "on_bits": 1.1366,
+          "off_tf_exact": 0.0,
+          "off_bits": 2.7291,
+          "gen_on_exact": 0.1328
+        },
+        "plain": {
+          "n": 128,
+          "on_tf_exact": 0.0,
+          "on_tf_first": 0.0156,
+          "on_bits": 2.2672,
+          "off_tf_exact": 0.0,
+          "off_bits": 3.4394,
+          "gen_on_exact": 0.0
+        }
+      },
+      "durum_izleme_dogruluk": 0.5938,
+      "oy10_toolrunner": {
+        "n_soru": 24,
+        "aracsiz_dogruluk": 0.0,
+        "toolrunner_cagri_orani": 1.0,
+        "toolrunner_dogruluk": 1.0,
+        "kazanc_puan": 100.0
+      },
+      "delta_z_tani": {
+        "maks_abs_delta_r2": 22.390625,
+        "maks_abs_delta_r1": 9.7890625,
+        "rms_delta_r2": 1.140985,
+        "rms_z_taban": 8.089656,
+        "goreli_delta_rms": 0.141042,
+        "maks_abs_logits_fark_taban": 3.7890625
+      }
+    },
+    "rdfl_kapali": {
+      "hizli_val": {
+        "lm_bits_512": 1.1197,
+        "r1_lm_bits_512": 1.1197,
+        "lm_bits_2048": 1.026,
+        "sft_val_bits": 1.2412,
+        "bilesik_skor": 1.1112,
+        "mtp_t2_acc": 0.4351,
+        "mtp_t3_acc": 0.3173,
+        "mtp_t4_acc": 0.2724
+      },
+      "dil": {
+        "mix_val_512_r2_bpb": 1.1477,
+        "mix_val_512_r1_bpb": 1.1477,
+        "mix_val_2048_r2_bpb": 1.0568,
+        "web_val_2048_r2_bpb": 1.3878
+      },
+      "sft": {
+        "sft_val_bits": 1.2564,
+        "sft_val_satir": 400.0,
+        "completion_rate": 0.34,
+        "repetition_rate": 0.78
+      },
+      "real_qa_d4000": {
+        "mesafe": 4000,
+        "gecerli_soru": 128,
+        "qa": {
+          "n": 128,
+          "on_tf_exact": 0.1094,
+          "on_tf_first": 0.1953,
+          "on_bits": 1.1532,
+          "off_tf_exact": 0.0,
+          "off_bits": 2.7331,
+          "gen_on_exact": 0.1094
+        },
+        "plain": {
+          "n": 128,
+          "on_tf_exact": 0.0,
+          "on_tf_first": 0.0234,
+          "on_bits": 2.3454,
+          "off_tf_exact": 0.0,
+          "off_bits": 3.4707,
+          "gen_on_exact": 0.0
+        }
+      },
+      "durum_izleme_dogruluk": 0.5938,
+      "oy10_toolrunner": {
+        "n_soru": 24,
+        "aracsiz_dogruluk": 0.0,
+        "toolrunner_cagri_orani": 0.5417,
+        "toolrunner_dogruluk": 0.5417,
+        "kazanc_puan": 54.17
+      },
+      "delta_z_tani": {
+        "maks_abs_delta_r2": 0.0,
+        "maks_abs_delta_r1": 0.0,
+        "rms_delta_r2": 0.0,
+        "rms_z_taban": 8.089656,
+        "goreli_delta_rms": 0.0,
+        "maks_abs_logits_fark_taban": 0.0
+      }
+    },
+    "delta_acik_eksi_kapali": {
+      "mix_val_512_r2_bpb": -0.001,
+      "mix_val_512_r1_bpb": -0.0001,
+      "mix_val_2048_r2_bpb": -0.0002,
+      "web_val_2048_r2_bpb": 0.0,
+      "sft_val_bits": 0.0066,
+      "sft_completion_rate": 0.44,
+      "sft_repetition_rate": -0.38,
+      "real_qa_qa_gen_on_exact": 0.0234,
+      "real_qa_qa_on_tf_exact": 0.0234,
+      "real_qa_qa_on_bits": -0.0166,
+      "real_qa_plain_on_bits": -0.0782,
+      "durum_izleme_dogruluk": 0.0,
+      "oy10_aracsiz_dogruluk": 0.0,
+      "oy10_toolrunner_cagri_orani": 0.4583,
+      "oy10_toolrunner_dogruluk": 0.4583,
+      "hizli_bilesik_skor": 0.0012
+    }
+  },
+  "karsilastirma_saat1": {
+    "referans_dosya": "artifacts/diogenes_rdfl_55m/saat1_mtp_kapisi.json",
+    "G_BASE_ONLY": {
+      "son_val": {
+        "lm_bits_512": 1.1231,
+        "r1_lm_bits_512": 1.1231,
+        "lm_bits_2048": 1.0346,
+        "sft_val_bits": 1.241,
+        "bilesik_skor": 1.1157,
+        "mtp_t2_acc": 0.1014,
+        "mtp_t3_acc": 0.0929,
+        "mtp_t4_acc": 0.1071
+      },
+      "sure_sn": 437.9,
+      "tepe_vram_mib": 2770.6,
+      "atlanan_adim": 0,
+      "nan_sayisi": 0
+    },
+    "G0_kontrol": {
+      "son_val": {
+        "lm_bits_512": 1.1232,
+        "r1_lm_bits_512": 1.1233,
+        "lm_bits_2048": 1.0344,
+        "sft_val_bits": 1.2415,
+        "bilesik_skor": 1.1158,
+        "mtp_t2_acc": 0.1015,
+        "mtp_t3_acc": 0.0928,
+        "mtp_t4_acc": 0.1072
+      },
+      "sure_sn": 1448.9,
+      "tepe_vram_mib": 2981.9,
+      "atlanan_adim": 0
+    },
+    "G1_mtp4_tam_yayilim": {
+      "son_val": {
+        "lm_bits_512": 1.1242,
+        "r1_lm_bits_512": 1.1237,
+        "lm_bits_2048": 1.0362,
+        "sft_val_bits": 1.241,
+        "bilesik_skor": 1.1167,
+        "mtp_t2_acc": 0.3408,
+        "mtp_t3_acc": 0.2464,
+        "mtp_t4_acc": 0.214
+      },
+      "sure_sn": 1517.0,
+      "tepe_vram_mib": 3833.9,
+      "atlanan_adim": 0
+    },
+    "delta_g0_eksi_base_only": {
+      "lm_bits_512": 0.0001,
+      "r1_lm_bits_512": 0.0002,
+      "lm_bits_2048": -0.0002,
+      "sft_val_bits": 0.0005,
+      "bilesik_skor": 0.0001
+    },
+    "delta_g1_eksi_base_only": {
+      "lm_bits_512": 0.0011,
+      "r1_lm_bits_512": 0.0006,
+      "lm_bits_2048": 0.0016,
+      "sft_val_bits": 0.0,
+      "bilesik_skor": 0.001,
+      "mtp_t2_acc": 0.2394,
+      "mtp_t3_acc": 0.1535,
+      "mtp_t4_acc": 0.1069
+    }
+  }
+}

@@ -209,7 +209,7 @@ def _draw_cap_panel_b(s: list[str], oy7: dict[str, Any]) -> None:
     s.append(txt(570, 405, f"{oy7['azr_rsi3_rollbacks']} rollbacks · permanent ID anchor + exact 3D KL", 12, MUTED))
 
 
-def _draw_cap_panel_c(s: list[str], oy4: dict[str, Any], ab_55m: dict[str, Any], step7k: dict[str, Any]) -> None:
+def _draw_cap_panel_c(s: list[str], oy4: dict[str, Any], ab_55m: dict[str, Any], step_ref: dict[str, Any]) -> None:
     s.append(txt(945, 34, "(c) MTP-4 scale crossover (1.2M &#x2192; 55M)", 14, INK, weight="700"))
     cx0, cy0, cw, ch, zy = 804, 340, 294, 250, 290.0
     s.append(f'  <line x1="{cx0}" y1="{zy}" x2="{cx0 + cw}" y2="{zy}" stroke="{INK}" stroke-width="1.1"/>\n')
@@ -239,18 +239,18 @@ def _draw_cap_panel_c(s: list[str], oy4: dict[str, Any], ab_55m: dict[str, Any],
         s.append(txt(bx + 27, lbl_y, f"{sign}{dv:.4f}", 11, col, weight="700"))
         s.append(txt(bx + 27, cy0 + 18, nm, 12, INK))
     ratio = round(tax_1_2m / max(1e-6, abs(tax_55m_lm)))
-    t2_7k = float(step7k["mtp_t2_acc"]) * 100.0
-    s.append(txt(945, 405, f"{ratio}x lower t+1 tax at 55M · t+2 = {t2_7k:.1f}% at 7K steps", 12, MUTED))
+    t2_21k = float(step_ref["mtp_t2_acc"]) * 100.0
+    s.append(txt(945, 405, f"{ratio}x lower t+1 tax at 55M · t+2 = {t2_21k:.1f}% at 21K steps", 12, MUTED))
 
 
 def build_self_capabilities_svg(summary: dict[str, Any]) -> str:
     """Build 3-panel audited self-capabilities & 55M scale crossover SVG from audited JSON."""
     oy = summary["studies"]["self_capabilities_v2_1_2m"]
     ab_55m = summary["studies"]["diogenes_rdfl_55m_gates"]["hour1_mtp4_ab_1500steps"]
-    step7k = summary["in_progress_live_observations"]["preliminary_step_7000"]
+    step_ref = summary["studies"]["diogenes_rdfl_55m_final"]["trajectory_fast_val"]["step_21000"]
     s = [svg_open(1140, 430, "Audited Self-Capabilities V2 and 46x MTP-4 Scale Crossover")]
     _draw_cap_panel_a(s, oy["oy6_fp32_slotcore"])
     _draw_cap_panel_b(s, oy["oy7_bounded_rsi_75gens"])
-    _draw_cap_panel_c(s, oy["oy4_mtp4_at_1_2m"], ab_55m, step7k)
+    _draw_cap_panel_c(s, oy["oy4_mtp4_at_1_2m"], ab_55m, step_ref)
     s.append("</svg>\n")
     return "".join(s)

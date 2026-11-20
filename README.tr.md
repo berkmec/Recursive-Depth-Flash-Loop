@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-EE4C2C.svg)](pyproject.toml)
-[![Ham JSON Doğrulaması](https://img.shields.io/badge/Doğrulanan_Hücre-320%2F320_(0_uyuşmazlık)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
+[![Ham JSON Doğrulaması](https://img.shields.io/badge/Doğrulanan_Hücre-698%2F698_(0_uyuşmazlık)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
 
 **[English](README.md)** · **[Türkçe](README.tr.md)** · **[Mimari Belirtim](docs/ARCHITECTURE.md)** · **[Denetlenmiş Özet JSON](results/audited_summary.json)** · **[Ham Denetim JSON'ları](results/raw/)**
 
@@ -18,7 +18,7 @@ Standart otoregresif Transformer mimarilerinde anahtar–değer (KV) önbelleği
 
 1. **Ağırlık-Paylaşımlı Özyinelemeli Derinlik (Opsiyonel Giriş Çıpalı):** Paylaşımlı özyinelemeli blok $R$ kez yinelenir ($h_t^{(r-1)} + \alpha_r e_t + e_r$). Kontrollü `1,20M` ablasyonları (Bölüm 2), `RDFL`'nin çekirdek kazanımının giriş çıpalamasından tek başına değil **`GatedDeltaNet + BDH + RLT-2` sinerjisinden** geldiğini göstermektedir (çıpasız `A6_R4_cipasiz`, `Multi-Hop ICL`'de eşdeğer ve `Byte LM`'de hafifçe daha iyidir).
 2. **Householder Yazma Kapılı Parça-Paralel `Gated DeltaNet`:** Nedensel kısa konvolüsyon ($k=4$), çok-ölçekli yavaş sönümleme ($\alpha_0 \in [0{,}953, 0{,}999]$) ve $\beta_t = 2\sigma(\cdot) \in (0, 2)$ yazma kapısını birleştirir; dizi uzunluğundan bağımsız $S_t^{(r)} \in \mathbb{R}^{H \times d_h \times d_h}$ matris durumu taşır (`FP64`'te parça-paralel `forward == step` farkı `4,44e-16`).
-3. **`BDH` Seyrek Etkileşim Kapısı ve Parça-Sınırı `FP32 SlotCore`:** İkili-seyrek ReLU etkileşimini parça sınırlarında kesin `float32` kilitli $S=4$ bellek bankasıyla eşleştirerek karma-hassasiyet taşmalarını giderir (`0/36` NaN; eş-parametre `Byte LM` ödünleşimi ve mekanistik simetrik çöküş bulgusu için bkz. Bölüm 3.1).
+3. **`BDH` Seyrek Etkileşim Kapısı ve Parça-Sınırı `FP32 SlotCore` (`v0.3`'te Ertelendi / Değiştirilecek):** İkili-seyrek ReLU etkileşimini parça sınırlarında kesin `float32` kilitli $S=4$ bellek bankasıyla eşleştirir (`1,20M`'de `0/36` NaN). Ancak doğrudan `55M` ablasyonu sıfır durum-izleme katkısı (`delta_durum = 0,0`, `delta_bpb = -0,0005 / -0,0003`) ve simetrik yuva çöküşü (`cos = 0,999982`, Bölüm 3.1) gösterdiğinden simetrik `SlotCore` **`v0.3`'te ertelenip değiştirilecektir**.
 4. **Sıfır-Başlangıçlı Kalıntı Uyarlama ve Kayıpsız Yardımcı Başlıklar:** $W_{\uparrow}|_0 = 0$ çıkışı mevcut önceden eğitilmiş gövdelere adım-0'da `0,0` farkla bağlanır; kayıpsız spekülatif çözümleme (`K3` ve `MTP-4`, [`rdfl/speculative.py`](rdfl/speculative.py)), sıfır-parametreli kalibre belirsizlik (`MSP + T*`), sıfır-kalıntılı halka akış tamponu ve doğrulayıcı-kapılı sınırlı öz-gelişim (`AZR` RSI) ile bütünleşir.
 
 ---
@@ -50,6 +50,7 @@ Tüm 8 kol (`ortalama ± örneklem std`, 3 tohum; algoritmik sütunlar kuyruk / 
 | `A5` | `BDH-CQ Loop` | `1,20M` | `49,88 ± 0,40` | `72,09 ± 5,39` | `3,36 ± 0,23` | `3,29 ± 0,39` | `2,4676 ± 0,0041` |
 | **`A6`** | **`RDFL` (`Delta+BDH+RLT2`)** | **`1,20M`** | **`100,00 ± 0,00`** | **`100,00 ± 0,00`** | **`100,00 ± 0,00`** | **`22,72 ± 1,30`** | `2,2896 ± 0,0060` |
 
+- **`Multi-Hop ICL` Derece-Filtreleme Şerhi (`KPN-Y01`):** `RDFL`'nin `%22,72 ± 1,30` 3-hop doğruluğu `A4B` (`%3,97`, `5,7×`) ve `A0` (`%7,13`) kollarını açık ara geçse de **yapısal derece-filtreleme tavanı (`1/4 = %25,0` / `1/8 = %12,5`, birleşik `%18,75`) içinde yer alır**; bu nedenle sınırsız çok-atlamalı graf gezintisinden ziyade bağlam-içi yapısal düğüm-rolü takibi kanıtıdır.
 - **Durum Belleği Ölçeklenmesi (`L=6, d=768, H=8`, `d_h=96`):** Ölçülen $T \in \{512,\, 4{,}096,\, 32{,}768\}$ bağlam uzunluklarında FP16 Tam-KV Transformer önbelleği `9,0 / 72,0 / 576,0 MiB` doğrusal büyürken `GatedDeltaNet` sabit **`1,7139 MiB`** (`1,71 MiB` ölçülen; $T=32{,}768$'de kesin **`336,1×`** küçülme) taşır (`python benchmarks/profile_decode_memory.py` ile CPU'da yeniden üretilebilir). `55M` eğitim bağlamı $T=8{,}192$'de `RLT-2` `3.072 MiB` tavanında OOM olurken `RDFL (R=2)` `1.877,4 MiB`'de eğitilir.
 - **Yapısal ve Giriş Çıpalama Ablasyonları (`dongu_cipa_rlt2_ablasyonu`):**
   - *Parça-Sınırı (`RLT-2`):* Kaldırıldığında (`A6_R4_rlt2siz`) `Multi-Hop ICL` `%22,72 ± 1,30 → %10,32 ± 11,20` (`-12,40 puan`, `8,6×` yüksek std) düşer.
@@ -71,11 +72,11 @@ Tüm 8 kol (`ortalama ± örneklem std`, 3 tohum; algoritmik sütunlar kuyruk / 
 | **`ÖY-3`: Kalibre `MSP + T*` Belirsizlik** | **Kabul** | Sıfır ek parametre: `1,2M` `AUROC = 0,8424`, `ECE15 = 0,0116`, `%40` çekinmede `+20,13 puan` (`%52,68 → %72,81`), `8,32×` düşük graf ECE; `55M`'de **`AUROC = 0,8994 / 0,9041`** (`%74,65 → %95,35` SFT doğruluğu). |
 | **`ÖY-4`: `MTP-4` Çok-Baytlı İleri Bakış** | **Kabul (`55M+`)** | **`46×` ölçek geçişi:** `1,20M`'deki `+0,0323 bpb` LM (`+0,0272` `rsi_L34`) vergisi, açık `55M` yayılımında **`32×`** eriyerek `+0,0010 bpb` LM ve `-0,0005 bpb` SFT'ye iner (eğitilmemiş adım-0 duvar-saati `0,501×`). |
 | **`ÖY-5`: İstemden Öz-Düzeltme & MLP Doğrulayıcı** | **Ret** | Simetrik `T=0,0` testinde istem revizyonu eşit adımlı `D0` taslaklarını bozdu (`%87,37 → %48,44 / %49,22`). Sıfır-parametreli `log p` (`AUROC = 0,9513`), 25K MLP doğrulayıcıyı (`0,5867`) açık ara geçti. |
-| **`ÖY-6`: `FP32 SlotCore` Parça-Sınırı Belleği** | **Kabul (Şerhli 3.1)** | `0/36` NaN; `graf_izli` `%68,09 ± 54,73 → %96,89 ± 1,47` (`37,3×` düşük std), `MQAR %99,88`. **Şerhler:** eş-parametre `Byte LM`'de `+0,0173 bpb` vergi (`2,3819` vs `2,3646`) ve canlı simetrik yuva çöküşü (Bölüm 3.1). `BDH`, `BDH`'siz koldan `3/3` tohumda iyi (`-0,0071 bpb`). |
-| **`ÖY-7`: Doğrulayıcı-Kapılı Sınırlı `AZR` RSI** | **Kabul (Sınırlı)** | `75` nesilde hakemsiz kör `RSI1` çöktü (`LM: 7,5162 bpb`, `ID: %63,54`). Dış deterministik hakem + kalıcı `Tur 0` ID çıpası + `%30` LM tekrarı + kesin 3B ters KL + geri-alma ile en iyi **`LM = 2,9301 bpb`**, `0` geri-alma, `ID = %98,44` ve en yüksek `IPT = %80,45` (Oracle `%71,26`, Kontrol `%66,59`). |
+| **`ÖY-6`: `FP32 SlotCore` Parça-Sınırı Belleği** | **Ertelendi / `v0.3`'te Değiştirilecek** | `1,20M`'de `0/36` NaN; `graf_izli` `%68,09 ± 54,73 → %96,89 ± 1,47` (`37,3×` düşük std), `MQAR %99,88` (`+0,0173 bpb` LM vergisi). **`55M`'de (`1,33M` param):** durum izlemede `slot_acik == slot_kapali` (`%59,38` vs `%59,38`, **`delta_durum = 0,0`**), `delta_bpb = -0,0005` (Ana) / `-0,0003` (RSI) ve 4 yuva **`cos = 0,999982`** çöküşü (Bölüm 3.1). `BDH`, `BDH`'siz koldan `3/3` tohumda iyi (`-0,0071 bpb`). |
+| **`ÖY-7`: Doğrulayıcı-Kapılı Sınırlı `AZR` RSI** | **Kabul (Sınırlı + SFT Koruma)** | `1,20M` (`75` nesil): kör `RSI1` çöktü (`LM 7,5162`), `AZR` en iyi `LM = 2,9301`, `0` rollback, `ID %98,44`, `IPT %80,45`. `55M` (`8` nesil, `0` rollback): `L=4 ↔ L=5` duvarı (`96/96` vs `0/96` kabul) ve SFT/`EOT` tekrarı olmayan entropi bonusuyla `completion 0,78 → 0,58`, `repetition 0,40 → 0,60` gerilemesi (Bölüm 4). |
 | **`ÖY-8`: Sıfır-Kalıntılı Halka Akış Tamponu** | **Kabul** | Makbuz-kilitli halka tampon `32,0 MiB` akışta `4,0 MiB` tepe, `0,0 MiB` son disk ve `0,0 MiB` VRAM ile çalışır. |
 | **`ÖY-9`: Çevrimiçi Ağırlık Öz-Düzenleme (`SEAL` / `E-SELF`)** | **Ertelendi (Kapsam Dışı)** | Yalnızca literatür incelemesinde değerlendirildi; V2 deney matrisinden ertelendi (bağımsız deney iddiası yoktur). |
-| **`ÖY-10`: `ToolRunner` (`<calc>` / `<check>` / `<note>`)** | **Yalnız Eğitim-Öncesi Taban** | Kod harici eğitim deposundadır (bu pakette yer almaz). `results/raw/taban_55m_degerlendirme.json` içindeki tek ölçüm eğitim-öncesi `55M` tabanıdır (`24` soru: `%0,0` çağrı, `%0,0` doğruluk). Eğitim-sonrası `55M` ölçümü `42K` koşusu bitince eklenecektir. |
+| **`ÖY-10`: `ToolRunner` (`<calc>` / `<check>` / `<note>`)** | **Kabul (Şablon Kapsamı)** | Kod harici eğitim deposundadır. `24` aritmetik istemde: eğitim-öncesi `55M` taban `%0,0` → `Ana 21K`, `RSI (8 nesil)` ve `RDFL`'siz `G_BASE_ONLY (1,5K)` üçü de **`%100,0` çağrı / `%100,0` doğruluk** (`%0,0` araçsız); ortak-uyarlanmış `en_iyi.pt` (`21K`) üzerinde `RDFL` kapatıldığında `%54,17`'ye düşer. |
 
 ### 3.1 `graf_izli` Tohum Kırılımı, Eş-Parametre `Byte LM` Vergisi ve Mekanistik Çöküş Bulgusu
 
@@ -89,25 +90,42 @@ Görülmeyen tohumlarda `(42, 137, 2026)` `graf_izli` ve `Byte LM` ([`results/ra
 | **`OY6_A6_SLOT4_FP32` (`ffn=128`, `FP32 SlotCore`)** | **`%95,30 / %98,19 / %97,17`** | **`%96,89 ± 1,47`** | `2,3819 ± 0,0055` (`+0,0173`) |
 
 - **Eş-Parametre `Byte LM` Gerilemesi (`+0,0173 bpb`):** `1,20M` eş-parametre bütçesinde `FP32 SlotCore` eklemek için `ffn` boyutunun `512 → 128` daraltılması `Byte LM`'de `+0,0173 bpb` vergiye yol açmıştır (`2,3819` vs `2,3646`). `55M` ölçeğinde bu vergiyi önlemek için `SlotCore` daraltılmamış `ffn=3072` omurga dışına eklenir.
-- **Mekanistik Dürüstlük Bulgusu (`FP32 SlotCore` Simetrik Çöküş — [`results/raw/slotcore_55m_cosine_probe.json`](results/raw/slotcore_55m_cosine_probe.json)):** Canlı eğitilmiş `55M` checkpoint'te (adım `21.000`, `16` gerçek parça / `1.024` bayt `mix/validation.bin`, CPU ölçümü): `init_slots` kosinüs benzerliği **`0,5017–0,7512`** (`ort = 0,6446`, `norm = 0,6941`) iken `16` parça sonunda tüm $S=4$ yuva arasındaki kosinüs **`0,999982`** (`min = 0,999959`, `maks = 0,999999`) ve ortalama norm **`664,5`** (adım `17.500`'deki `~577` değerinden büyümeye devam ederek) olmaktadır. CPU'da `python benchmarks/run_1_2m_suite.py --smoke --measure-slot-cosine` ile 8 parça sonrası `cos ≈ 0,988` çöküşü doğrudan gözlenir. Dolayısıyla kazanç "4 ayrı uzmanlaşmış yuva"dan değil, **parça sınırındaki birikimli `FP32` kalıntı durumdan** gelmektedir. **`v0.3`** için rekabetçi yuva-eksenli `SlotAttention` + yuva-başı `RMSNorm` ve sönümleme planlanmıştır.
+- **Mekanistik Dürüstlük Bulgusu (`FP32 SlotCore` Simetrik Çöküş & `55M` Sıfır Katkı — [`slotcore_55m_cosine_probe.json`](results/raw/slotcore_55m_cosine_probe.json), [`ana_55m_degerlendirme.json`](results/raw/ana_55m_degerlendirme.json)):** Eğitilmiş `55M` checkpoint'te (adım `21.000`, `16` gerçek parça / `1.024` bayt `mix/validation.bin`, CPU ölçümü): `init_slots` kosinüsü `0,5017–0,7512` (`ort = 0,6446`) iken `16` parça sonunda tüm $S=4$ yuva **`0,999982`** (`min = 0,999959`, `maks = 0,999999`) kosinüse ve **`664,5`** L2 normuna çökmüştür. Tam `55M` ablasyonu da **`delta_durum = 0,0`** (`%59,38` açık vs `%59,38` kapalı) ve ihmal edilebilir `delta_bpb_2048 = -0,0005` (Ana) / `-0,0003` (RSI) göstermiştir → simetrik `SlotCore` **`v0.3`'te ertelenip değiştirilecektir**.
 
 ---
 
-## 4. `55M` Sıcak Uyarlama, Değerlendirme Ayrımı ve Kontrol Kapsamı
+## 4. Tamamlanan `55M` Uyarlama, `G_BASE_ONLY` Nedensel Kontrolü ve `ÖY-7` RSI (`Diogenes-RDFL-55M`)
 
-- **`1.500`-Adımlık `G0` / `G1` Kapısı (`saat1_mtp_kapisi.json`) & Canlı Anlık Görüntü (`diogenes_55m_live_val_snapshot.json`):**
-  - *Hızlı Doğrulama (`fast-val`: `4` yığın, `200` SFT satırı):* Adım-0 taban `1,1268 / 1,0419 / 1,2416` (`MTP t+2/3/4 = %10,1 / %9,2 / %10,7`); `G0` ($\lambda_{\text{MTP}} = 0$, 1.5K): `1,1232 / 1,0344 / 1,2415`; `G1` ($\lambda_{\text{MTP}} = 0,15$, 1.5K): `1,1242 (+0,0010) / 1,0362 / 1,2410 (-0,0005)`, `MTP = %34,1 / %24,6 / %21,4`. Ön canlı gözlemler: `7K` adım `1,1207 / 1,0277 / %51,6 t+2`; `17,5K` adım `1,1188 / 1,0278 / %54,2 t+2`; `21K` adım `1,1197 / 1,0254 / %54,9 t+2`.
-  - *Tam Batarya (`full-val`: `8` yığın, `400` SFT satırı, `taban_55m_degerlendirme.json`):* Adım-0 taban `1,1549 / 1,0718 / 1,2567` (aynı dosyadaki `oy6_slotcore_ablasyon` ise `fast-val` `4` yığınla `1,0419` ölçer).
-  - *Kontrol Kapsamı:* `G0/G1` kapısı **`MTP-4`'ü izole eder** (her iki kolda da `RDFL` açıktır). `RDFL`'siz düz devam-eğitim kontrolü (**`G_BASE_ONLY`, `1.500` adım**) devam eden `42K` ana koşu biter bitmez çalıştırılıp tam `55M` eğitim-sonrası bataryasıyla (`ToolRunner`, `cmem`, gerçek QA, `AZR` RSI) yayımlanacaktır.
+> **Denetim Durumu:** Aşağıdaki `55M` final çıktılarının tamamı [`results/raw/`](results/raw/) ham JSON'larına karşı **`698/698`** hücrede `0` uyuşmazlıkla doğrulanmıştır (`kod_sha256 = 3c1a59a1dd2bb0f7`) ve **bağımsız sıfır-bağlamlı Carbon kapanış denetimini beklemektedir**.
+
+- **`G_BASE_ONLY` (`1.500` adım, `RDFL` KAPALI) vs `G0` / `G1` & `42K` Seyri (`fast-val`, [`g_base_only_kontrol.json`](results/raw/g_base_only_kontrol.json), [`saat1_mtp_kapisi.json`](results/raw/saat1_mtp_kapisi.json), [`ana_egitim_ozet.json`](results/raw/ana_egitim_ozet.json)):**
+  - Adım-0 taban: `1,1268 / 1,0419 / 1,2416` (`bileşik 1,1200`).
+  - **`G_BASE_ONLY` (`1,5K`, yalnız `55,08M core + 0,86M reader`, `maks|delta_z| == 0,0`):** **`437,9 sn` (`3,3×` hızlı)**, `2.770,6 MiB`, `0` NaN/atlanan → `1,1231 / 1,0346 / 1,2410` (**`bileşik 1,1157`**), `OY-10 %100`, `durum %25,0`.
+  - `G0` (`1,5K`, $\lambda_{\text{MTP}}=0$, `RDFL` ON): `1,1232 / 1,0344 / 1,2415` (`bileşik 1,1158`, `1.448,9 sn`, `2.981,9 MiB`).
+  - `G1` (`1,5K`, $\lambda_{\text{MTP}}=0,15$, `RDFL` ON): `1,1242 / 1,0362 / 1,2410` (`bileşik 1,1167`, `1.517,0 sn`, `3.833,9 MiB`, `MTP t+2/3/4 = %34,1 / %24,6 / %21,4`).
+  - Ana Eğitim (`42K` toplam `41.894,8 sn`, tepe `3.443,5 MiB`, `15` atlanan): En iyi bileşik Adım `21.000` (`en_iyi.pt = 1,1124`: `1,1197 / 1,0254 / 1,2485`, `MTP %54,9/%42,9/%35,4`); Adım `42.000` (`son.pt`: `1,1169 / 1,0231 / 1,2998` [dar SFT ezberi], `MTP %55,9/%44,0/%35,8`).
+- **Tam Batarya (`full-val`) ve `en_iyi.pt` (`21K`) `RDFL ON vs OFF (delta_z = 0)` Ablasyonu ([`ana_55m_degerlendirme.json`](results/raw/ana_55m_degerlendirme.json), [`rsi_55m_degerlendirme.json`](results/raw/rsi_55m_degerlendirme.json), [`oy7_rsi_55m.json`](results/raw/oy7_rsi_55m.json)):**
+  - `Taban → Ana 21K (RDFL ON) → Ana 21K (RDFL OFF) → RSI (8 nesil)`:
+    - `mix512_r2_bpb`: `1,1549 → 1,1467` vs `1,1477` (`Δ = -0,0010`) `→ 1,1452`
+    - `mix2048_r2_bpb`: `1,0718 → 1,0566` vs `1,0568` (`Δ = -0,0002`) `→ 1,0547`
+    - `web2048_r2_bpb`: `1,4067 → 1,3878` vs `1,3878` (`Δ = 0,0000`) `→ 1,3859`
+    - `sft_val_bits` (`400`): `1,2567 → 1,2630` vs `1,2564` (`Δ = +0,0066`) `→ 1,2543`
+    - `completion / repetition` (`50`): `0,72 / 0,42 → 0,78 / 0,40` vs `0,34 / 0,78` (`Δ = +0,44 / -0,38`) `→ 0,58 / 0,60`
+    - `real_qa_d4000.qa.gen_on_exact / on_bits`: `0,0703 / 1,2049 → 0,1328 / 1,1366` vs `0,1094 / 1,1532` (`Δ = +0,0234 / -0,0166`) `→ 0,1250 / 1,1350`
+    - `durum_izleme` (`32`): `0,0 → 0,5938` vs `0,5938` (`Δ = 0,0000`) `→ 0,5938`
+    - `ÖY-10 ToolRunner` (`24`): `0,0 → 1,0000` vs `0,5417` (`Δ = +0,4583`) `→ 1,0000` (`G_BASE_ONLY 1,5K = 1,0000`)
+    - `cmem chain3_held`: `0,8750 → 0,9062 → 0,9375`; kayıpsız spekülatif duvar-saati (`0` sapma): `K3 1,042×` (`RSI 1,007×`), `MTP-4 0,968×` (`RSI 0,865×`).
+  - **Dürüst Hüküm:** `1,5K` ufkunda `bpb` ve `%100` `<calc>` kazanımını `55M core` tek başına `3,3×` hızlı almış; `21K`'da aktif `RDFL` artığı (`goreli_delta_rms = %14,1`) saf LM `bpb`'ye sıfıra yakın (`-0,0010 / -0,0002 / 0,0000`) ve durum izlemeye `0,0` katkı verirken co-adapted üretimi (`completion`, `OY-10`, `real_qa`) taşımıştır. `ÖY-7` `8`-nesil `55M` RSI (`0` rollback) `L=4 ↔ L=5` duvarına çarpmış (`0/96` `L=5` kabul) ve SFT/`EOT` tekrarı eksikliği nedeniyle `completion 0,78 → 0,58` / `repetition 0,40 → 0,60` gerilemiştir.
 
 ---
 
 ## 5. Yöntemsel Kısıtlar
 
-1. **Referans Çekirdek:** Mevcut sonuçlar saf PyTorch parça-paralel WY + SDPA ile üretilmiştir; sıfırdan büyük ölçekli (`200M+`) eğitim için Triton / Flash Linear Attention birleştirmesi gerekir.
-2. **Yuva Simetrik Çöküşü ve Eş-Parametre LM Vergisi (`v0.2`):** `Fp32SlotCoreBoundary` uzun akışta yuvaları `cos = 0,99998` / `norm = 664,5` düzeyine çökertir ve `1,20M` eş-parametre koşulunda `+0,0173 bpb` LM vergisi öder (`v0.3`'te rekabetçi `SlotAttention` + sönümleme planlanmıştır).
-3. **Giriş Çıpalaması (`1,20M` Sıfır Etki):** Çıpasız `A6_R4_cipasiz`, `Multi-Hop`'ta çıpalı kola eşit ve `Byte LM`'de hafifçe daha iyidir.
-4. **Uzak-OOD ve Bekleyen `55M` Ölçümleri:** `1,20M` RSI deneylerinde `OOD-Uzak` (`L=7,8`) tüm kollarda `%0,0` kalmıştır; `55M` eğitim-sonrası `ToolRunner` (`ÖY-10`) ve `G_BASE_ONLY` sonuçları devam eden `42K` koşunun tamamlanmasını beklemektedir.
+1. **Referans Çekirdek & Spekülatif Yük:** Saf PyTorch'ta `55M` kayıpsız `K3` yalnız `1,042×` (`RSI 1,007×`), `MTP-4` ise `%42,8` kabule rağmen `0,968×` (`RSI 0,865×`) hız vermiştir; sıfırdan büyük ölçekli eğitim için birleşik Triton / `fla` `GatedDeltaNet` çekirdeği şarttır.
+2. **Hibrit `55M` Yan-Dal vs Saf `RDFL`:** `G_BASE_ONLY` (`1,5K`) ve `en_iyi.pt` `RDFL ON/OFF` (`21K`) kontrolleri hibrit yan-dalın saf LM `bpb`'ye ihmal edilebilir katkı verdiğini göstermiştir; mimari üstünlük iddiası için sıfırdan **Saf `RDFL`** ön-eğitimi gerekir.
+3. **`SlotCore` Çöküşü (`v0.3`'te Ertelendi) & `Multi-Hop ICL` Tavanı (`KPN-Y01`):** Simetrik `FP32 SlotCore` `cos = 0,999982` (`norm = 664,5`) ile çöküp `55M`'de `0,0` durum-izleme katkısı vermiştir. `1,20M` `Multi-Hop ICL` `%22,72` skoru `%25,0 / %12,5` derece-filtreleme tavanı içindedir (`KPN-Y01`), giriş çıpalaması ise sıfır etki göstermiştir.
+4. **OOD Uzaklaşması & RSI SFT Koruması:** `1,20M` `OOD-Uzak` (`L=7,8 = %0,0`) ve `55M` `L=4 ↔ L=5` duvarı (`0/96` kabul) + `completion 0,78 → 0,58` çöküşü, RSI'da hem uzunluk köprüsü hem SFT/`EOT` koruma payı zorunluluğunu kanıtlamıştır.
+5. **Doğrulama:** `results/audited_summary.json` içindeki **`698/698`** hücre CI'da ham JSON'lara karşı doğrulanmaktadır (`55M` final çıktıları bağımsız Carbon kapanış denetimini beklemektedir).
 
 ---
 

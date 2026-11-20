@@ -1,0 +1,42 @@
+{
+  "kod_sha256": "3c1a59a1dd2bb0f7",
+  "toplam_adim": 42000,
+  "atlanan_adim": 15,
+  "sure_sn": 41894.8,
+  "tepe_vram_mib": 3443.5,
+  "en_iyi_bilesik": 1.1124,
+  "son_val": {
+    "lm_bits_512": 1.1169,
+    "r1_lm_bits_512": 1.1185,
+    "lm_bits_2048": 1.0231,
+    "sft_val_bits": 1.2998,
+    "bilesik_skor": 1.1207,
+    "mtp_t2_acc": 0.5594,
+    "mtp_t3_acc": 0.4398,
+    "mtp_t4_acc": 0.3576
+  },
+  "ayar": {
+    "toplam_adim": 42000,
+    "warmup_adim": 200,
+    "lr_taban": 2e-05,
+    "lr_adaptor": 0.0003,
+    "lr_mtp": 0.0003,
+    "lr_reader": 0.0001,
+    "lam_mtp": 0.15,
+    "mtp_stop_grad": false,
+    "eot_agirlik": 5.0,
+    "batch_replay": 8,
+    "uzunluk_replay": 1024,
+    "batch_mem": 2,
+    "mem_toplam": 8192,
+    "mem_kuyruk": 1024,
+    "batch_sft": 8,
+    "batch_mantik": 8,
+    "deger_aralik": 3500,
+    "kayit_aralik": 1750,
+    "gunluk_aralik": 50,
+    "tohum": 137,
+    "amp": true,
+    "cihaz": "cuda"
+  }
+}
