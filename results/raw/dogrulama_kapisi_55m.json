@@ -1,0 +1,34 @@
+{
+  "kod_sha256": "3c1a59a1dd2bb0f7",
+  "matematik_ve_akis": {
+    "param_ozeti": {
+      "taban_55m": 55078145,
+      "rdfl_dar_gdn_bdh": 2812430,
+      "oy6_fp32_slotcore": 1330560,
+      "oy1_k3_kopuk": 737664,
+      "oy4_mtp4": 2359296,
+      "yeni_toplam": 7239950,
+      "genel_toplam": 62318095
+    },
+    "adim0_logits_maks_fark": 0.0,
+    "adim0_hn_maks_fark": 0.0,
+    "adim0_cmem_maks_fark": 0.0,
+    "nedensel_maks_fark": 0.0,
+    "forward_step_maks_fark": 1.33514404296875e-05,
+    "forward_blok4_maks_fark": 1.1444091796875e-05,
+    "gecti": true
+  },
+  "fp16_ve_vram_duman": {
+    "n_adim": 12,
+    "nan_adim": 0,
+    "atlanan_adim": 0,
+    "tepe_vram_mib": 3438.7,
+    "sn_basina_adim": 0.86,
+    "adim_basina_sn": 1.162,
+    "grad_55m_taban_aktif": true,
+    "grad_adaptor_aktif": true,
+    "grad_mtp4_aktif": true,
+    "gecti": true
+  },
+  "kapi1_gecti": true
+}

@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "kod_sha256": "c8c2744cd90baca1",
+    "mimari_lab_sha256": "ab9e7db6220038a6",
+    "zaman_utc": "2026-11-19T18:06:11Z"
+  },
+  "rsi_6_operator_birebir": true,
+  "saskinlik_gdn": {
+    "esitlik_maks_fark": 3.552713678800501e-15,
+    "nedensel_maks_fark": 0.0,
+    "adim0_sifir_fark": 2.4424906541753444e-15,
+    "durum_bellek_mib": {
+      "taban_s_mib": 0.0703,
+      "ek_s_ref_mib": 0.0703,
+      "toplam_s_mib": 0.1406,
+      "r4_ek_s_ref_mib": 0.1172,
+      "m55_saf_l6_ek_s_ref_mib": 1.125,
+      "m55_algi_l6_ek_s_ref_mib": 1.3125
+    },
+    "fp16_20": {
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0
+    }
+  },
+  "slot4_fp32": {
+    "esitlik_maks_fark": 2.4424906541753444e-15,
+    "nedensel_maks_fark": 0.0,
+    "fp16_20": {
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0
+    }
+  },
+  "bdhsiz_es_param": {
+    "param_taban": 1201178,
+    "param_bdhsiz": 1200986,
+    "param_slot4": 1202330,
+    "param_saskinlik": 1201190,
+    "fp16_20": {
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0
+    }
+  },
+  "k3_ve_mtp4_ve_spekulatif": {
+    "k3_ek_param": 36864.0,
+    "k3_adim0_fark": 0.0,
+    "mtp4_ek_param": 110592.0,
+    "spekulatif_kayipsiz_fark_bayt": 0.0
+  }
+}

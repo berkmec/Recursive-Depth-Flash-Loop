@@ -16,7 +16,13 @@ from rdfl.layers import (
     GatedDeltaNetLayer,
     RMSNorm,
 )
-from rdfl.model import RDFLConfig, RDFLModel, ZeroDiffRDFLAdapter
+from rdfl.model import RDFLConfig, RDFLModel, RDFLState, ZeroDiffRDFLAdapter
+from rdfl.speculative import (
+    SpeculativeDecodeResult,
+    greedy_decode,
+    speculative_decode_k3,
+    speculative_decode_mtp4,
+)
 
 __all__ = [
     "BdhSparseGate",
@@ -26,12 +32,17 @@ __all__ = [
     "GatedDeltaNetLayer",
     "RDFLConfig",
     "RDFLModel",
+    "RDFLState",
     "RMSNorm",
+    "SpeculativeDecodeResult",
     "ZeroDiffRDFLAdapter",
     "aurc",
     "auroc",
     "ece_15",
     "fit_temperature",
+    "greedy_decode",
     "msp_uncertainty",
     "reverse_kl_per_token",
+    "speculative_decode_k3",
+    "speculative_decode_mtp4",
 ]

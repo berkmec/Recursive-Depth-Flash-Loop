@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "kod_sha256": "ab9e7db6220038a6",
+    "zaman_utc": "2026-11-19T02:02:34Z"
+  },
+  "parca_ozyineleme_esitligi": {
+    "kisa_konv_maks_fark": 6.661338147750939e-16,
+    "hebbian_cikti_maks_fark": 6.661338147750939e-16,
+    "hebbian_durum_maks_fark": 2.6645352591003757e-15,
+    "gdn_cikti_maks_fark": 7.771561172376096e-16,
+    "gdn_durum_maks_fark": 4.0245584642661925e-16,
+    "a6_tam_model_step_maks_fark": 4.440892098500626e-16
+  },
+  "kol_dogrulamalari": {
+    "A0_RLT0": {
+      "ffn_dim": 664,
+      "parametre": 1196352,
+      "sapma_yuzde": 0.3,
+      "nedensel_maks_fark": 0.0,
+      "fp16_adim_sayisi": 20,
+      "nan_kayip_adim": 0,
+      "gradscaler_tasma_adim": 0,
+      "fp16_son_kayip": 5.5583,
+      "fp16_son_grad_norm": 3.6756
+    },
+    "A1_RLT1": {
+      "ffn_dim": 568,
+      "parametre": 1196928,
+      "sapma_yuzde": 0.26,
+      "nedensel_maks_fark": 0.0,
+      "fp16_adim_sayisi": 20,
+      "nan_kayip_adim": 0,
+      "gradscaler_tasma_adim": 0,
+      "fp16_son_kayip": 5.5924,
+      "fp16_son_grad_norm": 4.9411
+    },
+    "A2_RLT2": {
+      "ffn_dim": 568,
+      "parametre": 1196928,
+      "sapma_yuzde": 0.26,
+      "nedensel_maks_fark": 0.0,
+      "fp16_adim_sayisi": 20,
+      "nan_kayip_adim": 0,
+      "gradscaler_tasma_adim": 0,
+      "fp16_son_kayip": 5.6039,
+      "fp16_son_grad_norm": 4.3001
+    },
+    "A3_FLASH_HEBBIAN_RAW": {
+      "ffn_dim": 1352,
+      "parametre": 1201932,
+      "sapma_yuzde": 0.16,
+      "nedensel_maks_fark": 0.0,
+      "fp16_adim_sayisi": 20,
+      "nan_kayip_adim": 0,
+      "gradscaler_tasma_adim": 0,
+      "fp16_son_kayip": 5.526,
+      "fp16_son_grad_norm": 7.0152
+    },
+    "A4_GDN_DELTA": {
+      "ffn_dim": 416,
+      "parametre": 1200216,
+      "sapma_yuzde": 0.02,
+      "nedensel_maks_fark": 0.0,
+      "fp16_adim_sayisi": 20,
+      "nan_kayip_adim": 0,
+      "gradscaler_tasma_adim": 0,
+      "fp16_son_kayip": 5.5282,
+      "fp16_son_grad_norm": 6.4426
+    },
+    "A4B_GDN_ISOFLOP": {
+      "ffn_dim": 512,
+      "parametre": 2572272,
+      "sapma_yuzde": 114.36,
+      "nedensel_maks_fark": 0.0,
+      "fp16_adim_sayisi": 20,
+      "nan_kayip_adim": 0,
+      "gradscaler_tasma_adim": 0,
+      "fp16_son_kayip": 5.5779,
+      "fp16_son_grad_norm": 6.4717
+    },
+    "A5_BDH_CQ_LOOP": {
+      "ffn_dim": 1288,
+      "parametre": 1200586,
+      "sapma_yuzde": 0.05,
+      "nedensel_maks_fark": 0.0,
+      "fp16_adim_sayisi": 20,
+      "nan_kayip_adim": 0,
+      "gradscaler_tasma_adim": 0,
+      "fp16_son_kayip": 5.54,
+      "fp16_son_grad_norm": 6.3017
+    },
+    "A6_DELTA_BDH_RLT": {
+      "ffn_dim": 512,
+      "parametre": 1201564,
+      "sapma_yuzde": 0.13,
+      "nedensel_maks_fark": 0.0,
+      "fp16_adim_sayisi": 20,
+      "nan_kayip_adim": 0,
+      "gradscaler_tasma_adim": 0,
+      "fp16_son_kayip": 5.5878,
+      "fp16_son_grad_norm": 3.6322
+    },
+    "YOL1_ADAPTOR_d1536": {
+      "adim0_sifir_fark": 0.0,
+      "nedensel_maks_fark": 0.0,
+      "taban_param": 38149632.0,
+      "adaptor_toplam_param": 2812430.0,
+      "adaptor_ek_yuzde": 7.37,
+      "adaptor_toplam_fp16_mib": 5.364,
+      "adaptor_dongu_fp16_mib": 3.108,
+      "fp16_adim_sayisi": 20,
+      "nan_kayip_adim": 0,
+      "gradscaler_tasma_adim": 0,
+      "fp16_son_kayip": 5.5711,
+      "fp16_son_grad_norm": 4.0263
+    }
+  }
+}

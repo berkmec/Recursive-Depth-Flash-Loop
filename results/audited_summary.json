@@ -1,27 +1,114 @@
 {
   "project": "Recursive Depth Flash Loop (RDFL)",
-  "updated_at": "2026-11-20T06:00:00+03:00",
+  "updated_at": "2026-11-20T07:40:00+03:00",
   "hardware": "Single NVIDIA RTX 2060 SUPER (8 GiB Turing FP16)",
+  "raw_artifacts_dir": "results/raw",
   "studies": {
     "architecture_v2_1_2m": {
       "audit_status": "PASS (Independent Zero-Context Closure Audit, 411/411 cells verified)",
       "frozen_code_hash": "ab9e7db6220038a6",
       "total_gpu_runs": 204,
-      "fp16_nans": 0,
-      "forward_eq_step_fp64_max_diff": 4.44e-16,
-      "iso_param_1_20m": {
-        "RLT-0": {"parity64": 50.18, "s5_perm32": 19.45, "mqar_overwrite": 22.40, "multihop_icl": 7.13, "byte_lm_bpb": 2.4019},
-        "RLT-1": {"parity64": 79.78, "s5_perm32": 99.93, "mqar_overwrite": 21.96, "multihop_icl": 7.32, "byte_lm_bpb": 2.3648},
-        "RLT-2": {"parity64": 50.15, "s5_perm32": 20.27, "mqar_overwrite": 20.92, "multihop_icl": 7.03, "byte_lm_bpb": 2.4207},
-        "GDN_IsoFLOP_2_57M": {"parity64": 100.00, "s5_perm32": 100.00, "mqar_overwrite": 23.63, "multihop_icl": 3.97, "byte_lm_bpb": 2.2786},
-        "RDFL_1_20M": {"parity64": 100.00, "s5_perm32": 100.00, "mqar_overwrite": 100.00, "multihop_icl": 22.72, "byte_lm_bpb": 2.2896}
+      "core_186_runs_fp16_nans": 0,
+      "legacy_fp16_slot4_nan_runs": 2,
+      "forward_eq_step_fp64_max_diff": 4.440892098500626e-16,
+      "causality_max_diff": 0.0,
+      "metric_definitions": {
+        "parity64": "alt_metrik: kuyruk_48_63_acc (%)",
+        "s5_perm32": "alt_metrik: kuyruk_24_31_acc (%)",
+        "mqar_overwrite": "alt_metrik: uzerine_yazilan_acc (%)",
+        "multihop_icl": "alt_metrik: 3hop_acc (%)",
+        "byte_lm_bpb": "birincil_metrik: bits_per_byte (lower is better)"
+      },
+      "all_8_arms_1_20m": {
+        "A0_RLT0": {
+          "label": "RLT-0 (Feedback-Off)",
+          "params": 1196352,
+          "parity64": {"mean": 50.18, "std": 0.37},
+          "s5_perm32": {"mean": 19.45, "std": 0.65},
+          "mqar_overwrite": {"mean": 22.4, "std": 1.28},
+          "multihop_icl": {"mean": 7.13, "std": 0.88},
+          "byte_lm_bpb": {"mean": 2.4019, "std": 0.0065}
+        },
+        "A1_RLT1": {
+          "label": "RLT-1 (Token-Step Feedback)",
+          "params": 1196928,
+          "parity64": {"mean": 79.78, "std": 26.25},
+          "s5_perm32": {"mean": 99.93, "std": 0.12},
+          "mqar_overwrite": {"mean": 21.96, "std": 1.32},
+          "multihop_icl": {"mean": 7.32, "std": 0.49},
+          "byte_lm_bpb": {"mean": 2.3648, "std": 0.0174}
+        },
+        "A2_RLT2": {
+          "label": "RLT-2 (Chunk Boundary)",
+          "params": 1196928,
+          "parity64": {"mean": 50.15, "std": 0.43},
+          "s5_perm32": {"mean": 20.27, "std": 1.86},
+          "mqar_overwrite": {"mean": 20.92, "std": 1.31},
+          "multihop_icl": {"mean": 7.03, "std": 0.29},
+          "byte_lm_bpb": {"mean": 2.4207, "std": 0.0217}
+        },
+        "A3_FLASH_HEBBIAN_RAW": {
+          "label": "Flash Hebbian (Raw)",
+          "params": 1201932,
+          "parity64": {"mean": 64.68, "std": 23.05},
+          "s5_perm32": {"mean": 92.75, "std": 3.73},
+          "mqar_overwrite": {"mean": 3.21, "std": 0.48},
+          "multihop_icl": {"mean": 5.63, "std": 2.48},
+          "byte_lm_bpb": {"mean": 2.3504, "std": 0.0028}
+        },
+        "A4_GDN_DELTA": {
+          "label": "GatedDeltaNet (Iso-Param)",
+          "params": 1200216,
+          "parity64": {"mean": 100.0, "std": 0.0},
+          "s5_perm32": {"mean": 73.13, "std": 3.54},
+          "mqar_overwrite": {"mean": 19.27, "std": 7.73},
+          "multihop_icl": {"mean": 6.12, "std": 3.03},
+          "byte_lm_bpb": {"mean": 2.2786, "std": 0.005}
+        },
+        "A4B_GDN_ISOFLOP": {
+          "label": "GatedDeltaNet (Iso-FLOP)",
+          "params": 2572272,
+          "parity64": {"mean": 100.0, "std": 0.0},
+          "s5_perm32": {"mean": 95.17, "std": 3.93},
+          "mqar_overwrite": {"mean": 23.63, "std": 1.31},
+          "multihop_icl": {"mean": 3.97, "std": 0.5},
+          "byte_lm_bpb": {"mean": 2.1893, "std": 0.0064}
+        },
+        "A5_BDH_CQ_LOOP": {
+          "label": "BDH-CQ Loop",
+          "params": 1200586,
+          "parity64": {"mean": 49.88, "std": 0.4},
+          "s5_perm32": {"mean": 72.09, "std": 5.39},
+          "mqar_overwrite": {"mean": 3.36, "std": 0.23},
+          "multihop_icl": {"mean": 3.29, "std": 0.39},
+          "byte_lm_bpb": {"mean": 2.4676, "std": 0.0041}
+        },
+        "A6_DELTA_BDH_RLT": {
+          "label": "RDFL (Delta+BDH+RLT2)",
+          "params": 1201564,
+          "parity64": {"mean": 100.0, "std": 0.0},
+          "s5_perm32": {"mean": 100.0, "std": 0.0},
+          "mqar_overwrite": {"mean": 100.0, "std": 0.0},
+          "multihop_icl": {"mean": 22.72, "std": 1.3},
+          "byte_lm_bpb": {"mean": 2.2896, "std": 0.006}
+        }
+      },
+      "structural_ablations": {
+        "A6_R4_cipali": {"multihop_3hop_mean": 22.72, "multihop_3hop_std": 1.3, "byte_lm_bpb_mean": 2.2896, "byte_lm_kb_s": 19.0},
+        "A6_R2_cipali": {"multihop_3hop_mean": 23.28, "multihop_3hop_std": 0.92, "byte_lm_bpb_mean": 2.2903, "byte_lm_kb_s": 34.43},
+        "A6_R1_cipali": {"multihop_3hop_mean": 18.0, "multihop_3hop_std": 8.27, "byte_lm_bpb_mean": 2.3044, "byte_lm_kb_s": 59.2},
+        "A6_R4_rlt2siz": {"multihop_3hop_mean": 10.32, "multihop_3hop_std": 11.2, "byte_lm_bpb_mean": 2.279, "byte_lm_kb_s": 46.73}
       },
       "memory_scaling": {
-        "decode_32k_transformer_6l_kv_mib": 576.0,
-        "decode_32k_rdfl_gdn_o1_mib": 1.71,
-        "decode_32k_reduction_factor": 337.0,
-        "train_55m_t8192_rlt2": "OOM (>3072 MiB)",
-        "train_55m_t8192_rdfl_mib": 1877.0
+        "backbone_spec": "L=6, d=768, H=8 (d_h=96)",
+        "measured_seq_lens": [512, 4096, 32768],
+        "decode_transformer_6l_kv_mib": [9.0, 72.0, 576.0],
+        "decode_gdn_6l_o1_measured_mib": [1.71, 1.71, 1.71],
+        "decode_gdn_6l_o1_exact_mib": 1.7139,
+        "decode_32k_reduction_factor_exact": 336.1,
+        "vram_ceiling_mib": 3072.0,
+        "train_55m_t8192_rlt2_status": "OOM",
+        "train_55m_t8192_rdfl_r2_mib": 1877.4
       }
     },
     "self_capabilities_v2_1_2m": {
@@ -31,27 +118,177 @@
       "calibration_seed_disjoint": 401,
       "fp16_nans": 0,
       "peak_vram_mib": 1705.7,
-      "oy1_k3_early_exit": {"r1_bpb_before": 2.8886, "r1_bpb_after": 2.4987, "r4_tax_bpb": 0.0041, "speculative_byte_diff": 0, "speculative_flop_speedup": [1.48, 1.54], "wall_speedup_k3_k2": 1.09, "wall_speedup_k1_k4": 1.28},
-      "oy3_msp_calibration": {"byte_lm_auroc": 0.8424, "byte_lm_ece15": 0.0116, "abstain40_acc_before": 52.68, "abstain40_acc_after": 72.81, "graf_ece_reduction_x": 8.3},
-      "oy4_mtp4_at_1_2m": {"byte_lm_tax_bpb": 0.0323, "rsi_l34_tax_bpb": 0.0272, "structural_acc_t2_t3_t4": [71.2, 71.7, 64.1]},
-      "oy5_prompt_self_correction": {"status": "REJECTED", "d0_draft_acc": 87.37, "d1_d2_after_revision_acc": [48.44, 49.22], "zero_param_logp_auroc": 0.9513, "mlp_verifier_auroc": 0.5867},
-      "oy6_fp32_slotcore": {"runs_zero_nan": "36/36", "mqar_acc": 99.88, "graf_acc_mean": 96.89, "graf_acc_std": 1.47, "baseline_graf_mean": 68.09, "baseline_graf_std": 54.73, "std_reduction_x": 37.2},
-      "oy7_bounded_rsi_75gens": {"blind_rsi1_lm_bpb": 7.52, "blind_rsi1_id_acc": 63.54, "azr_rsi3_lm_bpb": 2.9301, "azr_rsi3_rollbacks": 0, "azr_rsi3_ipt_acc": 80.45, "oracle_rsi4_ipt_acc": 71.26, "control_rsi0_ipt_acc": 66.59, "ood_far_l78_acc": 0.0},
-      "oy8_zero_retention_ring": {"vram_mib": 0.0, "stream_mib": 32.0, "peak_disk_mib": 4.0, "final_disk_mib": 0.0, "receipt_lock": true}
+      "oy1_k3_early_exit": {
+        "r1_bpb_before": 2.8886,
+        "r1_bpb_after": 2.4987,
+        "r1_gain_bpb": -0.3899,
+        "r4_bpb_before": 2.3742,
+        "r4_bpb_after": 2.3783,
+        "r4_tax_bpb": 0.0041,
+        "speculative_prompts_total": 288,
+        "speculative_byte_diff": 0,
+        "speculative_flop_speedup_k2_k4": [1.4812, 1.5357],
+        "wall_speedup_k3_k2": 1.0881,
+        "wall_speedup_k1_k4": 1.276
+      },
+      "oy3_msp_calibration": {
+        "byte_lm_auroc": 0.8424,
+        "byte_lm_ece15": 0.01164,
+        "abstain40_acc_before": 52.68,
+        "abstain40_acc_after": 72.81,
+        "abstain40_gain_pp": 20.13,
+        "graf_ece_raw": 0.14829,
+        "graf_ece_cal": 0.01783,
+        "graf_ece_reduction_x": 8.32
+      },
+      "oy4_mtp4_at_1_2m": {
+        "byte_lm_ntp_bpb": 2.3626,
+        "byte_lm_mtp4_bpb": 2.3949,
+        "byte_lm_tax_bpb": 0.0323,
+        "rsi_l34_ntp_bpb": 0.6259,
+        "rsi_l34_mtp4_bpb": 0.6531,
+        "rsi_l34_tax_bpb": 0.0272,
+        "structural_acc_t2_t3_t4": [71.17, 71.69, 64.05]
+      },
+      "oy5_prompt_self_correction": {
+        "status": "REJECTED",
+        "d0_draft_acc": 87.37,
+        "d1_d2_after_revision_acc": [48.44, 49.22],
+        "zero_param_logp_auroc": 0.9513,
+        "mlp_verifier_auroc": 0.5867
+      },
+      "oy6_fp32_slotcore": {
+        "runs_zero_nan": 36,
+        "total_runs": 36,
+        "mqar_acc_mean": 99.88,
+        "mqar_acc_std": 0.09,
+        "graf_acc_mean": 96.89,
+        "graf_acc_std": 1.47,
+        "baseline_graf_mean": 68.09,
+        "baseline_graf_std": 54.73,
+        "bdhless_graf_mean": 68.41,
+        "bdhless_graf_std": 54.08,
+        "titans_a_graf_mean": 81.46,
+        "titans_a_graf_std": 20.19,
+        "std_reduction_x": 37.34,
+        "bdh_vs_bdhless_byte_lm_delta_bpb": -0.0071,
+        "graf_izli_per_seed": {
+          "seeds": [42, 137, 2026],
+          "OY6_A6_TABAN": [99.6, 99.77, 4.89],
+          "OY6_A6_BDHSIZ": [5.97, 99.34, 99.92],
+          "OY6_A6_SLOT4_FP32": [95.3, 98.19, 97.17],
+          "OY6_A6_SASKINLIK_GDN": [99.61, 59.72, 85.06]
+        }
+      },
+      "oy7_bounded_rsi_75gens": {
+        "total_generations": 75,
+        "blind_rsi1_lm_bpb": 7.5162,
+        "blind_rsi1_id_acc": 63.54,
+        "blind_rsi1_ipt_acc": 63.15,
+        "control_rsi0_lm_bpb": 2.943,
+        "control_rsi0_ipt_acc": 66.59,
+        "azr_rsi3_lm_bpb": 2.9301,
+        "azr_rsi3_id_acc": 98.44,
+        "azr_rsi3_rollbacks": 0,
+        "azr_rsi3_ipt_acc": 80.45,
+        "oracle_rsi4_lm_bpb": 2.9341,
+        "oracle_rsi4_ipt_acc": 71.26,
+        "ood_far_l78_acc": 0.0
+      },
+      "oy8_zero_retention_ring": {
+        "vram_mib": 0.0,
+        "stream_mib": 32.0,
+        "peak_disk_mib": 4.0,
+        "final_disk_mib": 0.0,
+        "receipt_lock": true
+      }
     },
-    "diogenes_rdfl_55m_live": {
-      "status": "IN_PROGRESS (42,000-step full adaptation + 8-gen RSI running on RTX 2060S)",
+    "diogenes_rdfl_55m_gates": {
       "frozen_code_hash": "3c1a59a1dd2bb0f7",
-      "parameters": {"base_55m": 55078145, "rdfl_narrow": 2812430, "fp32_slotcore": 1330560, "k3_decoupled": 737664, "mtp4_heads": 2359296, "cmem_reader": 858436},
-      "gate1_pass": {"step0_logits_diff": 0.0, "step0_hn_diff": 0.0, "step0_cmem_diff": 0.0, "causality_diff": 0.0, "forward_eq_step_fp32": 1.335e-05, "smoke_12steps_nan": 0, "peak_vram_mib": 3438.7},
+      "parameters": {
+        "base_55m": 55078145,
+        "rdfl_narrow": 2812430,
+        "fp32_slotcore": 1330560,
+        "k3_decoupled": 737664,
+        "mtp4_heads": 2359296,
+        "new_total": 7239950,
+        "grand_total": 62318095
+      },
+      "gate1_pass": {
+        "step0_logits_diff": 0.0,
+        "step0_hn_diff": 0.0,
+        "step0_cmem_diff": 0.0,
+        "causality_diff": 0.0,
+        "forward_eq_step_fp32": 1.33514404296875e-05,
+        "smoke_12steps_nan": 0,
+        "peak_vram_mib": 3438.7,
+        "passed": true
+      },
       "hour1_mtp4_ab_1500steps": {
-        "G0_control": {"lm_bits_512": 1.1232, "lm_bits_2048": 1.0344, "sft_val_bits": 1.2415, "mtp_t2_acc": 0.1015},
-        "G1_mtp4_full_55m_prop": {"lm_bits_512": 1.1242, "lm_bits_2048": 1.0362, "sft_val_bits": 1.2410, "mtp_t2_acc": 0.3408, "mtp_t3_acc": 0.2464, "mtp_t4_acc": 0.2140},
-        "delta_lm_512": 0.0010,
+        "control_scope_note": "G0 vs. G1 isolates MTP-4 (lam_mtp=0 vs 0.15) with RDFL enabled in both arms; a dedicated RDFL-off continued-pretraining control (G_BASE_ONLY, 1.5K steps) is scheduled immediately after the ongoing 42K run.",
+        "G0_control": {
+          "lm_bits_512": 1.1232,
+          "r1_lm_bits_512": 1.1233,
+          "lm_bits_2048": 1.0344,
+          "sft_val_bits": 1.2415,
+          "mtp_t2_acc": 0.1015,
+          "mtp_t3_acc": 0.0928,
+          "mtp_t4_acc": 0.1072
+        },
+        "G1_mtp4_full_55m_prop": {
+          "lm_bits_512": 1.1242,
+          "r1_lm_bits_512": 1.1237,
+          "lm_bits_2048": 1.0362,
+          "sft_val_bits": 1.241,
+          "mtp_t2_acc": 0.3408,
+          "mtp_t3_acc": 0.2464,
+          "mtp_t4_acc": 0.214
+        },
+        "delta_lm_512": 0.001,
         "delta_sft_val": -0.0005,
+        "delta_lm_2048": 0.0018,
         "winner": "G1_MTP4_TAM_YAYILIM"
       },
-      "preliminary_step_7000": {"lm_bits_512": 1.1207, "k3_r1_bits_512": 1.1198, "lm_bits_2048": 1.0277, "baseline_lm_2048": 1.0419, "mtp_t2_acc": 0.5158, "mtp_t3_acc": 0.3960, "mtp_t4_acc": 0.3239, "peak_vram_mib": 3442.3}
+      "baseline_55m_eval": {
+        "msp_mix_val_auroc": 0.8994,
+        "msp_sft_val_auroc": 0.9041,
+        "sft_acc_full": 0.7465,
+        "sft_acc_abstain40": 0.9535,
+        "baseline_lm_2048": 1.0419
+      }
+    }
+  },
+  "in_progress_live_observations": {
+    "audit_status": "PRELIMINARY_IN_PROGRESS (live 42,000-step run on RTX 2060S; full post-training audit pending)",
+    "preliminary_step_7000": {
+      "lm_bits_512": 1.1207,
+      "k3_r1_bits_512": 1.1198,
+      "lm_bits_2048": 1.0277,
+      "sft_val_bits": 1.2442,
+      "mtp_t2_acc": 0.5158,
+      "mtp_t3_acc": 0.396,
+      "mtp_t4_acc": 0.3239,
+      "peak_vram_mib": 3442.3
+    },
+    "preliminary_step_17500": {
+      "lm_bits_512": 1.1188,
+      "k3_r1_bits_512": 1.1187,
+      "lm_bits_2048": 1.0278,
+      "sft_val_bits": 1.2492,
+      "mtp_t2_acc": 0.5416,
+      "mtp_t3_acc": 0.4247,
+      "mtp_t4_acc": 0.3447,
+      "peak_vram_mib": 3442.7
+    },
+    "mechanistic_finding_slotcore_symmetry_collapse": {
+      "checkpoint_step": 17500,
+      "chunks_evaluated": 16,
+      "bytes_evaluated": 1024,
+      "init_slots_pairwise_cosine_range": [0.48, 0.69],
+      "post_16_chunks_pairwise_cosine": 1.0,
+      "post_16_chunks_slot_norm_approx": 577.0,
+      "interpretation": "In the live 55M checkpoint, symmetric broadcast of chunk_end_state into all S=4 slots without slot-axis competition or norm damping drives pairwise slot cosine similarity from 0.48-0.69 (init) to 1.0000 with norm ~577 after 16 chunks. Empirical gains therefore arise from an accumulative FP32 chunk-boundary residual state rather than 4 specialized slots.",
+      "planned_v0_3_design": "Competitive slot-axis SlotAttention routing with per-slot RMSNorm and learned contraction/damping."
     }
   }
 }

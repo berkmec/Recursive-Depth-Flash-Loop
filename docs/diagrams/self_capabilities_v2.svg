@@ -1,17 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1140 430" width="1140" height="430" role="img" aria-label="Audited Self-Capabilities V2 and 46x MTP-4 Scale Crossover">
   <defs>
-    <marker id="arrGray" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-      <path d="M 0 1.2 L 9.5 5 L 0 8.8 z" fill="#4B5563"/>
-    </marker>
-    <marker id="arrBlue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-      <path d="M 0 1.2 L 9.5 5 L 0 8.8 z" fill="#3B82C4"/>
-    </marker>
-    <marker id="arrAmber" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-      <path d="M 0 1.2 L 9.5 5 L 0 8.8 z" fill="#D9822B"/>
-    </marker>
-    <marker id="arrTeal" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
-      <path d="M 0 1.2 L 9.5 5 L 0 8.8 z" fill="#2C8C7C"/>
-    </marker>
+    <marker id="arrGray" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 1.2 L 9.5 5 L 0 8.8 z" fill="#4B5563"/></marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 1.2 L 9.5 5 L 0 8.8 z" fill="#3B82C4"/></marker>
+    <marker id="arrAmber" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 1.2 L 9.5 5 L 0 8.8 z" fill="#D9822B"/></marker>
+    <marker id="arrTeal" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 1.2 L 9.5 5 L 0 8.8 z" fill="#2C8C7C"/></marker>
   </defs>
   <rect x="0" y="0" width="1140" height="430" fill="#FFFFFF"/>
   <text x="190" y="34" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="14" font-weight="700" fill="#1F2937" text-anchor="middle">(a) FP32 SlotCore (3-hop graph)</text>
@@ -29,12 +21,12 @@
   <rect x="164" y="136.3" width="54" height="203.7" fill="#6BA3D6" stroke="#374151" stroke-width="0.7"/>
   <text x="191" y="129.35" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="12" font-weight="400" fill="#1F2937" text-anchor="middle">81.5%</text>
   <text x="191" y="358" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="12" font-weight="400" fill="#1F2937" text-anchor="middle">Titans-A</text>
-  <text x="191" y="374" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="11" font-weight="400" fill="#4B5563" text-anchor="middle">2x state</text>
+  <text x="191" y="374" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="11" font-weight="400" fill="#4B5563" text-anchor="middle">±20.2</text>
   <rect x="248" y="97.8" width="54" height="242.2" fill="#2C8C7C" stroke="#374151" stroke-width="0.7"/>
   <text x="275" y="90.775" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="12" font-weight="700" fill="#1D6B5E" text-anchor="middle">96.9%</text>
   <text x="275" y="358" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="12" font-weight="400" fill="#1F2937" text-anchor="middle">FP32 Slot</text>
   <text x="275" y="374" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="11" font-weight="400" fill="#4B5563" text-anchor="middle">±1.47</text>
-  <text x="190" y="405" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="12" font-weight="400" fill="#4B5563" text-anchor="middle">0 FP16 NaN (36/36 runs) · 37.2x lower std</text>
+  <text x="190" y="405" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="12" font-weight="400" fill="#4B5563" text-anchor="middle">0 FP16 NaN (36/36 runs) · 37.3x lower std</text>
   <text x="570" y="34" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="14" font-weight="700" fill="#1F2937" text-anchor="middle">(b) Bounded RSI: IPT vs. LM drift</text>
   <line x1="426" y1="340.0" x2="716" y2="340.0" stroke="#1F2937" stroke-width="1.1"/>
   <text x="418" y="344.0" font-family="'CMU Serif', 'STIX Two Text', 'Nimbus Roman', 'Liberation Serif', Georgia, serif" font-size="11" font-weight="400" fill="#4B5563" text-anchor="end">0%</text>

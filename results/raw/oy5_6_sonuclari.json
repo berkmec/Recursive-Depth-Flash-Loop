@@ -1,0 +1,1022 @@
+{
+  "meta": {
+    "kod_sha256": "c8c2744cd90baca1",
+    "mimari_lab_sha256": "ab9e7db6220038a6",
+    "zaman_utc": "2026-11-19T20:15:31Z",
+    "toplam_kosu": 48
+  },
+  "ozet": {
+    "oy5_ozet": {
+      "D0_pass1": {
+        "ort": 87.3667,
+        "std": 20.1842
+      },
+      "D0_pass2_oracle": {
+        "ort": 87.6933,
+        "std": 19.9571
+      },
+      "D0_bagimsiz_kurtarma": {
+        "ort": 53.2933,
+        "std": 22.1643
+      },
+      "D1_pass1_s1": {
+        "ort": 43.1667,
+        "std": 36.8262
+      },
+      "D1_revize": {
+        "ort": 44.7933,
+        "std": 27.9544
+      },
+      "D1_fix": {
+        "ort": 30.37,
+        "std": 15.2258
+      },
+      "D1_corrupt": {
+        "ort": 37.0167,
+        "std": 16.5527
+      },
+      "D2_revize": {
+        "ort": 45.1167,
+        "std": 26.3361
+      },
+      "D2_fix": {
+        "ort": 31.13,
+        "std": 14.7999
+      },
+      "D2_corrupt": {
+        "ort": 31.7533,
+        "std": 8.0831
+      },
+      "oz_dog_auroc": {
+        "ort": 0.5867,
+        "std": 0.0643
+      },
+      "logp_auroc": {
+        "ort": 0.9513,
+        "std": 0.0782
+      },
+      "best4_oz": {
+        "ort": 78.19,
+        "std": 32.7158
+      },
+      "best4_logp": {
+        "ort": 86.3267,
+        "std": 22.1589
+      },
+      "pass4_oracle": {
+        "ort": 90.95,
+        "std": 14.8267
+      },
+      "D2_karsi_olgusal_revize": {
+        "ort": 44.99,
+        "std": 25.1775
+      },
+      "D1_d0_taslak_revize": {
+        "ort": 48.4367,
+        "std": 29.1138
+      },
+      "D2_d0_taslak_revize": {
+        "ort": 49.22,
+        "std": 28.8573
+      }
+    },
+    "oy6_ozet": {
+      "mqar_overwrite": {
+        "OY6_A6_TABAN": {
+          "genel_acc": {
+            "ort": 99.7167,
+            "std": 0.0971
+          },
+          "bpb": {
+            "ort": 0.0188,
+            "std": 0.0059
+          },
+          "nan_toplam": 0.0,
+          "alt_acc": {
+            "ort": 99.9767,
+            "std": 0.0404
+          }
+        },
+        "OY6_A6_BDHSIZ": {
+          "genel_acc": {
+            "ort": 99.74,
+            "std": 0.14
+          },
+          "bpb": {
+            "ort": 0.0169,
+            "std": 0.0109
+          },
+          "nan_toplam": 0.0,
+          "alt_acc": {
+            "ort": 99.9333,
+            "std": 0.0651
+          }
+        },
+        "OY6_A6_SLOT4_FP32": {
+          "genel_acc": {
+            "ort": 99.88,
+            "std": 0.0854
+          },
+          "bpb": {
+            "ort": 0.0068,
+            "std": 0.0033
+          },
+          "nan_toplam": 0.0,
+          "alt_acc": {
+            "ort": 99.9333,
+            "std": 0.0651
+          }
+        },
+        "OY6_A6_SASKINLIK_GDN": {
+          "genel_acc": {
+            "ort": 99.6633,
+            "std": 0.0681
+          },
+          "bpb": {
+            "ort": 0.018,
+            "std": 0.0044
+          },
+          "nan_toplam": 0.0,
+          "alt_acc": {
+            "ort": 99.9333,
+            "std": 0.0651
+          }
+        }
+      },
+      "graf_izli": {
+        "OY6_A6_TABAN": {
+          "genel_acc": {
+            "ort": 68.0867,
+            "std": 54.73
+          },
+          "bpb": {
+            "ort": 1.6005,
+            "std": 2.5617
+          },
+          "nan_toplam": 0.0,
+          "alt_acc": {
+            "ort": 68.4133,
+            "std": 54.3113
+          }
+        },
+        "OY6_A6_BDHSIZ": {
+          "genel_acc": {
+            "ort": 68.41,
+            "std": 54.0754
+          },
+          "bpb": {
+            "ort": 1.5677,
+            "std": 2.5601
+          },
+          "nan_toplam": 0.0,
+          "alt_acc": {
+            "ort": 68.5633,
+            "std": 53.8276
+          }
+        },
+        "OY6_A6_SLOT4_FP32": {
+          "genel_acc": {
+            "ort": 96.8867,
+            "std": 1.4657
+          },
+          "bpb": {
+            "ort": 0.352,
+            "std": 0.1125
+          },
+          "nan_toplam": 0.0,
+          "alt_acc": {
+            "ort": 96.05,
+            "std": 1.6563
+          }
+        },
+        "OY6_A6_SASKINLIK_GDN": {
+          "genel_acc": {
+            "ort": 81.4633,
+            "std": 20.1868
+          },
+          "bpb": {
+            "ort": 1.3243,
+            "std": 1.2384
+          },
+          "nan_toplam": 0.0,
+          "alt_acc": {
+            "ort": 81.34,
+            "std": 19.3569
+          }
+        }
+      },
+      "byte_lm": {
+        "OY6_A6_TABAN": {
+          "genel_acc": {
+            "ort": 54.27,
+            "std": 0.03
+          },
+          "bpb": {
+            "ort": 2.3646,
+            "std": 0.0017
+          },
+          "nan_toplam": 0.0
+        },
+        "OY6_A6_BDHSIZ": {
+          "genel_acc": {
+            "ort": 54.1533,
+            "std": 0.0586
+          },
+          "bpb": {
+            "ort": 2.3717,
+            "std": 0.003
+          },
+          "nan_toplam": 0.0
+        },
+        "OY6_A6_SLOT4_FP32": {
+          "genel_acc": {
+            "ort": 53.9733,
+            "std": 0.1266
+          },
+          "bpb": {
+            "ort": 2.3819,
+            "std": 0.0055
+          },
+          "nan_toplam": 0.0
+        },
+        "OY6_A6_SASKINLIK_GDN": {
+          "genel_acc": {
+            "ort": 54.2167,
+            "std": 0.0611
+          },
+          "bpb": {
+            "ort": 2.3641,
+            "std": 0.0015
+          },
+          "nan_toplam": 0.0
+        }
+      }
+    }
+  },
+  "oy5_kosular": [
+    {
+      "tohum": 42,
+      "s1_egitim": {
+        "sure_sn": 13.6,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 1.0,
+        "tepe_vram_mib": 251.3
+      },
+      "D0": {
+        "sure_sn": 13.21,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 0.0,
+        "tepe_vram_mib": 366.2,
+        "pass1_pct": 99.02,
+        "pass2_oracle_pct": 99.41,
+        "bagimsiz_kurtarma_pct": 76.92
+      },
+      "D1_KOR": {
+        "sure_sn": 15.2,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 0.0,
+        "tepe_vram_mib": 370.8,
+        "pass1_pct": 47.66,
+        "pass_revize_pct": 48.83,
+        "fix_rate_pct": 33.96,
+        "corrupt_rate_pct": 34.84,
+        "d0_taslak": {
+          "pass1_pct": 99.02,
+          "pass_revize_pct": 53.32,
+          "fix_rate_pct": 40.0,
+          "corrupt_rate_pct": 46.55
+        }
+      },
+      "D2_HAKEMLI": {
+        "sure_sn": 15.62,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 1.0,
+        "tepe_vram_mib": 375.4,
+        "pass1_pct": 47.66,
+        "pass_revize_pct": 47.27,
+        "fix_rate_pct": 32.46,
+        "corrupt_rate_pct": 36.48,
+        "karsi_olgusal": {
+          "pass1_pct": 47.66,
+          "pass_revize_pct": 47.27,
+          "fix_rate_pct": 31.34,
+          "corrupt_rate_pct": 35.25
+        },
+        "d0_taslak": {
+          "pass1_pct": 99.02,
+          "pass_revize_pct": 54.3,
+          "fix_rate_pct": 40.0,
+          "corrupt_rate_pct": 45.56
+        }
+      },
+      "oz_dogrulayici": {
+        "oz_dogrulayici_param": 25025.0,
+        "auroc_oz_dogrulayici": 0.5563,
+        "auroc_logp_taban": 0.9982,
+        "acgozlu_pass1_pct": 99.02,
+        "best4_oz_dogrulayici_pct": 96.09,
+        "best4_logp_taban_pct": 99.22,
+        "best4_cogunluk_pct": 99.02,
+        "pass4_oracle_pct": 99.61
+      }
+    },
+    {
+      "tohum": 137,
+      "s1_egitim": {
+        "sure_sn": 13.74,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 0.0,
+        "tepe_vram_mib": 251.3
+      },
+      "D0": {
+        "sure_sn": 14.64,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 0.0,
+        "tepe_vram_mib": 366.2,
+        "pass1_pct": 99.02,
+        "pass2_oracle_pct": 99.02,
+        "bagimsiz_kurtarma_pct": 50.0
+      },
+      "D1_KOR": {
+        "sure_sn": 13.68,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 1.0,
+        "tepe_vram_mib": 370.8,
+        "pass1_pct": 77.54,
+        "pass_revize_pct": 70.51,
+        "fix_rate_pct": 43.48,
+        "corrupt_rate_pct": 21.66,
+        "d0_taslak": {
+          "pass1_pct": 99.02,
+          "pass_revize_pct": 74.8,
+          "fix_rate_pct": 40.0,
+          "corrupt_rate_pct": 24.85
+        }
+      },
+      "D2_HAKEMLI": {
+        "sure_sn": 15.21,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 1.0,
+        "tepe_vram_mib": 375.4,
+        "pass1_pct": 77.54,
+        "pass_revize_pct": 70.31,
+        "fix_rate_pct": 45.22,
+        "corrupt_rate_pct": 22.42,
+        "karsi_olgusal": {
+          "pass1_pct": 77.54,
+          "pass_revize_pct": 68.95,
+          "fix_rate_pct": 42.61,
+          "corrupt_rate_pct": 23.43
+        },
+        "d0_taslak": {
+          "pass1_pct": 99.02,
+          "pass_revize_pct": 75.2,
+          "fix_rate_pct": 60.0,
+          "corrupt_rate_pct": 24.65
+        }
+      },
+      "oz_dogrulayici": {
+        "oz_dogrulayici_param": 25025.0,
+        "auroc_oz_dogrulayici": 0.5432,
+        "auroc_logp_taban": 0.9947,
+        "acgozlu_pass1_pct": 99.02,
+        "best4_oz_dogrulayici_pct": 98.05,
+        "best4_logp_taban_pct": 99.02,
+        "best4_cogunluk_pct": 98.83,
+        "pass4_oracle_pct": 99.41
+      }
+    },
+    {
+      "tohum": 2026,
+      "s1_egitim": {
+        "sure_sn": 13.29,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 1.0,
+        "tepe_vram_mib": 251.3
+      },
+      "D0": {
+        "sure_sn": 14.63,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 0.0,
+        "tepe_vram_mib": 366.2,
+        "pass1_pct": 64.06,
+        "pass2_oracle_pct": 64.65,
+        "bagimsiz_kurtarma_pct": 32.96
+      },
+      "D1_KOR": {
+        "sure_sn": 15.75,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 1.0,
+        "tepe_vram_mib": 370.8,
+        "pass1_pct": 4.3,
+        "pass_revize_pct": 15.04,
+        "fix_rate_pct": 13.67,
+        "corrupt_rate_pct": 54.55,
+        "d0_taslak": {
+          "pass1_pct": 64.06,
+          "pass_revize_pct": 17.19,
+          "fix_rate_pct": 7.61,
+          "corrupt_rate_pct": 77.44
+        }
+      },
+      "D2_HAKEMLI": {
+        "sure_sn": 13.92,
+        "nan_kayip_adim": 0.0,
+        "gradscaler_tasma_adim": 1.0,
+        "tepe_vram_mib": 375.4,
+        "pass1_pct": 4.3,
+        "pass_revize_pct": 17.77,
+        "fix_rate_pct": 15.71,
+        "corrupt_rate_pct": 36.36,
+        "karsi_olgusal": {
+          "pass1_pct": 4.3,
+          "pass_revize_pct": 18.75,
+          "fix_rate_pct": 16.73,
+          "corrupt_rate_pct": 36.36
+        },
+        "d0_taslak": {
+          "pass1_pct": 64.06,
+          "pass_revize_pct": 18.16,
+          "fix_rate_pct": 9.24,
+          "corrupt_rate_pct": 76.83
+        }
+      },
+      "oz_dogrulayici": {
+        "oz_dogrulayici_param": 25025.0,
+        "auroc_oz_dogrulayici": 0.6606,
+        "auroc_logp_taban": 0.8611,
+        "acgozlu_pass1_pct": 64.06,
+        "best4_oz_dogrulayici_pct": 40.43,
+        "best4_logp_taban_pct": 60.74,
+        "best4_cogunluk_pct": 53.12,
+        "pass4_oracle_pct": 73.83
+      }
+    }
+  ],
+  "oy6_kosular": [
+    {
+      "kol": "OY6_A6_TABAN",
+      "gorev": "mqar_overwrite",
+      "tohum": 42,
+      "parametre": 1201178,
+      "ffn_dim": 512,
+      "sure_sn": 60.33,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 2.0,
+      "tepe_vram_mib": 967.2,
+      "ce": 0.0121,
+      "bits_per_byte": 0.0174,
+      "genel_acc": 99.74,
+      "ort_entropi": 0.0195,
+      "alt_acc": 100.0
+    },
+    {
+      "kol": "OY6_A6_BDHSIZ",
+      "gorev": "mqar_overwrite",
+      "tohum": 42,
+      "parametre": 1200986,
+      "ffn_dim": 896,
+      "sure_sn": 55.24,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 944.6,
+      "ce": 0.0075,
+      "bits_per_byte": 0.0109,
+      "genel_acc": 99.84,
+      "ort_entropi": 0.0298,
+      "alt_acc": 100.0
+    },
+    {
+      "kol": "OY6_A6_SLOT4_FP32",
+      "gorev": "mqar_overwrite",
+      "tohum": 42,
+      "parametre": 1202330,
+      "ffn_dim": 128,
+      "sure_sn": 67.81,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 2.0,
+      "tepe_vram_mib": 929.3,
+      "ce": 0.0064,
+      "bits_per_byte": 0.0092,
+      "genel_acc": 99.87,
+      "ort_entropi": 0.0172,
+      "alt_acc": 99.87
+    },
+    {
+      "kol": "OY6_A6_SASKINLIK_GDN",
+      "gorev": "mqar_overwrite",
+      "tohum": 42,
+      "parametre": 1201190,
+      "ffn_dim": 512,
+      "sure_sn": 66.42,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 3.0,
+      "tepe_vram_mib": 1001.2,
+      "ce": 0.016,
+      "bits_per_byte": 0.023,
+      "genel_acc": 99.64,
+      "ort_entropi": 0.0474,
+      "alt_acc": 100.0
+    },
+    {
+      "kol": "OY6_A6_TABAN",
+      "gorev": "mqar_overwrite",
+      "tohum": 137,
+      "parametre": 1201178,
+      "ffn_dim": 512,
+      "sure_sn": 61.34,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 2.0,
+      "tepe_vram_mib": 967.2,
+      "ce": 0.0096,
+      "bits_per_byte": 0.0138,
+      "genel_acc": 99.8,
+      "ort_entropi": 0.0273,
+      "alt_acc": 100.0
+    },
+    {
+      "kol": "OY6_A6_BDHSIZ",
+      "gorev": "mqar_overwrite",
+      "tohum": 137,
+      "parametre": 1200986,
+      "ffn_dim": 896,
+      "sure_sn": 56.44,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 1.0,
+      "tepe_vram_mib": 944.6,
+      "ce": 0.0204,
+      "bits_per_byte": 0.0295,
+      "genel_acc": 99.58,
+      "ort_entropi": 0.0413,
+      "alt_acc": 99.87
+    },
+    {
+      "kol": "OY6_A6_SLOT4_FP32",
+      "gorev": "mqar_overwrite",
+      "tohum": 137,
+      "parametre": 1202330,
+      "ffn_dim": 128,
+      "sure_sn": 65.72,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 4.0,
+      "tepe_vram_mib": 929.3,
+      "ce": 0.0056,
+      "bits_per_byte": 0.0081,
+      "genel_acc": 99.8,
+      "ort_entropi": 0.015,
+      "alt_acc": 99.93
+    },
+    {
+      "kol": "OY6_A6_SASKINLIK_GDN",
+      "gorev": "mqar_overwrite",
+      "tohum": 137,
+      "parametre": 1201190,
+      "ffn_dim": 512,
+      "sure_sn": 65.86,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 1.0,
+      "tepe_vram_mib": 1001.2,
+      "ce": 0.0112,
+      "bits_per_byte": 0.0162,
+      "genel_acc": 99.61,
+      "ort_entropi": 0.032,
+      "alt_acc": 99.87
+    },
+    {
+      "kol": "OY6_A6_TABAN",
+      "gorev": "mqar_overwrite",
+      "tohum": 2026,
+      "parametre": 1201178,
+      "ffn_dim": 512,
+      "sure_sn": 61.45,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 967.2,
+      "ce": 0.0175,
+      "bits_per_byte": 0.0253,
+      "genel_acc": 99.61,
+      "ort_entropi": 0.0293,
+      "alt_acc": 99.93
+    },
+    {
+      "kol": "OY6_A6_BDHSIZ",
+      "gorev": "mqar_overwrite",
+      "tohum": 2026,
+      "parametre": 1200986,
+      "ffn_dim": 896,
+      "sure_sn": 56.23,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 944.6,
+      "ce": 0.0071,
+      "bits_per_byte": 0.0103,
+      "genel_acc": 99.8,
+      "ort_entropi": 0.0175,
+      "alt_acc": 99.93
+    },
+    {
+      "kol": "OY6_A6_SLOT4_FP32",
+      "gorev": "mqar_overwrite",
+      "tohum": 2026,
+      "parametre": 1202330,
+      "ffn_dim": 128,
+      "sure_sn": 67.83,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 4.0,
+      "tepe_vram_mib": 929.3,
+      "ce": 0.0021,
+      "bits_per_byte": 0.003,
+      "genel_acc": 99.97,
+      "ort_entropi": 0.0095,
+      "alt_acc": 100.0
+    },
+    {
+      "kol": "OY6_A6_SASKINLIK_GDN",
+      "gorev": "mqar_overwrite",
+      "tohum": 2026,
+      "parametre": 1201190,
+      "ffn_dim": 512,
+      "sure_sn": 61.76,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 2.0,
+      "tepe_vram_mib": 1001.2,
+      "ce": 0.0102,
+      "bits_per_byte": 0.0147,
+      "genel_acc": 99.74,
+      "ort_entropi": 0.0254,
+      "alt_acc": 99.93
+    },
+    {
+      "kol": "OY6_A6_TABAN",
+      "gorev": "graf_izli",
+      "tohum": 42,
+      "parametre": 1201178,
+      "ffn_dim": 512,
+      "sure_sn": 36.55,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 734.0,
+      "ce": 0.0917,
+      "bits_per_byte": 0.1323,
+      "genel_acc": 99.6,
+      "ort_entropi": 0.5281,
+      "alt_acc": 99.74
+    },
+    {
+      "kol": "OY6_A6_BDHSIZ",
+      "gorev": "graf_izli",
+      "tohum": 42,
+      "parametre": 1200986,
+      "ffn_dim": 896,
+      "sure_sn": 32.57,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 2.0,
+      "tepe_vram_mib": 714.9,
+      "ce": 3.1355,
+      "bits_per_byte": 4.5235,
+      "genel_acc": 5.97,
+      "ort_entropi": 3.124,
+      "alt_acc": 6.41
+    },
+    {
+      "kol": "OY6_A6_SLOT4_FP32",
+      "gorev": "graf_izli",
+      "tohum": 42,
+      "parametre": 1202330,
+      "ffn_dim": 128,
+      "sure_sn": 36.9,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 702.8,
+      "ce": 0.3259,
+      "bits_per_byte": 0.4702,
+      "genel_acc": 95.3,
+      "ort_entropi": 1.119,
+      "alt_acc": 94.24
+    },
+    {
+      "kol": "OY6_A6_SASKINLIK_GDN",
+      "gorev": "graf_izli",
+      "tohum": 42,
+      "parametre": 1201190,
+      "ffn_dim": 512,
+      "sure_sn": 35.82,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 758.4,
+      "ce": 0.0809,
+      "bits_per_byte": 0.1167,
+      "genel_acc": 99.61,
+      "ort_entropi": 0.4733,
+      "alt_acc": 99.45
+    },
+    {
+      "kol": "OY6_A6_TABAN",
+      "gorev": "graf_izli",
+      "tohum": 137,
+      "parametre": 1201178,
+      "ffn_dim": 512,
+      "sure_sn": 38.72,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 734.0,
+      "ce": 0.0768,
+      "bits_per_byte": 0.1108,
+      "genel_acc": 99.77,
+      "ort_entropi": 0.4736,
+      "alt_acc": 99.8
+    },
+    {
+      "kol": "OY6_A6_BDHSIZ",
+      "gorev": "graf_izli",
+      "tohum": 137,
+      "parametre": 1200986,
+      "ffn_dim": 896,
+      "sure_sn": 32.97,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 1.0,
+      "tepe_vram_mib": 714.9,
+      "ce": 0.0875,
+      "bits_per_byte": 0.1263,
+      "genel_acc": 99.34,
+      "ort_entropi": 0.4766,
+      "alt_acc": 99.28
+    },
+    {
+      "kol": "OY6_A6_SLOT4_FP32",
+      "gorev": "graf_izli",
+      "tohum": 137,
+      "parametre": 1202330,
+      "ffn_dim": 128,
+      "sure_sn": 39.44,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 1.0,
+      "tepe_vram_mib": 702.8,
+      "ce": 0.1706,
+      "bits_per_byte": 0.2462,
+      "genel_acc": 98.19,
+      "ort_entropi": 0.7346,
+      "alt_acc": 97.49
+    },
+    {
+      "kol": "OY6_A6_SASKINLIK_GDN",
+      "gorev": "graf_izli",
+      "tohum": 137,
+      "parametre": 1201190,
+      "ffn_dim": 512,
+      "sure_sn": 39.04,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 2.0,
+      "tepe_vram_mib": 758.4,
+      "ce": 1.7961,
+      "bits_per_byte": 2.5913,
+      "genel_acc": 59.72,
+      "ort_entropi": 2.7513,
+      "alt_acc": 60.94
+    },
+    {
+      "kol": "OY6_A6_TABAN",
+      "gorev": "graf_izli",
+      "tohum": 2026,
+      "parametre": 1201178,
+      "ffn_dim": 512,
+      "sure_sn": 37.52,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 2.0,
+      "tepe_vram_mib": 734.0,
+      "ce": 3.1597,
+      "bits_per_byte": 4.5585,
+      "genel_acc": 4.89,
+      "ort_entropi": 3.1552,
+      "alt_acc": 5.7
+    },
+    {
+      "kol": "OY6_A6_BDHSIZ",
+      "gorev": "graf_izli",
+      "tohum": 2026,
+      "parametre": 1200986,
+      "ffn_dim": 896,
+      "sure_sn": 36.1,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 1.0,
+      "tepe_vram_mib": 714.9,
+      "ce": 0.0369,
+      "bits_per_byte": 0.0532,
+      "genel_acc": 99.92,
+      "ort_entropi": 0.2585,
+      "alt_acc": 100.0
+    },
+    {
+      "kol": "OY6_A6_SLOT4_FP32",
+      "gorev": "graf_izli",
+      "tohum": 2026,
+      "parametre": 1202330,
+      "ffn_dim": 128,
+      "sure_sn": 39.61,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 702.8,
+      "ce": 0.2353,
+      "bits_per_byte": 0.3395,
+      "genel_acc": 97.17,
+      "ort_entropi": 0.9222,
+      "alt_acc": 96.42
+    },
+    {
+      "kol": "OY6_A6_SASKINLIK_GDN",
+      "gorev": "graf_izli",
+      "tohum": 2026,
+      "parametre": 1201190,
+      "ffn_dim": 512,
+      "sure_sn": 42.39,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 1.0,
+      "tepe_vram_mib": 758.4,
+      "ce": 0.8768,
+      "bits_per_byte": 1.2649,
+      "genel_acc": 85.06,
+      "ort_entropi": 2.0558,
+      "alt_acc": 83.63
+    },
+    {
+      "kol": "OY6_A6_TABAN",
+      "gorev": "byte_lm",
+      "tohum": 42,
+      "parametre": 1201178,
+      "ffn_dim": 512,
+      "sure_sn": 105.47,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 950.0,
+      "ce": 1.6387,
+      "bits_per_byte": 2.3642,
+      "genel_acc": 54.3,
+      "ort_entropi": 1.6066
+    },
+    {
+      "kol": "OY6_A6_BDHSIZ",
+      "gorev": "byte_lm",
+      "tohum": 42,
+      "parametre": 1200986,
+      "ffn_dim": 896,
+      "sure_sn": 94.87,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 924.1,
+      "ce": 1.6417,
+      "bits_per_byte": 2.3685,
+      "genel_acc": 54.22,
+      "ort_entropi": 1.6059
+    },
+    {
+      "kol": "OY6_A6_SLOT4_FP32",
+      "gorev": "byte_lm",
+      "tohum": 42,
+      "parametre": 1202330,
+      "ffn_dim": 128,
+      "sure_sn": 107.51,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 906.8,
+      "ce": 1.6494,
+      "bits_per_byte": 2.3795,
+      "genel_acc": 54.07,
+      "ort_entropi": 1.6083
+    },
+    {
+      "kol": "OY6_A6_SASKINLIK_GDN",
+      "gorev": "byte_lm",
+      "tohum": 42,
+      "parametre": 1201190,
+      "ffn_dim": 512,
+      "sure_sn": 109.61,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 983.4,
+      "ce": 1.6375,
+      "bits_per_byte": 2.3624,
+      "genel_acc": 54.27,
+      "ort_entropi": 1.6084
+    },
+    {
+      "kol": "OY6_A6_TABAN",
+      "gorev": "byte_lm",
+      "tohum": 137,
+      "parametre": 1201178,
+      "ffn_dim": 512,
+      "sure_sn": 99.64,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 950.0,
+      "ce": 1.6381,
+      "bits_per_byte": 2.3632,
+      "genel_acc": 54.27,
+      "ort_entropi": 1.599
+    },
+    {
+      "kol": "OY6_A6_BDHSIZ",
+      "gorev": "byte_lm",
+      "tohum": 137,
+      "parametre": 1200986,
+      "ffn_dim": 896,
+      "sure_sn": 93.73,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 924.1,
+      "ce": 1.6443,
+      "bits_per_byte": 2.3722,
+      "genel_acc": 54.13,
+      "ort_entropi": 1.602
+    },
+    {
+      "kol": "OY6_A6_SLOT4_FP32",
+      "gorev": "byte_lm",
+      "tohum": 137,
+      "parametre": 1202330,
+      "ffn_dim": 128,
+      "sure_sn": 103.3,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 906.8,
+      "ce": 1.6554,
+      "bits_per_byte": 2.3882,
+      "genel_acc": 53.83,
+      "ort_entropi": 1.6185
+    },
+    {
+      "kol": "OY6_A6_SASKINLIK_GDN",
+      "gorev": "byte_lm",
+      "tohum": 137,
+      "parametre": 1201190,
+      "ffn_dim": 512,
+      "sure_sn": 102.81,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 983.4,
+      "ce": 1.6394,
+      "bits_per_byte": 2.3652,
+      "genel_acc": 54.15,
+      "ort_entropi": 1.6025
+    },
+    {
+      "kol": "OY6_A6_TABAN",
+      "gorev": "byte_lm",
+      "tohum": 2026,
+      "parametre": 1201178,
+      "ffn_dim": 512,
+      "sure_sn": 95.17,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 950.0,
+      "ce": 1.6403,
+      "bits_per_byte": 2.3665,
+      "genel_acc": 54.24,
+      "ort_entropi": 1.6002
+    },
+    {
+      "kol": "OY6_A6_BDHSIZ",
+      "gorev": "byte_lm",
+      "tohum": 2026,
+      "parametre": 1200986,
+      "ffn_dim": 896,
+      "sure_sn": 89.07,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 924.1,
+      "ce": 1.6459,
+      "bits_per_byte": 2.3745,
+      "genel_acc": 54.11,
+      "ort_entropi": 1.6127
+    },
+    {
+      "kol": "OY6_A6_SLOT4_FP32",
+      "gorev": "byte_lm",
+      "tohum": 2026,
+      "parametre": 1202330,
+      "ffn_dim": 128,
+      "sure_sn": 99.8,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 906.8,
+      "ce": 1.6484,
+      "bits_per_byte": 2.3781,
+      "genel_acc": 54.02,
+      "ort_entropi": 1.618
+    },
+    {
+      "kol": "OY6_A6_SASKINLIK_GDN",
+      "gorev": "byte_lm",
+      "tohum": 2026,
+      "parametre": 1201190,
+      "ffn_dim": 512,
+      "sure_sn": 104.53,
+      "nan_kayip_adim": 0.0,
+      "gradscaler_tasma_adim": 0.0,
+      "tepe_vram_mib": 983.4,
+      "ce": 1.6391,
+      "bits_per_byte": 2.3648,
+      "genel_acc": 54.23,
+      "ort_entropi": 1.5937
+    }
+  ]
+}

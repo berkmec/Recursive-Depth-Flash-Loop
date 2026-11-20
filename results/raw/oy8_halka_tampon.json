@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "kod_sha256": "c8c2744cd90baca1",
+    "zaman_utc": "2026-11-19T18:10:28Z"
+  },
+  "veri_motoru_envanter": {
+    "py_dosya_sayisi": 29,
+    "toplam_bayt": 276606,
+    "toplam_kib": 270.1,
+    "gpu_vram_mib": 0.0
+  },
+  "halka_tampon_olcumu": {
+    "makbuzsuz_silme_reddedildi": true,
+    "islenen_toplam_mib": 32.0,
+    "tepe_aktif_disk_mib": 4.0,
+    "son_aktif_disk_mib": 0.0,
+    "mantiksal_ust_sinir_mib": 512.0,
+    "yazma_hiz_mb_sn": 3126.5,
+    "sha256_hiz_mb_sn": 433.9,
+    "mod_a_ort_ms": 21.15,
+    "mod_b_ort_ms": 9.78,
+    "sqlite_10k_kayit_ms": 435.26,
+    "sqlite_10k_boyut_kib": 1016.0,
+    "sqlite_bayt_per_belge": 104.0
+  }
+}

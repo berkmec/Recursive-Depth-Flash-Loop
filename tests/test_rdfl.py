@@ -15,7 +15,10 @@ from rdfl import (
     auroc,
     ece_15,
     fit_temperature,
+    greedy_decode,
     reverse_kl_per_token,
+    speculative_decode_k3,
+    speculative_decode_mtp4,
 )
 
 
@@ -94,6 +97,37 @@ class TestRDFL(unittest.TestCase):
         self.assertTrue(0.4 <= t_star <= 2.0)
         self.assertEqual(auroc(np.array([0.9, 0.8, 0.2, 0.1]), np.array([1, 1, 0, 0])), 1.0)
         self.assertLess(ece_15(np.array([0.9, 0.9, 0.1, 0.1]), np.array([1, 1, 0, 0])), 0.15)
+
+    def test_07_lossless_speculative_k3_and_mtp4(self) -> None:
+        torch.manual_seed(19)
+        cfg = RDFLConfig(
+            d_model=48, num_heads=4, ffn_dim=96, num_loops=2, chunk_size=8, num_slots=4
+        )
+        model = RDFLModel(cfg).double().eval()
+        prompt = torch.randint(0, 256, (1, 6))
+        ref = greedy_decode(model, prompt, max_new_tokens=18)
+
+        for draft_k in (1, 2, 4):
+            res_k3 = speculative_decode_k3(model, prompt, max_new_tokens=18, draft_k=draft_k)
+            self.assertEqual(int((res_k3.tokens != ref).sum().item()), 0)
+            self.assertGreater(res_k3.verify_calls, 0)
+            self.assertGreaterEqual(res_k3.tokens_per_verify, 1.0)
+
+        res_mtp = speculative_decode_mtp4(model, prompt, max_new_tokens=18)
+        self.assertEqual(int((res_mtp.tokens != ref).sum().item()), 0)
+        self.assertGreater(res_mtp.verify_calls, 0)
+        self.assertGreater(res_mtp.proposed_drafts, 0)
+
+        # R=1 model with zero-init K3 adapter must achieve 100% draft acceptance and 0 rollbacks.
+        cfg_r1 = RDFLConfig(
+            d_model=48, num_heads=4, ffn_dim=96, num_loops=1, chunk_size=8, num_slots=0
+        )
+        m_r1 = RDFLModel(cfg_r1).double().eval()
+        ref_r1 = greedy_decode(m_r1, prompt, max_new_tokens=12)
+        res_r1 = speculative_decode_k3(m_r1, prompt, max_new_tokens=12, draft_k=3)
+        self.assertEqual(int((res_r1.tokens != ref_r1).sum().item()), 0)
+        self.assertEqual(res_r1.rollbacks, 0)
+        self.assertEqual(res_r1.acceptance_rate, 1.0)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,43 @@
+name: RDFL CPU Verification CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-cpu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install CPU PyTorch and dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --index-url https://download.pytorch.org/whl/cpu torch
+          pip install -e ".[dev]"
+
+      - name: Lint with ruff
+        run: ruff check rdfl tests benchmarks scripts
+
+      - name: Run mathematical invariant unit tests
+        run: PYTHONPATH=. python -m unittest discover -s tests -v
+
+      - name: Verify audited summary against raw JSON artifacts
+        run: python benchmarks/verify_audited_results.py
+
+      - name: Profile O(1) decode state memory on CPU
+        run: python benchmarks/profile_decode_memory.py
+
+      - name: Run 1.20M algorithmic suite smoke test + SlotCore cosine diagnostic
+        run: python benchmarks/run_1_2m_suite.py --smoke
+
+      - name: Regenerate and XML-validate vector diagrams
+        run: python scripts/build_diagrams.py
