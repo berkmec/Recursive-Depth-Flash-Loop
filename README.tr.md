@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-EE4C2C.svg)](pyproject.toml)
-[![Ham JSON Doğrulaması](https://img.shields.io/badge/Doğrulanan_Hücre-773%2F773_(0_uyuşmazlık)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
+[![Ham JSON Doğrulaması](https://img.shields.io/badge/Doğrulanan_Hücre-782%2F782_(0_uyuşmazlık)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
 
 **[English](README.md)** · **[Türkçe](README.tr.md)** · **[Mimari Belirtim](docs/ARCHITECTURE.md)** · **[Denetlenmiş Özet JSON](results/audited_summary.json)** · **[Ham Denetim JSON'ları](results/raw/)**
 
@@ -142,7 +142,7 @@ Tüm `v0.3` çekirdek onarımları (`13/13` CPU birim testi, [`tests/test_rdfl.p
 2. **Hibrit `55M` Yan-Dal vs Saf `RDFL`:** `G_BASE_ONLY` (`1,5K`) ve `en_iyi.pt` `RDFL ON/OFF` (`21K`) kontrolleri hibrit yan-dalın saf LM `bpb`'ye ihmal edilebilir katkı verdiğini göstermiştir; mimari üstünlük iddiası için sıfırdan **Saf `RDFL`** ön-eğitimi gerekir.
 3. **`SlotCore` Çöküşü (`v0.3`'te Ertelendi) & `Multi-Hop ICL` Tavanı (`KPN-Y01`):** Simetrik `FP32 SlotCore` `cos = 0,999982` (`norm = 664,5`) ile çöküp `55M`'de `0,0` durum-izleme katkısı vermiştir. `1,20M` `Multi-Hop ICL` `%22,72` skoru `%25,0 / %12,5` derece-filtreleme tavanı içindedir (`KPN-Y01`), giriş çıpalaması ise sıfır etki göstermiştir.
 4. **OOD Uzaklaşması & RSI SFT Koruması:** `1,20M` `OOD-Uzak` (`L=7,8 = %0,0`) ve `55M` `L=4 ↔ L=5` duvarı (`0/96` kabul) + `completion 0,78 → 0,58` çöküşü, RSI'da hem uzunluk köprüsü hem SFT/`EOT` koruma payı zorunluluğunu kanıtlamıştır.
-5. **Doğrulama:** `results/audited_summary.json` içindeki **`773/773`** hücre CI'da ham JSON'lara karşı doğrulanmaktadır (`55M` final ve `v0.3` çıktıları bağımsız Carbon kapanış denetimini beklemektedir).
+5. **Doğrulama:** `results/audited_summary.json` içindeki **`782/782`** hücre CI'da ham JSON'lara karşı doğrulanmaktadır (`55M` final ve `v0.3` çıktıları bağımsız Carbon kapanış denetimini beklemektedir).
 
 ---
 

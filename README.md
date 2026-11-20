@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-EE4C2C.svg)](pyproject.toml)
-[![Raw JSON Verification](https://img.shields.io/badge/Verified_Cells-773%2F773_(0_mismatches)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
+[![Raw JSON Verification](https://img.shields.io/badge/Verified_Cells-782%2F782_(0_mismatches)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
 
 **[English](README.md)** · **[Türkçe](README.tr.md)** · **[Architectural Specification](docs/ARCHITECTURE.md)** · **[Audited Summary JSON](results/audited_summary.json)** · **[Raw Audited JSONs](results/raw/)**
 
@@ -90,7 +90,7 @@ Per-seed `graf_izli` accuracy and `Byte LM` (`bpb` ↓) across unseen seeds `(42
 | **`OY6_A6_SLOT4_FP32` (`ffn=128`, `FP32 SlotCore`)** | **`95.30% / 98.19% / 97.17%`** | **`96.89 ± 1.47%`** | `2.3819 ± 0.0055` (`+0.0173`) |
 
 - **Iso-Parameter `Byte LM` Trade-Off (`+0.0173 bpb`):** Keeping `OY6_A6_SLOT4_FP32` iso-parameter at `1.20M` required shrinking its FFN from `512` to `128`, which caused a `+0.0173 bpb` regression on `Byte LM` (`2.3819` vs `2.3646`, worst of the 4 `ÖY-6` arms) despite dramatically stabilizing 3-hop graph tracking (`37.3×` lower std). At `55M`, `FP32 SlotCore` is attached externally onto the unshrunk `ffn=3072` backbone to avoid cannibalizing FFN width.
-- **Mechanistic Honesty Finding — Symmetric Collapse & Zero `55M` Gain of `FP32 SlotCore` ([`results/raw/slotcore_55m_cosine_probe.json`](results/raw/slotcore_55m_cosine_probe.json), [`ana_55m_degerlendirme.json`](results/raw/ana_55m_degerlendirme.json)):** Direct CPU probing of the trained `55M` checkpoint (step `21,000`, `16` real text chunks / `1,024` bytes from `mix/validation.bin`) shows that while `init_slots` start at pairwise cosine **`0.5017–0.7512`** (`mean = 0.6446`, `norm = 0.6941`), after `16` chunks all $S=4$ slots collapse to pairwise cosine **`0.999982`** (`min = 0.999959`, `max = 0.999999`) with mean L2 norm **`664.5`** (reproducible on CPU via `python benchmarks/run_1_2m_suite.py --smoke --measure-slot-cosine`). Moreover, full `55M` ablation confirms **`delta_durum = 0.0`** (`59.38%` ON vs `59.38%` OFF) and negligible `delta_bpb_2048 = -0.0005` (Ana) / `-0.0003` (RSI). Consequently, symmetric `FP32 SlotCore` is **deferred / replaced in `v0.3`** (planned competitive slot-axis `SlotAttention` + per-slot `RMSNorm` + contraction damping, gated on cosine separation).
+- **Mechanistic Honesty Finding — Symmetric Collapse & Zero `55M` Gain of `FP32 SlotCore` ([`results/raw/slotcore_55m_cosine_probe.json`](results/raw/slotcore_55m_cosine_probe.json), [`ana_55m_degerlendirme.json`](results/raw/ana_55m_degerlendirme.json)):** Direct CPU probing of the trained `55M` checkpoint (step `21,000`, `16` real text chunks / `1,024` bytes from `mix/validation.bin`) shows that while `init_slots` start at pairwise cosine **`0.5017–0.7512`** (`mean = 0.6446`, `norm = 0.6941`), after `16` chunks all $S=4$ slots collapse to pairwise cosine **`0.999982`** (`min = 0.999959`, `max = 0.999999`) with mean L2 norm **`664.5`** (reproducible on CPU via `python benchmarks/run_1_2m_suite.py --smoke --measure-slot-cosine`). Moreover, full `55M` ablation confirms **`delta_durum = 0.0`** (`59.38%` ON vs `59.38%` OFF) and negligible `delta_bpb_2048 = -0.0005` (Ana) / `-0.0003` (RSI). Consequently, symmetric `FP32 SlotCore` is **deferred / replaced in `v0.3`** by damped 1-slot `Fp32RLT2Boundary` (`rlt2_s1`, with competitive multi-slot `SlotAttention` reserved for future `v0.4+` work).
 
 ---
 
@@ -160,7 +160,7 @@ All `v0.3` kernel fixes (`13/13` CPU unit tests in [`tests/test_rdfl.py`](tests/
 2. **Hybrid `55M` Side-Branch vs. Pure `RDFL`:** Our `G_BASE_ONLY` (`1.5K`) and `en_iyi.pt` `RDFL ON/OFF` (`21K`) controls show that attaching `RDFL` as a warm side-branch onto a `55M` windowed-attention backbone yields negligible pure-LM `bpb` gain (`-0.0010 / -0.0002 / 0.0000`) and `0.0` state-tracking gain; evaluating `RDFL` at scale therefore requires from-scratch **Pure `RDFL`** pretraining against iso-FLOP baselines.
 3. **`SlotCore` Collapse (`Deferred / Replaced in v0.3`) & `Multi-Hop ICL` Ceiling (`KPN-Y01`):** Symmetric `FP32 SlotCore` collapses to `cos = 0.999982` (`norm = 664.5`) with `0.0` `55M` state-tracking gain and is deferred for competitive `v0.3` `SlotAttention`. At `1.20M`, `Multi-Hop ICL` `22.72%` lies within the `1/4 = 25.0%` (`1/8 = 12.5%`) degree-filtering ceiling (`KPN-Y01`), and input anchoring showed a null effect (`A6_R4_cipasiz` matched `A6_R4_cipali`).
 4. **OOD Extrapolation & RSI SFT Guard:** Both `1.20M` (`OOD-Far L=7,8 = 0.0%`) and `55M` RSI (`L=4 <-> L=5` wall, `0/96` accepted on `L=5`) show that verifier-gated RSI cannot bootstrap past a zero-acceptance length wall without curriculum bridges, and requires explicit SFT/`EOT` replay to prevent completion/repetition drift.
-5. **Hardware & Verification Protocol:** All experiments ran on a single consumer 8 GiB Turing GPU with strict train/validation/test separation; **`773/773`** cells in `results/audited_summary.json` are programmatically verified against `results/raw/*.json` in CI (`55M` final and `v0.3` artifacts are pending independent Carbon closure audit).
+5. **Hardware & Verification Protocol:** All experiments ran on a single consumer 8 GiB Turing GPU with strict train/validation/test separation; **`782/782`** cells in `results/audited_summary.json` are programmatically verified against `results/raw/*.json` in CI (`55M` final and `v0.3` artifacts are pending independent Carbon closure audit).
 
 ---
 
@@ -174,7 +174,7 @@ pip install -e ".[dev]"
 # 1. Mathematical invariant unit tests (13/13: chunk==step FP64, causality, zero-diff, K1-K5, FP32 SlotCore/RLT2 lock, AUROC ties)
 python -m unittest discover -s tests -v
 
-# 2. Programmatically verify all 773 audited cells in results/audited_summary.json against results/raw/*.json
+# 2. Programmatically verify all 782 audited cells in results/audited_summary.json against results/raw/*.json
 python benchmarks/verify_audited_results.py
 
 # 3. Measure O(1) decode state vs. FP16 full-KV cache directly from CPU PyTorch tensors

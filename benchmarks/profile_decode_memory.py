@@ -51,6 +51,7 @@ def measure_gdn_6l_o1(
     layer = GatedDeltaNetLayer(d_model=d_model, num_heads=num_heads).eval().to(dtype=torch.float16)
     x_step = torch.zeros((1, 1, d_model), dtype=torch.float16, device="cpu")
     _, (s_state, conv_state) = layer.step(x_step)
+    assert conv_state is not None
     s_bytes = num_layers * _tensor_nbytes(s_state)
     conv_bytes = num_layers * _tensor_nbytes(conv_state)
     total_bytes = s_bytes + conv_bytes

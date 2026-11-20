@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import statistics
 import sys
 from pathlib import Path
@@ -267,6 +268,18 @@ def _verify_oy7_8_10(
     ck.close("oy10.gain", s10["pretraining_55m_gain_pp"], r10["kazanc_puan"], 1e-4)
 
 
+def _paired_p_df2(a: list[float], b: list[float]) -> float:
+    diffs = [x - y for x, y in zip(a, b, strict=True)]
+    t_val = statistics.mean(diffs) / (statistics.stdev(diffs) / math.sqrt(len(diffs)))
+    return float(1.0 - abs(t_val) / math.sqrt(t_val * t_val + 2.0))
+
+
+def _paired_p_df4(a: list[float], b: list[float]) -> float:
+    diffs = [x - y for x, y in zip(a, b, strict=True)]
+    t_val = statistics.mean(diffs) / (statistics.stdev(diffs) / math.sqrt(len(diffs)))
+    return float(1.0 - (abs(t_val) * (t_val * t_val + 6.0)) / ((t_val * t_val + 4.0) ** 1.5))
+
+
 def _verify_v03_study(ck: CellChecker, v03: dict[str, Any]) -> None:
     deney_a = load_json(RAW_DIR / "deney_a_k1_k5.json")
     h5 = load_json(RAW_DIR / "h5_memory_latency_and_serving.json")
@@ -289,6 +302,15 @@ def _verify_v03_study(ck: CellChecker, v03: dict[str, Any]) -> None:
     ck.close("v03.k3.v03_std", k3["v03_std002_val_bpb_std"], round(s_v03["val_bpb_std"], 4), 1e-4)
     ck.close("v03.k3.v03_acc", k3["v03_std002_val_acc_mean"], round(s_v03["val_acc_mean"], 4), 1e-4)
     ck.close("v03.k3.delta_bpb", k3["delta_bpb"], round(s_v03["val_bpb_mean"] - s_leg["val_bpb_mean"], 4), 1e-4)
+    k3_p = _paired_p_df2(
+        [float(r["val_bpb"]) for r in s_v03["val_bpbs_by_seed"]],
+        [float(r["val_bpb"]) for r in s_leg["val_bpbs_by_seed"]],
+    )
+    ck.close("v03.k3.p_val", k3["paired_p_value"], k3_p, 1e-5)
+    ovf_before = sum(int(r["grad_overflows"]) for r in deney_a["runs"] if r["model"] == "K3_legacy_std1")
+    ovf_after = sum(int(r["grad_overflows"]) for r in deney_a["runs"] if r["model"] == "K3_v03_std002")
+    ck.eq("v03.k3.ovf_before", k3["fp16_overflow_count_before"], ovf_before)
+    ck.eq("v03.k3.ovf_after", k3["fp16_overflow_count_after"], ovf_after)
 
     dim_probe = {(r["d_model"], r["init"]): r for r in deney_a["k3_dim_probe"]}
     ck.close("v03.k3.ce_192_leg", k3["step0_ce_d192_legacy"], round(dim_probe[(192, "legacy_std1")]["step0_ce"], 4), 1e-4)
@@ -351,6 +373,14 @@ def _verify_v03_study(ck: CellChecker, v03: dict[str, Any]) -> None:
     ck.close("v03.p3.nobdh_mix", sp3["no_bdh_iso_param_mix_val_bpb_mean"], round(vp3["no_bdh_iso_param"]["mix_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
     ck.close("v03.p3.relu_web", sp3["relu_relu_web_val_bpb_mean"], round(vp3["relu_relu"]["web_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
     ck.close("v03.p3.nobdh_web", sp3["no_bdh_iso_param_web_val_bpb_mean"], round(vp3["no_bdh_iso_param"]["web_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
+    p3_relu_mix = [float(s["lm_trajectory"]["1000"]["mix_val_bpb"]) for s in vp3["relu_relu"]["seeds"]]
+    p3_nob_mix = [float(s["lm_trajectory"]["1000"]["mix_val_bpb"]) for s in vp3["no_bdh_iso_param"]["seeds"]]
+    p3_relu_web = [float(s["lm_trajectory"]["1000"]["web_val_bpb"]) for s in vp3["relu_relu"]["seeds"]]
+    p3_nob_web = [float(s["lm_trajectory"]["1000"]["web_val_bpb"]) for s in vp3["no_bdh_iso_param"]["seeds"]]
+    ck.close("v03.p3.mix_delta", sp3["mix_val_delta_bpb"], round(statistics.mean(p3_nob_mix) - statistics.mean(p3_relu_mix), 4), 1e-4)
+    ck.close("v03.p3.mix_p", sp3["mix_val_p_value"], round(_paired_p_df4(p3_nob_mix, p3_relu_mix), 4), 1e-4)
+    ck.close("v03.p3.web_delta", sp3["web_val_delta_bpb"], round(statistics.mean(p3_nob_web) - statistics.mean(p3_relu_web), 4), 1e-4)
+    ck.close("v03.p3.web_p", sp3["web_val_p_value"], round(_paired_p_df4(p3_nob_web, p3_relu_web), 4), 1e-4)
 
     sp2 = v03["p2_long_v03_conv_bias_sink"]
     vp2 = p2["result"]["variants"]
@@ -358,6 +388,10 @@ def _verify_v03_study(ck: CellChecker, v03: dict[str, Any]) -> None:
     ck.eq("v03.p2.steps", sp2["steps"], p2["meta"]["steps"])
     ck.close("v03.p2.def_mix", sp2["v03_default_mix_val_bpb_mean"], round(vp2["v03_default"]["mix_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
     ck.close("v03.p2.nob_mix", sp2["no_conv_bias_mix_val_bpb_mean"], round(vp2["no_conv_bias"]["mix_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
+    p2_def_mix = [float(s["lm_trajectory"]["1000"]["mix_val_bpb"]) for s in vp2["v03_default"]["seeds"]]
+    p2_nob_mix = [float(s["lm_trajectory"]["1000"]["mix_val_bpb"]) for s in vp2["no_conv_bias"]["seeds"]]
+    ck.close("v03.p2.mix_delta", sp2["mix_val_delta_bpb"], round(statistics.mean(p2_nob_mix) - statistics.mean(p2_def_mix), 4), 1e-4)
+    ck.close("v03.p2.mix_p", sp2["mix_val_p_value"], round(_paired_p_df4(p2_nob_mix, p2_def_mix), 4), 1e-4)
     ck.close("v03.p2.def_web", sp2["v03_default_web_val_bpb_mean"], round(vp2["v03_default"]["web_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
     ck.close("v03.p2.nob_web", sp2["no_conv_bias_web_val_bpb_mean"], round(vp2["no_conv_bias"]["web_val_bpb_by_step"]["1000"]["mean"], 4), 1e-4)
     ck.close("v03.p2.def_erank", sp2["v03_default_post_erank"], round(vp2["v03_default"]["post_erank"]["mean"], 4), 1e-4)
