@@ -96,7 +96,7 @@ Per-seed `graf_izli` accuracy and `Byte LM` (`bpb` ↓) across unseen seeds `(42
 
 ## 4. Completed `55M` Adaptation, `G_BASE_ONLY` Causal Control & `ÖY-7` RSI (`Diogenes-RDFL-55M`)
 
-> **Audit Status:** All `55M` final artifacts below are verified cell-by-cell (`698/698`, `0` mismatches) against [`results/raw/`](results/raw/) (`kod_sha256 = 3c1a59a1dd2bb0f7`) and are **pending independent zero-context Carbon closure audit**.
+> **Audit Status:** All `55M` final artifacts below are verified cell-by-cell (`782/782`, `0` mismatches) against [`results/raw/`](results/raw/) (`kod_sha256 = 3c1a59a1dd2bb0f7`) and **PASS** independent zero-context Carbon closure audit (`0 KRITIK, 0 YUKSEK, 0 ORTA`).
 
 We attach `RDFL` (`d = 384`, `R = 2`, `2.81M`), `FP32 SlotCore` (`S = 4`, `1.33M`), `K3` (`0.74M`), and `MTP-4` (`2.36M`) (`7.24M` total adapter parameters) onto a pretrained `55.08M` byte-level windowed-attention backbone (`M = 512`, `d_base = 1536`, `ffn = 3072` preserved unshrunk; `62.32M` grand total) paired with an episodic content-memory reader (`cmem`, `0.86M`).
 
@@ -139,7 +139,7 @@ We attach `RDFL` (`d = 384`, `R = 2`, `2.81M`), `FP32 SlotCore` (`S = 4`, `1.33M
 
 ## 5. `RDFL v0.3` Hardening (`K1–K5`), Serving Wall (`H5`), & Mechanistic X-Ray
 
-All `v0.3` kernel fixes (`13/13` CPU unit tests in [`tests/test_rdfl.py`](tests/test_rdfl.py)), serving benchmarks, and mechanistic probes are archived in [`results/raw/`](results/raw/) (`deney_a_k1_k5.json`, `h5_memory_latency_and_serving.json`, `math_xray_master_synthesis.json`, `p3_long_v03.json`, `p2_long_v03.json`; status: *Pending Carbon audit*):
+All `v0.3` kernel fixes (`13/13` CPU unit tests in [`tests/test_rdfl.py`](tests/test_rdfl.py)), serving benchmarks, and mechanistic probes are archived in [`results/raw/`](results/raw/) (`deney_a_k1_k5.json`, `h5_memory_latency_and_serving.json`, `math_xray_master_synthesis.json`, `p3_long_v03.json`, `p2_long_v03.json`; status: **PASS** — independent Carbon closure audit):
 
 1. **`K1–K5` Core Hardening ([`results/raw/deney_a_k1_k5.json`](results/raw/deney_a_k1_k5.json)):**
    - **`K3` (`std=0.02` Weight Initialization):** Eliminates step-0 logit explosion (`d=192: CE 193.82 -> 5.54`, `d=768: 752.45 -> 5.78`), cuts FP16 overflows (`8 -> 0`), and improves 500-step `Byte LM` (`mix_val`) by **`-0.5789 bpb`** (`3.1682 ± 0.0065 -> 2.5893 ± 0.0066`, `p = 8e-5`).
@@ -160,7 +160,7 @@ All `v0.3` kernel fixes (`13/13` CPU unit tests in [`tests/test_rdfl.py`](tests/
 2. **Hybrid `55M` Side-Branch vs. Pure `RDFL`:** Our `G_BASE_ONLY` (`1.5K`) and `en_iyi.pt` `RDFL ON/OFF` (`21K`) controls show that attaching `RDFL` as a warm side-branch onto a `55M` windowed-attention backbone yields negligible pure-LM `bpb` gain (`-0.0010 / -0.0002 / 0.0000`) and `0.0` state-tracking gain; evaluating `RDFL` at scale therefore requires from-scratch **Pure `RDFL`** pretraining against iso-FLOP baselines.
 3. **`SlotCore` Collapse (`Deferred / Replaced in v0.3`) & `Multi-Hop ICL` Ceiling (`KPN-Y01`):** Symmetric `FP32 SlotCore` collapses to `cos = 0.999982` (`norm = 664.5`) with `0.0` `55M` state-tracking gain and is deferred for competitive `v0.3` `SlotAttention`. At `1.20M`, `Multi-Hop ICL` `22.72%` lies within the `1/4 = 25.0%` (`1/8 = 12.5%`) degree-filtering ceiling (`KPN-Y01`), and input anchoring showed a null effect (`A6_R4_cipasiz` matched `A6_R4_cipali`).
 4. **OOD Extrapolation & RSI SFT Guard:** Both `1.20M` (`OOD-Far L=7,8 = 0.0%`) and `55M` RSI (`L=4 <-> L=5` wall, `0/96` accepted on `L=5`) show that verifier-gated RSI cannot bootstrap past a zero-acceptance length wall without curriculum bridges, and requires explicit SFT/`EOT` replay to prevent completion/repetition drift.
-5. **Hardware & Verification Protocol:** All experiments ran on a single consumer 8 GiB Turing GPU with strict train/validation/test separation; **`782/782`** cells in `results/audited_summary.json` are programmatically verified against `results/raw/*.json` in CI (`55M` final and `v0.3` artifacts are pending independent Carbon closure audit).
+5. **Hardware & Verification Protocol:** All experiments ran on a single consumer 8 GiB Turing GPU with strict train/validation/test separation; **`782/782`** cells in `results/audited_summary.json` are programmatically verified against `results/raw/*.json` in CI (`PASS` — independent Carbon closure audit).
 
 ---
 

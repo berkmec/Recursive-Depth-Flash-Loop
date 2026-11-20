@@ -528,7 +528,7 @@
       }
     },
     "diogenes_rdfl_55m_final": {
-      "audit_status": "Pending Carbon closure audit for 55M final artifacts",
+      "audit_status": "PASS (Independent Zero-Context Carbon Closure Audit; 0 KRITIK, 0 YUKSEK, 0 ORTA)",
       "frozen_code_hash": "3c1a59a1dd2bb0f7",
       "training_42k_summary": {
         "toplam_adim": 42000,
@@ -1071,7 +1071,7 @@
       }
     },
     "rdfl_v0_3_hardening_and_xray": {
-      "audit_status": "Pending Carbon audit",
+      "audit_status": "PASS (Independent Zero-Context Carbon Closure Audit; 0 KRITIK, 0 YUKSEK, 0 ORTA)",
       "rdfl_version": "0.3.0",
       "unit_tests_passed": 13,
       "k1_k5_ablation": {

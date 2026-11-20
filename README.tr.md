@@ -96,7 +96,7 @@ Görülmeyen tohumlarda `(42, 137, 2026)` `graf_izli` ve `Byte LM` ([`results/ra
 
 ## 4. Tamamlanan `55M` Uyarlama, `G_BASE_ONLY` Nedensel Kontrolü ve `ÖY-7` RSI (`Diogenes-RDFL-55M`)
 
-> **Denetim Durumu:** Aşağıdaki `55M` final çıktılarının tamamı [`results/raw/`](results/raw/) ham JSON'larına karşı **`698/698`** hücrede `0` uyuşmazlıkla doğrulanmıştır (`kod_sha256 = 3c1a59a1dd2bb0f7`) ve **bağımsız sıfır-bağlamlı Carbon kapanış denetimini beklemektedir**.
+> **Denetim Durumu:** Aşağıdaki `55M` final çıktılarının tamamı [`results/raw/`](results/raw/) ham JSON'larına karşı **`782/782`** hücrede `0` uyuşmazlıkla doğrulanmıştır (`kod_sha256 = 3c1a59a1dd2bb0f7`) ve bağımsız sıfır-bağlamlı Carbon kapanış denetiminden **PASS** (`0 KRITIK, 0 YUKSEK, 0 ORTA`) almıştır.
 
 - **`G_BASE_ONLY` (`1.500` adım, `RDFL` KAPALI) vs `G0` / `G1` & `42K` Seyri (`fast-val`, [`g_base_only_kontrol.json`](results/raw/g_base_only_kontrol.json), [`saat1_mtp_kapisi.json`](results/raw/saat1_mtp_kapisi.json), [`ana_egitim_ozet.json`](results/raw/ana_egitim_ozet.json)):**
   - Adım-0 taban: `1,1268 / 1,0419 / 1,2416` (`bileşik 1,1200`).
@@ -121,7 +121,7 @@ Görülmeyen tohumlarda `(42, 137, 2026)` `graf_izli` ve `Byte LM` ([`results/ra
 
 ## 5. `RDFL v0.3` Sertleştirme (`K1–K5`), Servis Duvarı (`H5`) ve Mekanistik X-Ray
 
-Tüm `v0.3` çekirdek onarımları (`13/13` CPU birim testi, [`tests/test_rdfl.py`](tests/test_rdfl.py)), servis ölçümleri ve mekanistik problar [`results/raw/`](results/raw/) altında arşivlenmiştir (`deney_a_k1_k5.json`, `h5_memory_latency_and_serving.json`, `math_xray_master_synthesis.json`, `p3_long_v03.json`, `p2_long_v03.json`; durum: *Carbon denetimi bekliyor*):
+Tüm `v0.3` çekirdek onarımları (`13/13` CPU birim testi, [`tests/test_rdfl.py`](tests/test_rdfl.py)), servis ölçümleri ve mekanistik problar [`results/raw/`](results/raw/) altında arşivlenmiştir (`deney_a_k1_k5.json`, `h5_memory_latency_and_serving.json`, `math_xray_master_synthesis.json`, `p3_long_v03.json`, `p2_long_v03.json`; durum: **PASS** — Carbon kapanış denetimi):
 
 1. **`K1–K5` Çekirdek Sertleştirme ([`results/raw/deney_a_k1_k5.json`](results/raw/deney_a_k1_k5.json)):**
    - **`K3` (`std=0,02` Ağırlık Başlatma):** Adım-0 logit patlamasını (`d=192: CE 193,82 -> 5,54`, `d=768: 752,45 -> 5,78`) ve FP16 taşmalarını (`8 -> 0`) ortadan kaldırır; 500-adım `Byte LM` (`mix_val`) skorunu **`-0,5789 bpb`** iyileştirir (`3,1682 ± 0,0065 -> 2,5893 ± 0,0066`, `p = 8e-5`).
@@ -142,7 +142,7 @@ Tüm `v0.3` çekirdek onarımları (`13/13` CPU birim testi, [`tests/test_rdfl.p
 2. **Hibrit `55M` Yan-Dal vs Saf `RDFL`:** `G_BASE_ONLY` (`1,5K`) ve `en_iyi.pt` `RDFL ON/OFF` (`21K`) kontrolleri hibrit yan-dalın saf LM `bpb`'ye ihmal edilebilir katkı verdiğini göstermiştir; mimari üstünlük iddiası için sıfırdan **Saf `RDFL`** ön-eğitimi gerekir.
 3. **`SlotCore` Çöküşü (`v0.3`'te Ertelendi) & `Multi-Hop ICL` Tavanı (`KPN-Y01`):** Simetrik `FP32 SlotCore` `cos = 0,999982` (`norm = 664,5`) ile çöküp `55M`'de `0,0` durum-izleme katkısı vermiştir. `1,20M` `Multi-Hop ICL` `%22,72` skoru `%25,0 / %12,5` derece-filtreleme tavanı içindedir (`KPN-Y01`), giriş çıpalaması ise sıfır etki göstermiştir.
 4. **OOD Uzaklaşması & RSI SFT Koruması:** `1,20M` `OOD-Uzak` (`L=7,8 = %0,0`) ve `55M` `L=4 ↔ L=5` duvarı (`0/96` kabul) + `completion 0,78 → 0,58` çöküşü, RSI'da hem uzunluk köprüsü hem SFT/`EOT` koruma payı zorunluluğunu kanıtlamıştır.
-5. **Doğrulama:** `results/audited_summary.json` içindeki **`782/782`** hücre CI'da ham JSON'lara karşı doğrulanmaktadır (`55M` final ve `v0.3` çıktıları bağımsız Carbon kapanış denetimini beklemektedir).
+5. **Doğrulama:** `results/audited_summary.json` içindeki **`782/782`** hücre CI'da ham JSON'lara karşı doğrulanmaktadır (`PASS` — bağımsız Carbon kapanış denetimi).
 
 ---
 

@@ -287,7 +287,11 @@ def _verify_v03_study(ck: CellChecker, v03: dict[str, Any]) -> None:
     p3 = load_json(RAW_DIR / "p3_long_v03.json")
     p2 = load_json(RAW_DIR / "p2_long_v03.json")
 
-    ck.eq("v03.audit_status", v03["audit_status"], "Pending Carbon audit")
+    ck.eq(
+        "v03.audit_status",
+        v03["audit_status"],
+        "PASS (Independent Zero-Context Carbon Closure Audit; 0 KRITIK, 0 YUKSEK, 0 ORTA)",
+    )
 
     # K1-K5 ablation (deney_a_k1_k5.json)
     ab = v03["k1_k5_ablation"]
