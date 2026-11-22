@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="440" viewBox="0 0 980 440">
+<metadata>{"generator": "eval/plot_figures.py", "sources": {"scaling/scale_S0_gdn_untied_L2_s42.json": "1c29dd1f3fd9b1812e25594505b2661705a10c7198ea7b8aa7dc209cde9ac16f", "scaling/scale_S0_gdn_untied_L3_s42.json": "03fa0f33adf507af6f6f4b41c0daf3338be0f520a3089a8ff0fd706a502223e3", "scaling/scale_S0_rdfl_R1_s42.json": "a00d8c628db443294dc7d8494e364a54fbc981ee8d09e129b6aae110618a9a0f", "scaling/scale_S0_rdfl_R2_s137.json": "e582c6147e9ea69731836de43d3daf0017f1f70ff80083d974078483dc84ecc7", "scaling/scale_S0_rdfl_R2_s2026.json": "3fc680b5e5d49aff366c3ddc1c178e42df621d2065eecee366b5a4dd1d9762ac", "scaling/scale_S0_rdfl_R2_s42.json": "bc5c885523adadd0907d2e9ac5dfdbbcd48bd1853efb558fc90d147b1e805ff9", "scaling/scale_S0_rdfl_R4_s42.json": "15bfad48909233b0d92b8ba65444d70db45eb294de9c728b19707d6dd578d93a", "scaling/scale_S0_rdfl_nomtp_R2_s42.json": "c624ae285d1c7361cc9e6690d1ff67efa839f473a20b7bc6c50844f5c152e31a", "scaling/scale_S0_transformer_L2_s42.json": "2d541a8f51b00a0a1767a6794cfb1ccffd6b9887c78d3a3140e703b51e74d679", "scaling/scale_S0_transformer_L3_s137.json": "84021679289e986241c33b74c0fff95cf11233f2e1179e41b0becaeb7cc857fe", "scaling/scale_S0_transformer_L3_s2026.json": "d303bd4b9524af904cc02ba61dd56accb6debf0e7e5426b4713ef33cb80f5d2c", "scaling/scale_S0_transformer_L3_s42.json": "23bf96de1458f9c69e6d925f06ee33ed86e14c60bdb454ae06c5d5ab7acbd99e", "scaling/scale_S1_gdn_untied_L2_s42.json": "3f4d3f3f50f9e9d8189d8988d33ed3be8d2dca624fe9daa97ccd4cbf87afcd9f", "scaling/scale_S1_gdn_untied_L3_s42.json": "d57f5a36e13078bd8ac99e5ddb86cf225a484e3d44e01fbe2803f951e8e7e363", "scaling/scale_S1_rdfl_R1_s42.json": "0f51249f11c9893124729cd773823bbfde9c6e1ab529bc46d3bbfe55905cfe9f", "scaling/scale_S1_rdfl_R2_s137.json": "ff73be27501121d71c15a3eebde777485961fd4b81311822b55cd8bc255dc6ce", "scaling/scale_S1_rdfl_R2_s2026.json": "8b46b75eefd657e03bd2ca78da3695e95945f52eb38517f11fd6a01e15b3a6e7", "scaling/scale_S1_rdfl_R2_s42.json": "760691cfe04409c552dc720aa1e4d70dfe70e924dcef52becea8ed6ab542d68a", "scaling/scale_S1_rdfl_R4_s42.json": "da9904ecdbba82a28e658e9b33e4f648cd0ec84ceeacaf3c1965b44cd17692c2", "scaling/scale_S1_rdfl_nomtp_R2_s42.json": "d784fa0539751d5e8cd9e60188cefe1b9dcf70b31b9a3bb9c366a44ca6d82709", "scaling/scale_S1_transformer_L2_s42.json": "6ac19a9a1dfc2032e4129a0a0469936a559f4f32567390f3044bd0f06970761f", "scaling/scale_S1_transformer_L3_s137.json": "22535c594ee70b5817c3adb86f40595fcd5dc3d357f1143e378caa21486fb9d4", "scaling/scale_S1_transformer_L3_s2026.json": "d4f39b8d867a1b2aa776d9e14c8278559b05eaaab29931b986e5de560ecb2cba", "scaling/scale_S1_transformer_L3_s42.json": "87bfdeec218485965e9c72bf11ddc323e4b48c92ae896862454e21c80276771c", "scaling/scale_S2_gdn_untied_L2_s42.json": "e366cdbf0eb458337c0fb54ebdbdba7ac1cd7e0088d40dfd7e7199931c0d4617", "scaling/scale_S2_gdn_untied_L3_s42.json": "80e971d501b1e650fc9b1fbc85ad1ad0c09e0d68e3907c9707fbe6a75fdd9c4e", "scaling/scale_S2_rdfl_R1_s42.json": "5d880d5c10af19795949a7905bc1ab7fd96cb8b928681793b55b9af80a0853d7", "scaling/scale_S2_rdfl_R2_s137.json": "63d3b7b7939bcf9d1e0b3418e607b745c5f8b458ce4ae2f6fbec46770392bc02", "scaling/scale_S2_rdfl_R2_s2026.json": "2a15fe2b028b828edbc2d8ee0610725538a33e3fb2392cbd4179bdb074d9d0e4", "scaling/scale_S2_rdfl_R2_s42.json": "ab370f96fe8d91797ad587982f3ea6d37449d64ee7d262a811b2db63d60d10f7", "scaling/scale_S2_rdfl_R4_s42.json": "e3190c1bcf7348a801e60c917553d98f8420c426cb8ce2cf08ede2c7b36f1379", "scaling/scale_S2_rdfl_nomtp_R2_s42.json": "3c79f157806d3d6139423026dc41e8df10182e81056b462020ff5b717270dadb", "scaling/scale_S2_transformer_L2_s42.json": "e4063da60c842ecb3246cb4edef73d857560b75bb291613257ecbc5bef1c73c1", "scaling/scale_S2_transformer_L3_s137.json": "3224bc493a401926d231bd051b5371b1cd4c303b40f1a0056e47c723b74e9389", "scaling/scale_S2_transformer_L3_s2026.json": "a4a902a32c6279d1e75f3b3c544f683fa5f86370bc89f06f17e4fba249e26ef1", "scaling/scale_S2_transformer_L3_s42.json": "15b990057bad095d3490a7a1aeb7f70fd62aae526055a86b34b18c30af0c33ac", "scaling/scale_S3_gdn_untied_L2_s42.json": "d6d36599cd163ff272a0f6546155aae69fbd222ca1ad2e93349757edf415ee4b", "scaling/scale_S3_gdn_untied_L3_s42.json": "6965e6e8f8f9549eb0ff21192240c10f6254dd10564f66f817395ee4c4378512", "scaling/scale_S3_rdfl_R1_s42.json": "4a6dd751847eb57b4af32d06815ec64b6c7c41d68ab93fa09090defc5b6aab1c", "scaling/scale_S3_rdfl_R2_s137.json": "43bb8b71c673f38ce903b22ad4e349b88e81751a0932c5f8a0fa615f76978eb8", "scaling/scale_S3_rdfl_R2_s2026.json": "ee576574d2162b5d79aef2e74504865905ce335c77f48311f000e6d60ab1bdbd", "scaling/scale_S3_rdfl_R2_s42.json": "9c0850218b73e2c57ac4806bf3e28b0d866dbd1b20bb630485c86775d04acd7b", "scaling/scale_S3_rdfl_R4_s42.json": "c9bbe59c0345244c1297dd643ece4b799b48d60926679dc6d3416e56651a9b3e", "scaling/scale_S3_rdfl_nomtp_R2_s42.json": "c0e5dcc0878ac2193bbb1cd9756e66b63b2c85cf6009929b9b700a83f72b51f9", "scaling/scale_S3_transformer_L2_s42.json": "7906ef00354d1a304a09573e961155d0ecb2366bade95c93febea3ecc1629470", "scaling/scale_S3_transformer_L3_s137.json": "ab6c0a488acd7e2762fadf4066d3afe9f4a40d206f650bfa6e525e09f41a2d60", "scaling/scale_S3_transformer_L3_s2026.json": "eeb33fca464f601ae6bfd06bce1e5709c951943fa7f1cb9589c644038eeeed26", "scaling/scale_S3_transformer_L3_s42.json": "443083b4a7acbf8f18dec7af78d6366473b39c261e39ba9a2975984eda7e59d8", "scaling/wallclock_bpe_transformer_S1_m30.0_s42.json": "336fc1d44858d46403bbc727a30fa5cf1691bfddbc62a8d642ace7f711f0d280", "scaling/wallclock_rdfl_S1_m30.0_s42.json": "2b3630f1f8790b371ec17dcd85bfeab0a5a9659f43be09368541cac81023ad47"}}</metadata>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="490.00" y="22.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="14" text-anchor="middle" font-weight="bold" font-style="normal" fill="#212121">Sekil 2 — Olceklenme yasasi (mix_val) ve test-zamani derinlik R=1..8</text>
+<text x="265.00" y="50.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="12.5" text-anchor="middle" font-weight="bold" font-style="normal" fill="#212121">(a) bpb(N) — log-log (mix_val)</text>
+<rect x="85" y="60" width="360" height="290" fill="none" stroke="#212121" stroke-width="0.8"/>
+<line x1="116.69" y1="350.00" x2="116.69" y2="346.00" stroke="#212121" stroke-width="0.7"/>
+<line x1="116.69" y1="60.00" x2="116.69" y2="64.00" stroke="#212121" stroke-width="0.7"/>
+<text x="116.69" y="364.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">500K</text>
+<line x1="176.58" y1="350.00" x2="176.58" y2="346.00" stroke="#212121" stroke-width="0.7"/>
+<line x1="176.58" y1="60.00" x2="176.58" y2="64.00" stroke="#212121" stroke-width="0.7"/>
+<text x="176.58" y="364.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">1M</text>
+<line x1="236.46" y1="350.00" x2="236.46" y2="346.00" stroke="#212121" stroke-width="0.7"/>
+<line x1="236.46" y1="60.00" x2="236.46" y2="64.00" stroke="#212121" stroke-width="0.7"/>
+<text x="236.46" y="364.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">2M</text>
+<line x1="315.62" y1="350.00" x2="315.62" y2="346.00" stroke="#212121" stroke-width="0.7"/>
+<line x1="315.62" y1="60.00" x2="315.62" y2="64.00" stroke="#212121" stroke-width="0.7"/>
+<text x="315.62" y="364.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">5M</text>
+<line x1="375.50" y1="350.00" x2="375.50" y2="346.00" stroke="#212121" stroke-width="0.7"/>
+<line x1="375.50" y1="60.00" x2="375.50" y2="64.00" stroke="#212121" stroke-width="0.7"/>
+<text x="375.50" y="364.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">10M</text>
+<line x1="435.39" y1="350.00" x2="435.39" y2="346.00" stroke="#212121" stroke-width="0.7"/>
+<line x1="435.39" y1="60.00" x2="435.39" y2="64.00" stroke="#212121" stroke-width="0.7"/>
+<text x="435.39" y="364.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">20M</text>
+<line x1="85" y1="261.44" x2="445" y2="261.44" stroke="#eeeeee" stroke-width="0.6"/>
+<line x1="85.00" y1="261.44" x2="89.00" y2="261.44" stroke="#212121" stroke-width="0.7"/>
+<line x1="445.00" y1="261.44" x2="441.00" y2="261.44" stroke="#212121" stroke-width="0.7"/>
+<text x="80.00" y="264.94" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="end" font-weight="normal" font-style="normal" fill="#212121">1.5</text>
+<line x1="85" y1="171.08" x2="445" y2="171.08" stroke="#eeeeee" stroke-width="0.6"/>
+<line x1="85.00" y1="171.08" x2="89.00" y2="171.08" stroke="#212121" stroke-width="0.7"/>
+<line x1="445.00" y1="171.08" x2="441.00" y2="171.08" stroke="#212121" stroke-width="0.7"/>
+<text x="80.00" y="174.58" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="end" font-weight="normal" font-style="normal" fill="#212121">2</text>
+<line x1="85" y1="100.99" x2="445" y2="100.99" stroke="#eeeeee" stroke-width="0.6"/>
+<line x1="85.00" y1="100.99" x2="89.00" y2="100.99" stroke="#212121" stroke-width="0.7"/>
+<line x1="445.00" y1="100.99" x2="441.00" y2="100.99" stroke="#212121" stroke-width="0.7"/>
+<text x="80.00" y="104.49" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="end" font-weight="normal" font-style="normal" fill="#212121">2.5</text>
+<circle cx="208.62" cy="267.60" r="2.6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.1"/>
+<path d="M111.53,164.91 L204.78,188.66 L309.55,206.44 L391.11,218.27" fill="none" stroke="#b03a2e" stroke-width="1.4" stroke-dasharray="6,3" stroke-linejoin="round"/>
+<rect x="109.13" y="162.51" width="4.8" height="4.8" fill="#b03a2e"/>
+<rect x="202.38" y="186.26" width="4.8" height="4.8" fill="#b03a2e"/>
+<rect x="307.15" y="204.04" width="4.8" height="4.8" fill="#b03a2e"/>
+<rect x="388.71" y="215.87" width="4.8" height="4.8" fill="#b03a2e"/>
+<path d="M111.53,167.61 L125.51,170.25 L139.49,172.89 L153.47,175.53 L167.45,178.17 L181.43,180.81 L195.40,183.45 L209.38,186.09 L223.36,188.73 L237.34,191.38 L251.32,194.02 L265.30,196.66 L279.28,199.30 L293.26,201.94 L307.24,204.58 L321.21,207.22 L335.19,209.86 L349.17,212.50 L363.15,215.14 L377.13,217.78 L391.11,220.42" fill="none" stroke="#b03a2e" stroke-width="0.9" stroke-dasharray="2,2" stroke-linejoin="round"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<path d="M144.52,175.71 L238.60,196.47 L343.91,212.92 L425.72,224.70" fill="none" stroke="#2e7d32" stroke-width="1.4" stroke-dasharray="2,2" stroke-linejoin="round"/>
+<path d="M144.52,172.71L147.52,178.11L141.52,178.11Z" fill="#2e7d32"/>
+<path d="M238.60,193.47L241.60,198.87L235.60,198.87Z" fill="#2e7d32"/>
+<path d="M343.91,209.92L346.91,215.32L340.91,215.32Z" fill="#2e7d32"/>
+<path d="M425.72,221.70L428.72,227.10L422.72,227.10Z" fill="#2e7d32"/>
+<path d="M144.52,177.67 L158.58,180.10 L172.64,182.52 L186.70,184.95 L200.76,187.37 L214.82,189.80 L228.88,192.22 L242.94,194.65 L257.00,197.07 L271.06,199.50 L285.12,201.92 L299.18,204.34 L313.24,206.77 L327.30,209.19 L341.36,211.62 L355.42,214.04 L369.48,216.47 L383.54,218.89 L397.60,221.32 L411.66,223.74 L425.72,226.17" fill="none" stroke="#2e7d32" stroke-width="0.9" stroke-dasharray="2,2" stroke-linejoin="round"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<path d="M208.74,225.93L211.74,229.13L208.74,232.33L205.74,229.13Z" fill="#ffffff" stroke="#6a1b9a" stroke-width="1.1"/>
+<path d="M104.28,142.40 L197.58,167.68 L302.39,187.17 L384.12,200.36" fill="none" stroke="#e67e22" stroke-width="1.4" stroke-dasharray="4,4" stroke-linejoin="round"/>
+<circle cx="104.28" cy="142.40" r="2.6" fill="#ffffff" stroke="#e67e22" stroke-width="1.1"/>
+<circle cx="197.58" cy="167.68" r="2.6" fill="#ffffff" stroke="#e67e22" stroke-width="1.1"/>
+<circle cx="302.39" cy="187.17" r="2.6" fill="#ffffff" stroke="#e67e22" stroke-width="1.1"/>
+<circle cx="384.12" cy="200.36" r="2.6" fill="#ffffff" stroke="#e67e22" stroke-width="1.1"/>
+<path d="M104.28,145.11 L118.27,147.98 L132.26,150.85 L146.25,153.72 L160.25,156.59 L174.24,159.46 L188.23,162.33 L202.22,165.20 L216.21,168.07 L230.21,170.94 L244.20,173.81 L258.19,176.68 L272.18,179.55 L286.17,182.42 L300.16,185.29 L314.16,188.16 L328.15,191.03 L342.14,193.90 L356.13,196.77 L370.12,199.64 L384.12,202.51" fill="none" stroke="#e67e22" stroke-width="0.9" stroke-dasharray="2,2" stroke-linejoin="round"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<path d="M104.30,153.22V152.49M101.30,153.22h6M101.30,152.49h6" stroke="#424242" stroke-width="0.8" fill="none"/>
+<path d="M197.60,181.24V178.66M194.60,181.24h6M194.60,178.66h6" stroke="#424242" stroke-width="0.8" fill="none"/>
+<path d="M302.40,200.48V199.81M299.40,200.48h6M299.40,199.81h6" stroke="#424242" stroke-width="0.8" fill="none"/>
+<path d="M384.12,214.35V213.69M381.12,214.35h6M381.12,213.69h6" stroke="#424242" stroke-width="0.8" fill="none"/>
+<path d="M104.30,152.86 L197.60,179.95 L302.40,200.15 L384.12,214.02" fill="none" stroke="#424242" stroke-width="1.4" stroke-dasharray="1,3" stroke-linejoin="round"/>
+<rect x="101.90" y="150.46" width="4.8" height="4.8" fill="#424242"/>
+<rect x="195.20" y="177.55" width="4.8" height="4.8" fill="#424242"/>
+<rect x="300.00" y="197.75" width="4.8" height="4.8" fill="#424242"/>
+<rect x="381.72" y="211.62" width="4.8" height="4.8" fill="#424242"/>
+<path d="M104.30,155.88 L118.29,158.90 L132.29,161.93 L146.28,164.95 L160.27,167.98 L174.26,171.00 L188.25,174.02 L202.24,177.05 L216.23,180.07 L230.22,183.09 L244.21,186.12 L258.20,189.14 L272.19,192.16 L286.19,195.19 L300.18,198.21 L314.17,201.23 L328.16,204.26 L342.15,207.28 L356.14,210.31 L370.13,213.33 L384.12,216.35" fill="none" stroke="#424242" stroke-width="0.9" stroke-dasharray="2,2" stroke-linejoin="round"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<path d="M104.36,156.72 L197.63,183.41 L302.42,203.88 L384.13,218.62" fill="none" stroke="#00838f" stroke-width="1.4" stroke-linejoin="round"/>
+<path d="M104.36,153.72L107.36,159.12L101.36,159.12Z" fill="#00838f"/>
+<path d="M197.63,180.41L200.63,185.81L194.63,185.81Z" fill="#00838f"/>
+<path d="M302.42,200.88L305.42,206.28L299.42,206.28Z" fill="#00838f"/>
+<path d="M384.13,215.62L387.13,221.02L381.13,221.02Z" fill="#00838f"/>
+<path d="M104.36,159.44 L118.34,162.50 L132.33,165.56 L146.32,168.62 L160.31,171.67 L174.30,174.73 L188.29,177.79 L202.28,180.85 L216.27,183.91 L230.25,186.97 L244.24,190.03 L258.23,193.09 L272.22,196.14 L286.21,199.20 L300.20,202.26 L314.19,205.32 L328.18,208.38 L342.17,211.44 L356.15,214.50 L370.14,217.56 L384.13,220.62" fill="none" stroke="#00838f" stroke-width="0.9" stroke-dasharray="2,2" stroke-linejoin="round"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<path d="M104.30,152.36 L197.60,179.32 L302.40,198.19 L384.12,212.08" fill="none" stroke="#ad1457" stroke-width="1.4" stroke-dasharray="6,3" stroke-linejoin="round"/>
+<path d="M104.30,149.16L107.30,152.36L104.30,155.56L101.30,152.36Z" fill="#ffffff" stroke="#ad1457" stroke-width="1.1"/>
+<path d="M197.60,176.12L200.60,179.32L197.60,182.52L194.60,179.32Z" fill="#ffffff" stroke="#ad1457" stroke-width="1.1"/>
+<path d="M302.40,194.99L305.40,198.19L302.40,201.39L299.40,198.19Z" fill="#ffffff" stroke="#ad1457" stroke-width="1.1"/>
+<path d="M384.12,208.88L387.12,212.08L384.12,215.28L381.12,212.08Z" fill="#ffffff" stroke="#ad1457" stroke-width="1.1"/>
+<path d="M104.30,155.49 L118.29,158.43 L132.29,161.37 L146.28,164.31 L160.27,167.25 L174.26,170.19 L188.25,173.13 L202.24,176.06 L216.23,179.00 L230.22,181.94 L244.21,184.88 L258.20,187.82 L272.19,190.76 L286.19,193.70 L300.18,196.64 L314.17,199.57 L328.16,202.51 L342.15,205.45 L356.14,208.39 L370.13,211.33 L384.12,214.27" fill="none" stroke="#ad1457" stroke-width="0.9" stroke-dasharray="2,2" stroke-linejoin="round"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<path d="M104.63,146.13 L197.70,172.18 L302.36,187.33 L383.84,185.37" fill="none" stroke="#827717" stroke-width="1.4" stroke-dasharray="2,2" stroke-linejoin="round"/>
+<circle cx="104.63" cy="146.13" r="2.6" fill="#ffffff" stroke="#827717" stroke-width="1.1"/>
+<circle cx="197.70" cy="172.18" r="2.6" fill="#ffffff" stroke="#827717" stroke-width="1.1"/>
+<circle cx="302.36" cy="187.33" r="2.6" fill="#ffffff" stroke="#827717" stroke-width="1.1"/>
+<circle cx="383.84" cy="185.37" r="2.6" fill="#ffffff" stroke="#827717" stroke-width="1.1"/>
+<path d="M104.63,152.41 L118.59,154.40 L132.55,156.39 L146.51,158.39 L160.47,160.38 L174.43,162.37 L188.39,164.37 L202.35,166.36 L216.31,168.35 L230.27,170.35 L244.23,172.34 L258.20,174.33 L272.16,176.33 L286.12,178.32 L300.08,180.31 L314.04,182.31 L328.00,184.30 L341.96,186.29 L355.92,188.29 L369.88,190.28 L383.84,192.27" fill="none" stroke="#827717" stroke-width="0.9" stroke-dasharray="2,2" stroke-linejoin="round"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<path d="M137.45,161.89V156.40M134.45,161.89h6M134.45,156.40h6" stroke="#4e342e" stroke-width="0.8" fill="none"/>
+<path d="M231.42,181.47V180.83M228.42,181.47h6M228.42,180.83h6" stroke="#4e342e" stroke-width="0.8" fill="none"/>
+<path d="M336.67,195.67V194.92M333.67,195.67h6M333.67,194.92h6" stroke="#4e342e" stroke-width="0.8" fill="none"/>
+<path d="M418.42,202.20V194.46M415.42,202.20h6M415.42,194.46h6" stroke="#4e342e" stroke-width="0.8" fill="none"/>
+<path d="M137.45,159.13 L231.42,181.15 L336.67,195.29 L418.42,198.30" fill="none" stroke="#4e342e" stroke-width="1.4" stroke-dasharray="8,3,2,3" stroke-linejoin="round"/>
+<rect x="135.05" y="156.73" width="4.8" height="4.8" fill="#4e342e"/>
+<rect x="229.02" y="178.75" width="4.8" height="4.8" fill="#4e342e"/>
+<rect x="334.27" y="192.89" width="4.8" height="4.8" fill="#4e342e"/>
+<rect x="416.02" y="195.90" width="4.8" height="4.8" fill="#4e342e"/>
+<path d="M137.45,163.38 L151.50,165.35 L165.55,167.31 L179.59,169.28 L193.64,171.24 L207.69,173.21 L221.74,175.18 L235.79,177.14 L249.84,179.11 L263.89,181.08 L277.93,183.04 L291.98,185.01 L306.03,186.97 L320.08,188.94 L334.13,190.91 L348.18,192.87 L362.22,194.84 L376.27,196.81 L390.32,198.77 L404.37,200.74 L418.42,202.70" fill="none" stroke="#4e342e" stroke-width="0.9" stroke-dasharray="2,2" stroke-linejoin="round"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<text x="265.00" y="382.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="11" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">parametre sayisi N</text>
+<text x="43.00" y="205.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="11" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121" transform="rotate(-90 43.00 205.00)">dogrulama bpb</text>
+<rect x="321.00" y="66.00" width="118.00" height="148" fill="#ffffff" fill-opacity="0.92" stroke="#bdbdbd" stroke-width="0.6"/>
+<line x1="326.00" y1="76.00" x2="344.00" y2="76.00" stroke="#1f4e79" stroke-width="1.4"/>
+<circle cx="335.00" cy="76.00" r="2.6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.1"/>
+<text x="349.00" y="79.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">bpe_transformer</text>
+<line x1="326.00" y1="90.00" x2="344.00" y2="90.00" stroke="#b03a2e" stroke-width="1.4" stroke-dasharray="6,3"/>
+<rect x="332.60" y="87.60" width="4.8" height="4.8" fill="#b03a2e"/>
+<text x="349.00" y="93.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">gdn_untied_L2</text>
+<line x1="326.00" y1="104.00" x2="344.00" y2="104.00" stroke="#2e7d32" stroke-width="1.4" stroke-dasharray="2,2"/>
+<path d="M335.00,101.00L338.00,106.40L332.00,106.40Z" fill="#2e7d32"/>
+<text x="349.00" y="107.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">gdn_untied_L3</text>
+<line x1="326.00" y1="118.00" x2="344.00" y2="118.00" stroke="#6a1b9a" stroke-width="1.4" stroke-dasharray="8,3,2,3"/>
+<path d="M335.00,114.80L338.00,118.00L335.00,121.20L332.00,118.00Z" fill="#ffffff" stroke="#6a1b9a" stroke-width="1.1"/>
+<text x="349.00" y="121.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">rdfl</text>
+<line x1="326.00" y1="132.00" x2="344.00" y2="132.00" stroke="#e67e22" stroke-width="1.4" stroke-dasharray="4,4"/>
+<circle cx="335.00" cy="132.00" r="2.6" fill="#ffffff" stroke="#e67e22" stroke-width="1.1"/>
+<text x="349.00" y="135.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">rdfl_R1</text>
+<line x1="326.00" y1="146.00" x2="344.00" y2="146.00" stroke="#424242" stroke-width="1.4" stroke-dasharray="1,3"/>
+<rect x="332.60" y="143.60" width="4.8" height="4.8" fill="#424242"/>
+<text x="349.00" y="149.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">rdfl_R2</text>
+<line x1="326.00" y1="160.00" x2="344.00" y2="160.00" stroke="#00838f" stroke-width="1.4"/>
+<path d="M335.00,157.00L338.00,162.40L332.00,162.40Z" fill="#00838f"/>
+<text x="349.00" y="163.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">rdfl_R4</text>
+<line x1="326.00" y1="174.00" x2="344.00" y2="174.00" stroke="#ad1457" stroke-width="1.4" stroke-dasharray="6,3"/>
+<path d="M335.00,170.80L338.00,174.00L335.00,177.20L332.00,174.00Z" fill="#ffffff" stroke="#ad1457" stroke-width="1.1"/>
+<text x="349.00" y="177.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">rdfl_nomtp_R2</text>
+<line x1="326.00" y1="188.00" x2="344.00" y2="188.00" stroke="#827717" stroke-width="1.4" stroke-dasharray="2,2"/>
+<circle cx="335.00" cy="188.00" r="2.6" fill="#ffffff" stroke="#827717" stroke-width="1.1"/>
+<text x="349.00" y="191.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">transformer_L2</text>
+<line x1="326.00" y1="202.00" x2="344.00" y2="202.00" stroke="#4e342e" stroke-width="1.4" stroke-dasharray="8,3,2,3"/>
+<rect x="332.60" y="199.60" width="4.8" height="4.8" fill="#4e342e"/>
+<text x="349.00" y="205.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">transformer_L3</text>
+<text x="91.00" y="344.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="8.5" text-anchor="start" font-weight="normal" font-style="italic" fill="#616161">transformer_L3: bpb ∝ N^-0.038 (R²=0.922, n=4)</text>
+<text x="91.00" y="332.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="8.5" text-anchor="start" font-weight="normal" font-style="italic" fill="#616161">transformer_L2: bpb ∝ N^-0.039 (R²=0.839, n=4)</text>
+<text x="91.00" y="320.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="8.5" text-anchor="start" font-weight="normal" font-style="italic" fill="#616161">rdfl_nomtp_R2: bpb ∝ N^-0.058 (R²=0.983, n=4)</text>
+<text x="91.00" y="308.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="8.5" text-anchor="start" font-weight="normal" font-style="italic" fill="#616161">rdfl_R4: bpb ∝ N^-0.060 (R²=0.988, n=4)</text>
+<text x="91.00" y="296.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="8.5" text-anchor="start" font-weight="normal" font-style="italic" fill="#616161">rdfl_R2: bpb ∝ N^-0.059 (R²=0.985, n=4)</text>
+<text x="91.00" y="284.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="8.5" text-anchor="start" font-weight="normal" font-style="italic" fill="#616161">rdfl_R1: bpb ∝ N^-0.056 (R²=0.986, n=4)</text>
+<text x="91.00" y="272.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="8.5" text-anchor="start" font-weight="normal" font-style="italic" fill="#616161">gdn_untied_L3: bpb ∝ N^-0.047 (R²=0.990, n=4)</text>
+<text x="91.00" y="260.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="8.5" text-anchor="start" font-weight="normal" font-style="italic" fill="#616161">gdn_untied_L2: bpb ∝ N^-0.052 (R²=0.984, n=4)</text>
+<text x="740.00" y="50.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="12.5" text-anchor="middle" font-weight="bold" font-style="normal" fill="#212121">(b) Test-zamani derinlik R (S3, mix_val)</text>
+<rect x="560" y="60" width="360" height="290" fill="none" stroke="#212121" stroke-width="0.8"/>
+<line x1="591.81" y1="350.00" x2="591.81" y2="346.00" stroke="#212121" stroke-width="0.7"/>
+<line x1="591.81" y1="60.00" x2="591.81" y2="64.00" stroke="#212121" stroke-width="0.7"/>
+<text x="591.81" y="364.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">1</text>
+<line x1="690.60" y1="350.00" x2="690.60" y2="346.00" stroke="#212121" stroke-width="0.7"/>
+<line x1="690.60" y1="60.00" x2="690.60" y2="64.00" stroke="#212121" stroke-width="0.7"/>
+<text x="690.60" y="364.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">2</text>
+<line x1="789.40" y1="350.00" x2="789.40" y2="346.00" stroke="#212121" stroke-width="0.7"/>
+<line x1="789.40" y1="60.00" x2="789.40" y2="64.00" stroke="#212121" stroke-width="0.7"/>
+<text x="789.40" y="364.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">4</text>
+<line x1="888.19" y1="350.00" x2="888.19" y2="346.00" stroke="#212121" stroke-width="0.7"/>
+<line x1="888.19" y1="60.00" x2="888.19" y2="64.00" stroke="#212121" stroke-width="0.7"/>
+<text x="888.19" y="364.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">8</text>
+<line x1="560" y1="276.98" x2="920" y2="276.98" stroke="#eeeeee" stroke-width="0.6"/>
+<line x1="560.00" y1="276.98" x2="564.00" y2="276.98" stroke="#212121" stroke-width="0.7"/>
+<line x1="920.00" y1="276.98" x2="916.00" y2="276.98" stroke="#212121" stroke-width="0.7"/>
+<text x="555.00" y="280.48" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="end" font-weight="normal" font-style="normal" fill="#212121">2</text>
+<line x1="560" y1="192.73" x2="920" y2="192.73" stroke="#eeeeee" stroke-width="0.6"/>
+<line x1="560.00" y1="192.73" x2="564.00" y2="192.73" stroke="#212121" stroke-width="0.7"/>
+<line x1="920.00" y1="192.73" x2="916.00" y2="192.73" stroke="#212121" stroke-width="0.7"/>
+<text x="555.00" y="196.23" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="end" font-weight="normal" font-style="normal" fill="#212121">2.5</text>
+<line x1="560" y1="108.47" x2="920" y2="108.47" stroke="#eeeeee" stroke-width="0.6"/>
+<line x1="560.00" y1="108.47" x2="564.00" y2="108.47" stroke="#212121" stroke-width="0.7"/>
+<line x1="920.00" y1="108.47" x2="916.00" y2="108.47" stroke="#212121" stroke-width="0.7"/>
+<text x="555.00" y="111.97" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="10" text-anchor="end" font-weight="normal" font-style="normal" fill="#212121">3</text>
+<path d="M591.81,312.24 L690.60,295.33 L748.39,263.12 L789.40,225.22 L847.19,147.93 L888.19,80.00" fill="none" stroke="#1f4e79" stroke-width="1.4" stroke-linejoin="round"/>
+<circle cx="591.81" cy="312.24" r="2.6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.1"/>
+<circle cx="690.60" cy="295.33" r="2.6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.1"/>
+<circle cx="748.39" cy="263.12" r="2.6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.1"/>
+<circle cx="789.40" cy="225.22" r="2.6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.1"/>
+<circle cx="847.19" cy="147.93" r="2.6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.1"/>
+<circle cx="888.19" cy="80.00" r="2.6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.1"/>
+<path d="M591.81,220.41V213.61M588.81,220.41h6M588.81,213.61h6" stroke="#b03a2e" stroke-width="0.8" fill="none"/>
+<path d="M690.60,325.86V324.98M687.60,325.86h6M687.60,324.98h6" stroke="#b03a2e" stroke-width="0.8" fill="none"/>
+<path d="M748.39,316.69V315.69M745.39,316.69h6M745.39,315.69h6" stroke="#b03a2e" stroke-width="0.8" fill="none"/>
+<path d="M789.40,298.01V296.56M786.40,298.01h6M786.40,296.56h6" stroke="#b03a2e" stroke-width="0.8" fill="none"/>
+<path d="M847.19,250.95V249.18M844.19,250.95h6M844.19,249.18h6" stroke="#b03a2e" stroke-width="0.8" fill="none"/>
+<path d="M888.19,200.91V198.48M885.19,200.91h6M885.19,198.48h6" stroke="#b03a2e" stroke-width="0.8" fill="none"/>
+<path d="M591.81,217.01 L690.60,325.42 L748.39,316.19 L789.40,297.28 L847.19,250.07 L888.19,199.69" fill="none" stroke="#b03a2e" stroke-width="1.4" stroke-dasharray="6,3" stroke-linejoin="round"/>
+<rect x="589.41" y="214.61" width="4.8" height="4.8" fill="#b03a2e"/>
+<rect x="688.20" y="323.02" width="4.8" height="4.8" fill="#b03a2e"/>
+<rect x="745.99" y="313.79" width="4.8" height="4.8" fill="#b03a2e"/>
+<rect x="787.00" y="294.88" width="4.8" height="4.8" fill="#b03a2e"/>
+<rect x="844.79" y="247.67" width="4.8" height="4.8" fill="#b03a2e"/>
+<rect x="885.79" y="197.29" width="4.8" height="4.8" fill="#b03a2e"/>
+<path d="M591.81,125.70 L690.60,295.41 L748.39,324.92 L789.40,330.00 L847.19,325.10 L888.19,314.60" fill="none" stroke="#2e7d32" stroke-width="1.4" stroke-dasharray="2,2" stroke-linejoin="round"/>
+<path d="M591.81,122.70L594.81,128.10L588.81,128.10Z" fill="#2e7d32"/>
+<path d="M690.60,292.41L693.60,297.81L687.60,297.81Z" fill="#2e7d32"/>
+<path d="M748.39,321.92L751.39,327.32L745.39,327.32Z" fill="#2e7d32"/>
+<path d="M789.40,327.00L792.40,332.40L786.40,332.40Z" fill="#2e7d32"/>
+<path d="M847.19,322.10L850.19,327.50L844.19,327.50Z" fill="#2e7d32"/>
+<path d="M888.19,311.60L891.19,317.00L885.19,317.00Z" fill="#2e7d32"/>
+<path d="M591.81,224.55 L690.60,323.27 L748.39,310.89 L789.40,283.46 L847.19,213.06 L888.19,144.92" fill="none" stroke="#6a1b9a" stroke-width="1.4" stroke-dasharray="8,3,2,3" stroke-linejoin="round"/>
+<path d="M591.81,221.35L594.81,224.55L591.81,227.75L588.81,224.55Z" fill="#ffffff" stroke="#6a1b9a" stroke-width="1.1"/>
+<path d="M690.60,320.07L693.60,323.27L690.60,326.47L687.60,323.27Z" fill="#ffffff" stroke="#6a1b9a" stroke-width="1.1"/>
+<path d="M748.39,307.69L751.39,310.89L748.39,314.09L745.39,310.89Z" fill="#ffffff" stroke="#6a1b9a" stroke-width="1.1"/>
+<path d="M789.40,280.26L792.40,283.46L789.40,286.66L786.40,283.46Z" fill="#ffffff" stroke="#6a1b9a" stroke-width="1.1"/>
+<path d="M847.19,209.86L850.19,213.06L847.19,216.26L844.19,213.06Z" fill="#ffffff" stroke="#6a1b9a" stroke-width="1.1"/>
+<path d="M888.19,141.72L891.19,144.92L888.19,148.12L885.19,144.92Z" fill="#ffffff" stroke="#6a1b9a" stroke-width="1.1"/>
+<text x="740.00" y="382.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="11" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121">R (dongu sayisi)</text>
+<text x="518.00" y="205.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="11" text-anchor="middle" font-weight="normal" font-style="normal" fill="#212121" transform="rotate(-90 518.00 205.00)">dogrulama bpb</text>
+<rect x="566.00" y="66.00" width="106.80" height="64" fill="#ffffff" fill-opacity="0.92" stroke="#bdbdbd" stroke-width="0.6"/>
+<line x1="571.00" y1="76.00" x2="589.00" y2="76.00" stroke="#1f4e79" stroke-width="1.4"/>
+<circle cx="580.00" cy="76.00" r="2.6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.1"/>
+<text x="594.00" y="79.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">rdfl_R1</text>
+<line x1="571.00" y1="90.00" x2="589.00" y2="90.00" stroke="#b03a2e" stroke-width="1.4" stroke-dasharray="6,3"/>
+<rect x="577.60" y="87.60" width="4.8" height="4.8" fill="#b03a2e"/>
+<text x="594.00" y="93.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">rdfl_R2</text>
+<line x1="571.00" y1="104.00" x2="589.00" y2="104.00" stroke="#2e7d32" stroke-width="1.4" stroke-dasharray="2,2"/>
+<path d="M580.00,101.00L583.00,106.40L577.00,106.40Z" fill="#2e7d32"/>
+<text x="594.00" y="107.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">rdfl_R4</text>
+<line x1="571.00" y1="118.00" x2="589.00" y2="118.00" stroke="#6a1b9a" stroke-width="1.4" stroke-dasharray="8,3,2,3"/>
+<path d="M580.00,114.80L583.00,118.00L580.00,121.20L577.00,118.00Z" fill="#ffffff" stroke="#6a1b9a" stroke-width="1.1"/>
+<text x="594.00" y="121.50" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="normal" fill="#212121">rdfl_nomtp_R2</text>
+<text x="566.00" y="344.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="8.5" text-anchor="start" font-weight="normal" font-style="italic" fill="#616161">R &gt; R_train: serbest ekstrapolasyon iraksiyor</text>
+<text x="18.00" y="428.00" font-family="'Latin Modern Roman','CMU Serif','Computer Modern','DejaVu Serif',serif" font-size="9.5" text-anchor="start" font-weight="normal" font-style="italic" fill="#424242">Guc yasasi uyumu ham noktalardan en kucuk karelerle hesaplanir (n&gt;=3 olcek gerektirir). Kaynak: runs/scaling/*.json (eski mix==web S0 dosyalari karantinada).</text>
+</svg>

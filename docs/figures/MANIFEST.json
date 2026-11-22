@@ -1,0 +1,196 @@
+{
+  "figures": {
+    "fig1_ablation_k1k5_rivals": {
+      "panels_waiting_data": [],
+      "sources": {
+        "ablation/deney_a_k1_k5.json": "a7fdd2f1cf211b0c2111df1b7adf98bbb444062796130c6a9329b81d1507127f",
+        "ablation/deney_b_depth_memory.json": "9c128822397c2e8d561d49af28ac37650daa473db1a17514b78339b67b10d2dd",
+        "ablation/deney_c_10seed_stability.json": "c2e0772f9d14297135f7cddb4114a1715dea15be59ba695e34884a82250cc3ba"
+      },
+      "svg": "fig1_ablation_k1k5_rivals.svg"
+    },
+    "fig2_scaling_depth": {
+      "panels_waiting_data": [],
+      "sources": {
+        "scaling/scale_S0_gdn_untied_L2_s42.json": "1c29dd1f3fd9b1812e25594505b2661705a10c7198ea7b8aa7dc209cde9ac16f",
+        "scaling/scale_S0_gdn_untied_L3_s42.json": "03fa0f33adf507af6f6f4b41c0daf3338be0f520a3089a8ff0fd706a502223e3",
+        "scaling/scale_S0_rdfl_R1_s42.json": "a00d8c628db443294dc7d8494e364a54fbc981ee8d09e129b6aae110618a9a0f",
+        "scaling/scale_S0_rdfl_R2_s137.json": "e582c6147e9ea69731836de43d3daf0017f1f70ff80083d974078483dc84ecc7",
+        "scaling/scale_S0_rdfl_R2_s2026.json": "3fc680b5e5d49aff366c3ddc1c178e42df621d2065eecee366b5a4dd1d9762ac",
+        "scaling/scale_S0_rdfl_R2_s42.json": "bc5c885523adadd0907d2e9ac5dfdbbcd48bd1853efb558fc90d147b1e805ff9",
+        "scaling/scale_S0_rdfl_R4_s42.json": "15bfad48909233b0d92b8ba65444d70db45eb294de9c728b19707d6dd578d93a",
+        "scaling/scale_S0_rdfl_nomtp_R2_s42.json": "c624ae285d1c7361cc9e6690d1ff67efa839f473a20b7bc6c50844f5c152e31a",
+        "scaling/scale_S0_transformer_L2_s42.json": "2d541a8f51b00a0a1767a6794cfb1ccffd6b9887c78d3a3140e703b51e74d679",
+        "scaling/scale_S0_transformer_L3_s137.json": "84021679289e986241c33b74c0fff95cf11233f2e1179e41b0becaeb7cc857fe",
+        "scaling/scale_S0_transformer_L3_s2026.json": "d303bd4b9524af904cc02ba61dd56accb6debf0e7e5426b4713ef33cb80f5d2c",
+        "scaling/scale_S0_transformer_L3_s42.json": "23bf96de1458f9c69e6d925f06ee33ed86e14c60bdb454ae06c5d5ab7acbd99e",
+        "scaling/scale_S1_gdn_untied_L2_s42.json": "3f4d3f3f50f9e9d8189d8988d33ed3be8d2dca624fe9daa97ccd4cbf87afcd9f",
+        "scaling/scale_S1_gdn_untied_L3_s42.json": "d57f5a36e13078bd8ac99e5ddb86cf225a484e3d44e01fbe2803f951e8e7e363",
+        "scaling/scale_S1_rdfl_R1_s42.json": "0f51249f11c9893124729cd773823bbfde9c6e1ab529bc46d3bbfe55905cfe9f",
+        "scaling/scale_S1_rdfl_R2_s137.json": "ff73be27501121d71c15a3eebde777485961fd4b81311822b55cd8bc255dc6ce",
+        "scaling/scale_S1_rdfl_R2_s2026.json": "8b46b75eefd657e03bd2ca78da3695e95945f52eb38517f11fd6a01e15b3a6e7",
+        "scaling/scale_S1_rdfl_R2_s42.json": "760691cfe04409c552dc720aa1e4d70dfe70e924dcef52becea8ed6ab542d68a",
+        "scaling/scale_S1_rdfl_R4_s42.json": "da9904ecdbba82a28e658e9b33e4f648cd0ec84ceeacaf3c1965b44cd17692c2",
+        "scaling/scale_S1_rdfl_nomtp_R2_s42.json": "d784fa0539751d5e8cd9e60188cefe1b9dcf70b31b9a3bb9c366a44ca6d82709",
+        "scaling/scale_S1_transformer_L2_s42.json": "6ac19a9a1dfc2032e4129a0a0469936a559f4f32567390f3044bd0f06970761f",
+        "scaling/scale_S1_transformer_L3_s137.json": "22535c594ee70b5817c3adb86f40595fcd5dc3d357f1143e378caa21486fb9d4",
+        "scaling/scale_S1_transformer_L3_s2026.json": "d4f39b8d867a1b2aa776d9e14c8278559b05eaaab29931b986e5de560ecb2cba",
+        "scaling/scale_S1_transformer_L3_s42.json": "87bfdeec218485965e9c72bf11ddc323e4b48c92ae896862454e21c80276771c",
+        "scaling/scale_S2_gdn_untied_L2_s42.json": "e366cdbf0eb458337c0fb54ebdbdba7ac1cd7e0088d40dfd7e7199931c0d4617",
+        "scaling/scale_S2_gdn_untied_L3_s42.json": "80e971d501b1e650fc9b1fbc85ad1ad0c09e0d68e3907c9707fbe6a75fdd9c4e",
+        "scaling/scale_S2_rdfl_R1_s42.json": "5d880d5c10af19795949a7905bc1ab7fd96cb8b928681793b55b9af80a0853d7",
+        "scaling/scale_S2_rdfl_R2_s137.json": "63d3b7b7939bcf9d1e0b3418e607b745c5f8b458ce4ae2f6fbec46770392bc02",
+        "scaling/scale_S2_rdfl_R2_s2026.json": "2a15fe2b028b828edbc2d8ee0610725538a33e3fb2392cbd4179bdb074d9d0e4",
+        "scaling/scale_S2_rdfl_R2_s42.json": "ab370f96fe8d91797ad587982f3ea6d37449d64ee7d262a811b2db63d60d10f7",
+        "scaling/scale_S2_rdfl_R4_s42.json": "e3190c1bcf7348a801e60c917553d98f8420c426cb8ce2cf08ede2c7b36f1379",
+        "scaling/scale_S2_rdfl_nomtp_R2_s42.json": "3c79f157806d3d6139423026dc41e8df10182e81056b462020ff5b717270dadb",
+        "scaling/scale_S2_transformer_L2_s42.json": "e4063da60c842ecb3246cb4edef73d857560b75bb291613257ecbc5bef1c73c1",
+        "scaling/scale_S2_transformer_L3_s137.json": "3224bc493a401926d231bd051b5371b1cd4c303b40f1a0056e47c723b74e9389",
+        "scaling/scale_S2_transformer_L3_s2026.json": "a4a902a32c6279d1e75f3b3c544f683fa5f86370bc89f06f17e4fba249e26ef1",
+        "scaling/scale_S2_transformer_L3_s42.json": "15b990057bad095d3490a7a1aeb7f70fd62aae526055a86b34b18c30af0c33ac",
+        "scaling/scale_S3_gdn_untied_L2_s42.json": "d6d36599cd163ff272a0f6546155aae69fbd222ca1ad2e93349757edf415ee4b",
+        "scaling/scale_S3_gdn_untied_L3_s42.json": "6965e6e8f8f9549eb0ff21192240c10f6254dd10564f66f817395ee4c4378512",
+        "scaling/scale_S3_rdfl_R1_s42.json": "4a6dd751847eb57b4af32d06815ec64b6c7c41d68ab93fa09090defc5b6aab1c",
+        "scaling/scale_S3_rdfl_R2_s137.json": "43bb8b71c673f38ce903b22ad4e349b88e81751a0932c5f8a0fa615f76978eb8",
+        "scaling/scale_S3_rdfl_R2_s2026.json": "ee576574d2162b5d79aef2e74504865905ce335c77f48311f000e6d60ab1bdbd",
+        "scaling/scale_S3_rdfl_R2_s42.json": "9c0850218b73e2c57ac4806bf3e28b0d866dbd1b20bb630485c86775d04acd7b",
+        "scaling/scale_S3_rdfl_R4_s42.json": "c9bbe59c0345244c1297dd643ece4b799b48d60926679dc6d3416e56651a9b3e",
+        "scaling/scale_S3_rdfl_nomtp_R2_s42.json": "c0e5dcc0878ac2193bbb1cd9756e66b63b2c85cf6009929b9b700a83f72b51f9",
+        "scaling/scale_S3_transformer_L2_s42.json": "7906ef00354d1a304a09573e961155d0ecb2366bade95c93febea3ecc1629470",
+        "scaling/scale_S3_transformer_L3_s137.json": "ab6c0a488acd7e2762fadf4066d3afe9f4a40d206f650bfa6e525e09f41a2d60",
+        "scaling/scale_S3_transformer_L3_s2026.json": "eeb33fca464f601ae6bfd06bce1e5709c951943fa7f1cb9589c644038eeeed26",
+        "scaling/scale_S3_transformer_L3_s42.json": "443083b4a7acbf8f18dec7af78d6366473b39c261e39ba9a2975984eda7e59d8",
+        "scaling/wallclock_bpe_transformer_S1_m30.0_s42.json": "336fc1d44858d46403bbc727a30fa5cf1691bfddbc62a8d642ace7f711f0d280",
+        "scaling/wallclock_rdfl_S1_m30.0_s42.json": "2b3630f1f8790b371ec17dcd85bfeab0a5a9659f43be09368541cac81023ad47"
+      },
+      "svg": "fig2_scaling_depth.svg"
+    },
+    "fig3_horizon_memory_serving": {
+      "panels_waiting_data": [],
+      "sources": {
+        "horizon/h1_length_extrapolation.json": "d422f2b7ec48ea6d8bd4cfee4515572c679aabfa1f924f90ff8b9ce6ebb8c402",
+        "horizon/h5_memory_latency_and_serving.json": "cba9c07c37c824fd5776e7abc79235b66a6f2f9c28c44c2a16bc7a9946c01493"
+      },
+      "svg": "fig3_horizon_memory_serving.svg"
+    },
+    "fig4_mechanistic_xray": {
+      "panels_waiting_data": [],
+      "sources": {
+        "math_xray/v03_algo12m_mqar_k8_xray.json": "85530818025aab483ee9f577d35cff2eb40f22d50aaf1e1d9bbbb6d5698d3bef",
+        "math_xray/v03_probe12m_byte_lm_xray.json": "aabe45cf865e6172d977b6b6c571b445d48e8d0ffb2258ff22d4762410089c7e"
+      },
+      "svg": "fig4_mechanistic_xray.svg"
+    }
+  },
+  "forbidden_name_hits": 0,
+  "generator": "eval/plot_figures.py",
+  "n_json_loaded": 181,
+  "quarantined_refuted": [],
+  "rejected_non_rfc8259": [
+    {
+      "file": "ablation/dry_run_budgets.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "horizon/dry_run_check.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_AdayF_Patch4_CausalAR_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_BPE_V1024_RDFL_R2_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_Byte_RDFL_R2_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_CS_HNet_GDN_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_FG_HNet_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_GDN_untied_L2_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_GDN_untied_L3_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_HNet_Ctrl_Bernoulli_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_HNet_Ctrl_Const_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_HNet_Ctrl_PeriodicK4_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_Naive_Patch4_MTP4_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_SB_HNet_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_algo_mqar_s5.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_p1.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_p2.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_wc_AdayF_Patch4_CausalAR_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "ideas/dry_run_wc_BPE_V1024_RDFL_R2_s42.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "phase4_mech/dry_run_a_tying_tax.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "phase4_mech/dry_run_b_swiglu_bdh.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "phase4_mech/dry_run_c_h2_capacity.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "phase4_mech/dry_run_cpu_ckpt.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "phase4_mech/dry_run_d_spectral_rtest.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "phase4_mech/dry_run_summary.json",
+      "reason": "dry_run (deney sonucu degil)"
+    },
+    {
+      "file": "rsi/dry_run_rsi.json",
+      "reason": "dry_run (deney sonucu degil)"
+    }
+  ],
+  "runs_root": "runs"
+}
