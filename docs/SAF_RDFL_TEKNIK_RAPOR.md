@@ -1,5 +1,6 @@
 # Saf RDFL (`Recursive-Depth-Flash-Loop`) — Teknik Rapor (v1.0)
 
+> **Sürüm Notu:** Bu teknik rapor **eski `v0.3` / `v0.4` saf-RDFL deney matrisi** içindir. Güncel birleşik **`RDFL v0.5.0`** (`RDFLv05Model`) belirtimi ve denetlenmiş sonuçları için bkz. [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) ve [`docs/V05_TECHNICAL_REPORT.md`](V05_TECHNICAL_REPORT.md).
 > **Durum:** **v1.0** — 2026-11-22.
 > **Kanıt Standardı:** Bölüm 2'deki tüm bulgular ham RFC 8259 JSON dosyalarına, çürütme saldırılarına (`notes/CURUTME_GUNLUGU.md`, Kayıt `#1–#18`) ve bağımsız sıfır-bağlamlı **Carbon** denetimlerine (`CARBON_CORE KABUL`, Faz 1/2/3 `KABUL`, `0 KRITIK / 0 YUKSEK`) dayanır. Bölüm 4'teki Faz 4 MoE / Ayrık-FFN / LoRA / H-Net sonuçları **ön-bulgu** (ham 3-tohum verisi mevcut, ayrı Faz 4 Carbon turu sonraki denetim turunda) olarak açıkça etiketlenmiştir.
 > **Figürler:** `eval/plot_figures.py` → `docs/figures/fig1..fig4.svg` (**4/4 figür tamamlandı**, `panels_waiting_data = []`, `quarantined_refuted = []`, `forbidden_name_hits = 0`; özet `docs/figures/MANIFEST.json`).

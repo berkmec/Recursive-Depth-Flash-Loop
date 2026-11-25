@@ -91,7 +91,7 @@ All subspaces fit via Frobenius-normalized end-to-end Jacobian SVD on `x_cal` (`
 
 ```bash
 CUDA_VISIBLE_DEVICES="" OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=. pytest -q
-ruff check rdfl benchmarks tests
+ruff check rdfl benchmarks tests scripts
 mypy --strict rdfl/v05.py benchmarks/verify_v05.py rdfl/__init__.py tests/test_rdfl_v05.py
 CUDA_VISIBLE_DEVICES="" OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python benchmarks/verify_v05.py --out results/v05_audited_summary.json
 ```
