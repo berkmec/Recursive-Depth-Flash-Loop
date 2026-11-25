@@ -23,16 +23,26 @@ from rdfl.speculative import (
     speculative_decode_k3,
     speculative_decode_mtp4,
 )
+from rdfl.v05 import (
+    ConsolidationManager,
+    RDFLv05Config,
+    RDFLv05Model,
+    RDFLv05State,
+)
 
 __all__ = [
     "BdhSparseGate",
     "BottleneckAdapter",
     "CausalShortConv",
+    "ConsolidationManager",
     "Fp32SlotCoreBoundary",
     "GatedDeltaNetLayer",
     "RDFLConfig",
     "RDFLModel",
     "RDFLState",
+    "RDFLv05Config",
+    "RDFLv05Model",
+    "RDFLv05State",
     "RMSNorm",
     "SpeculativeDecodeResult",
     "ZeroDiffRDFLAdapter",

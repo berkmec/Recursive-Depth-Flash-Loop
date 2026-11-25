@@ -1,14 +1,45 @@
 # Recursive Depth Flash Loop (`RDFL`)
 
-**Ağırlık-Paylaşımlı Özyinelemeli Derinlik, FP32 Parça-Sınırı Belleği, Kopuk Spekülatif Başlıklar ve Doğrulayıcı-Kapılı Öz-Gelişim İçeren Bayt Düzeyi Sabit-Bellekli Hibrit Mimari**
+**Ağırlık-Paylaşımlı Özyinelemeli Derinlik, Çökmeyen Adım-Adım Muhakeme + Öğrenilmiş Durma Kapısı, Nedensel Sürekli Bellek ve Kopuk Spekülatif Başlıklar İçeren Bayt Düzeyi Sabit-Bellekli Mimari**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Sürüm](https://img.shields.io/badge/Sürüm-v0.5.0-0B5394.svg)](pyproject.toml)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-EE4C2C.svg)](pyproject.toml)
-[![Ham JSON Doğrulaması](https://img.shields.io/badge/Doğrulanan_Hücre-782%2F782_(0_uyuşmazlık)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
+[![Ham JSON Doğrulaması](https://img.shields.io/badge/v0.3_Doğrulanan_Hücre-782%2F782_(0_uyuşmazlık)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
 
-**[English](README.md)** · **[Türkçe](README.tr.md)** · **[Mimari Belirtim](docs/ARCHITECTURE.md)** · **[Denetlenmiş Özet JSON](results/audited_summary.json)** · **[Ham Denetim JSON'ları](results/raw/)**
+**[English](README.md)** · **[Türkçe](README.tr.md)** · **[v0.5.0 Teknik Rapor](docs/V05_TECHNICAL_REPORT.md)** · **[Mimari Belirtim](docs/ARCHITECTURE.md)** · **[v0.5 Denetlenmiş JSON](results/v05_audited_summary.json)** · **[v0.3 Denetlenmiş Özet JSON](results/audited_summary.json)**
 
 ---
+
+## Sürüm `v0.5.0` — Birleşik Saf Özyinelemeli `RDFLv05Model` (CPU Ölçeğinde Doğrulanmış)
+
+> **Kapsam Ayrımı (`v0.5.0` CPU vs `v0.3` GPU 55M):** Aşağıdaki tüm `v0.5.0` ölçümleri [`benchmarks/verify_v05.py`](benchmarks/verify_v05.py) ile deterministik (`seed=42`, tek-CPU FP32/FP64) olarak çalıştırılmış ve [`results/v05_audited_summary.json`](results/v05_audited_summary.json) içine kaydedilmiştir. `v0.3` 55M GPU (`150M` token) sonuçları ve `782/782` denetlenmiş hücre aşağıda ayrı başlık altında korunur. `v0.5-Reason 10M` GPU eğitimi sonraki aşama olarak planlanmıştır.
+
+[`RDFLv05Model`](rdfl/v05.py) (`RDFLv05Config`, `RDFLv05State`, `ConsolidationManager`, `565,216` param), `v0.4.1` 4-problem saf özyinelemeli çekirdeğini çökmeyen adım-adım muhakeme + öğrenilmiş durma kapısı (`StepReasoner + Learned Halting Gate`) ile tek sabit-bellekli (`O(1)`) mimaride birleştirir (`0` Attention, `0` KV-cache, `0` harici BPE, `0` CUDA):
+
+- **Saf Değişmezler & Parite:**
+  - `FP64 forward == step` (`R=2,4`, `slowOFF/ON`): maks. fark **`5.27e-15 .. 5.72e-15`** (`≤ 1e-13`); kısmi-yama `37+11` **`3.75e-15`**; `random_matched` **`5.38e-15`**; `eps_halt > 0` **`8.10e-15`**; **`0` FP32 argmax uyuşmazlığı**.
+  - Nedensellik `0.0`; `return_aux=True` `pos==0` vs `pos>0` simetrisi (`keys_match=true`, `4.72e-15`); `gate_override == 0.0` birebir no-op (`0.0`); kesin `O(1)` durum (**`25,136` bayt**, `T=16..320` ve `R=1..1024`); `R=1024` sıfır NaN/Inf (`h_norm_max = 9.2451`, `w_norm_max = 7.2491`); `K3` çekirdek gradyanı `0.0`; tek-geçiş `dec_ffn_calls == 1`.
+- **Çökmeyen Adım-Adım Muhakeme & Durma Kapısı (`step_halting` vs `adfp`, eşit `1.000`-adım bütçesi):**
+  - Değişken derinlikli işaretçi takibi (`0` ara-adım denetimi): **`K=2: 1.0000`, `K=4: 0.9922`, `K=6: 1.0000`, `K=8: 0.8516`, OOD `K=10: 0.3906`, `K=12: 0.3047`** (eşit bütçeli büzülen `"adfp"` kolu aşama 1'de `0.1328..0.3203`'te kalır; `mean_step_jvp_top_sv = 0.7703` vs `step_halting` `1.5621`).
+  - Öğrenilmiş `g_step` kapısı fazla döngülerde söner (`K=4, R=64`: `0.9978 → 0.2881`; `K=6, R=64`: `0.9976 → 0.3040`) ve `eps_halt=0.40` dinamik erken çıkışı tetikler (`r_used_mean = 12.08..22.66`), `R=1024`'te normlar sınırlı kalır (dürüst kısıt notu: 1,000 adımlık bu CPU bütçesinde `R=16..64` ek adımları kapının `~0.30` yerine anında `<0.05`'e düşmemesinden ötürü `K=4,6` doğruluğunu `0.1641..0.3281`'e düşürmektedir).
+- **Anthropic Global Workspace (`J-Space` / Jakobiyen Merceği, Sıkı OOS `x_cal → x_te`, `K=6, R=8`, `clean_acc = 0.9896` vs `adfp` `0.1979`):**
+  - Monoton ara-adım doğrusal sondaları (`5/5` ardışık tepe `r=[1,4,5,6,7,8]`, doğruluk `0.9688..1.0000`) ve sıralı kesinti okuması (`v_1..v_6` sırayla `r=3..8` adımlarında `0.9896..1.0000` tepe).
+  - **OOS Varyans Şerhi (`OOS var_J`):** `d=64`'te `J-space` (`k90=11..37`), `h_r` varyansının **`%42,15 → %93,87`**'sini taşır (yani yüksek-boyutlu `<%10` varsayımı sağlanmaz), ancak nedensel ablasyon ve kavram nakli `J`'yi `J_perp`'ten net biçimde ayırır.
+  - OOS fonksiyonel küresel yayın (`r_mid=4, k=14`): `J-space` `0.6226` vs `J_perp` `0.2364` (**`2.6335×`**, `p = 5.27e-15`) ve rastgele-`k` `0.3374` (**`1.8453×`**, `p = 7.80e-15`; `adfp` sıfır kontrolü `0.9984×`, `p = 0.380`).
+  - OOS seçici ablasyon (`r_mid=4`): `J-space` silinince `0.9896 → 0.1875` (`-0.8021`), tam `J_perp` `0.9688`, rastgele `0.9708`.
+  - OOS kavram & bileşik nakil (`93/96` temiz çift): `J-space` aynı-tablo `flip_to_A = 1.0000` vs `J_perp` `0.0` (`keep_B = 0.9785`); farklı-tablo bileşik $P_B^4(v_2(A))$ = **`0.9271`** vs `J_perp` **`0.1042`** (`adfp` kontrolü `flip_to_A = 0.0`, bileşik `0.0521`).
+- **4-Problem Regresyon Kilidi (Tek `RDFLv05Model` Sınıfı):**
+  - **P1:** `dyck_stack` `t80_s_macro_r1_vs_r16_diff = 0.0` (`R1=0.2604 → R16=0.2639`).
+  - **P2 (`s5_perm32`, `running=False`, sıkı OOD `L ≤ 8`):** **`L2 = 0.8438` (`101.3×` şans `0.00833`), `L4 = 0.6641`, `L8 = 0.4844`, OOD `L16 = 0.1172`, `L32 = 0.0234`**; `s_fast=0` ablasyonu `0.0078`.
+  - **P3:** `dec_ffn_calls = 1`, hook FLOP/B `250,816` (`slowOFF`) / `302,272` (`slowON`), kayma `+1/+17` `+0.0047 / +0.0036` (`bpb=0.6933`).
+  - **P4 (`0` replay sürekli öğrenme):** `ACC = 0.2517` vs `frozen = 0.1719` vs `naive_adamw = 0.0851` (`BWT = -0.0625` vs `-0.4167`); akışlı `g_surp` `0.3498 / 0.7522 / 0.1335`, çeldirici sonrası `S_slow` kosinüs `0.5268 > rand 0.4380 > always_one 0.3085`; adaptif boşluk kapısı `copy_l16` `p4 |λ| = 0.9440` vs `shuf16_bag = 0.8643`.
+
+---
+
+## Eski `v0.3` / 55M GPU Tabanı (`rdfl/model.py`, `rdfl/layers.py`)
+
+**[Eski Denetlenmiş Özet JSON](results/audited_summary.json)** · **[Ham Denetim JSON'ları](results/raw/)**
 
 ## Özet
 
@@ -152,7 +183,11 @@ Tüm `v0.3` çekirdek onarımları (`13/13` CPU birim testi, [`tests/test_rdfl.p
 git clone https://github.com/berkmec/Recursive-Depth-Flash-Loop.git
 cd Recursive-Depth-Flash-Loop
 pip install -e ".[dev]"
+# Tam birim test paketi (19/19: 13 eski v0.3 + 6 birlesik v0.5)
 python -m unittest discover -s tests -v
+ruff check rdfl benchmarks tests
+mypy --strict rdfl/v05.py benchmarks/verify_v05.py rdfl/__init__.py tests/test_rdfl_v05.py
+python benchmarks/verify_v05.py --out results/v05_audited_summary.json
 python benchmarks/verify_audited_results.py
 python benchmarks/profile_decode_memory.py
 python benchmarks/run_1_2m_suite.py --smoke

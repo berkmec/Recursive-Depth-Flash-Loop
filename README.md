@@ -1,14 +1,45 @@
 # Recursive Depth Flash Loop (`RDFL`)
 
-**A Byte-Level Constant-Memory Hybrid Sequence Architecture with Weight-Tied Recursive Depth, FP32 Chunk-Boundary Memory, Decoupled Speculative Heads, and Verifier-Gated Self-Improvement**
+**A Byte-Level Constant-Memory Sequence Architecture with Weight-Tied Recursive Depth, Non-Collapsing Learned Halting, Causal Continual Memory, and Decoupled Speculative Heads**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/Release-v0.5.0-0B5394.svg)](pyproject.toml)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1%2B-EE4C2C.svg)](pyproject.toml)
-[![Raw JSON Verification](https://img.shields.io/badge/Verified_Cells-782%2F782_(0_mismatches)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
+[![Raw JSON Verification](https://img.shields.io/badge/v0.3_Verified_Cells-782%2F782_(0_mismatches)-1D6B5E.svg)](benchmarks/verify_audited_results.py)
 
-**[English](README.md)** · **[Türkçe](README.tr.md)** · **[Architectural Specification](docs/ARCHITECTURE.md)** · **[Audited Summary JSON](results/audited_summary.json)** · **[Raw Audited JSONs](results/raw/)**
+**[English](README.md)** · **[Türkçe](README.tr.md)** · **[v0.5.0 Technical Report](docs/V05_TECHNICAL_REPORT.md)** · **[Architectural Specification](docs/ARCHITECTURE.md)** · **[v0.5 Audited JSON](results/v05_audited_summary.json)** · **[v0.3 Audited Summary JSON](results/audited_summary.json)**
 
 ---
+
+## Release `v0.5.0` — Unified Pure-Recurrent `RDFLv05Model` (CPU-Verified)
+
+> **Scope Separation (`v0.5.0` CPU vs `v0.3` GPU 55M):** All `v0.5.0` numbers below were measured deterministically (`seed=42`, single-threaded CPU FP32/FP64) in [`benchmarks/verify_v05.py`](benchmarks/verify_v05.py) and exported to [`results/v05_audited_summary.json`](results/v05_audited_summary.json). The `v0.3` GPU 55M checkpoints (`150M` tokens) and `782/782` audited raw cells remain intact in the `v0.3` sections below. A `v0.5-Reason 10M` GPU pretraining run is planned as the next stage.
+
+[`RDFLv05Model`](rdfl/v05.py) (`RDFLv05Config`, `RDFLv05State`, `ConsolidationManager`, `565,216` CPU-scale params) unifies the `v0.4.1` 4-problem pure-recurrent architecture with a non-collapsing step-by-step reasoner and learned halting gate (`0` Attention, `0` KV-cache, `0` external BPE, `0` CUDA):
+
+- **Exact Purity & Invariants:**
+  - `FP64 forward == step` parity across `R=2,4` and `slowOFF/ON`: max abs diff **`5.27e-15 .. 5.72e-15`** (`≤ 1e-13`); partial-patch `37+11` resume **`3.75e-15`**; `random_matched` **`5.38e-15`**; `eps_halt > 0` **`8.10e-15`**; **`0` FP32 argmax mismatches**.
+  - Strict causality `0.0`; `return_aux=True` exact symmetry between `pos==0` and `pos>0` (`keys_match=true`, max diff `4.72e-15`); `gate_override == 0.0` bit-exact no-op (`0.0`); strict `O(1)` recurrent state (**`25,136` bytes** at `B=1` FP32 across `T=16..320` and `R=1..1024`); `R=1024` finite with zero NaN/Inf (`h_norm_max = 9.2451`, `w_norm_max = 7.2491`); detached `K3` core gradient `0.0`; single-pass `dec_ffn_calls == 1`.
+- **Non-Collapsing Step Reasoning & Learned Halting (`reasoning_mode="step_halting"` vs `"adfp"`, equal `1,000`-step budget):**
+  - Variable-depth pointer chaining (`0` intermediate supervision): **`K=2: 1.0000`, `K=4: 0.9922`, `K=6: 1.0000`, `K=8: 0.8516`, OOD `K=10: 0.3906`, `K=12: 0.3047`** (vs equal-budget `"adfp"` remaining at stage 1 with `0.1328..0.3203`, `mean_step_jvp_top_sv = 0.7703` vs `step_halting` `1.5621`).
+  - Learned halting gate `g_step` decays across idle iterations (`g_first=0.9978 → g_last=0.2881` at `K=4, R=64`; `0.9976 → 0.3040` at `K=6, R=64`) and triggers `eps_halt=0.40` early exit (`r_used_mean = 12.08..22.66`), while keeping norms strictly bounded through `R=1024` (note: in the 1,000-step CPU budget, un-halted `R=16..64` extra loops still degrade `K=4,6` accuracy to `0.1641..0.3281`; sharper snap-to-zero halting is left for larger schedules).
+- **Anthropic Global Workspace (`J-Space` / Jacobian Lens, Strict OOS `x_cal → x_te` at `K=6, R=8`, `clean_acc = 0.9896` vs `adfp` `0.1979`):**
+  - Monotone intermediate linear probes (`5/5` adjacent peaks `r=[1,4,5,6,7,8]`, peak acc `0.9688..1.0000`) & interruption readout (`v_1..v_6` peaking sequentially at `r=3..8` with `0.9896..1.0000`).
+  - **OOS Variance Caveat (`OOS var_J`):** In `d=64`, `J-space` (`k90=11..37`) concentrates `42.15% → 93.87%` of `h_r` variance (not a `<10%` low-variance subspace), while causal ablation and patching cleanly isolate `J` from `J_perp`.
+  - OOS functional global broadcast (`r_mid=4, k=14`): `J-space` `0.6226` vs `J_perp` `0.2364` (**`2.6335×`**, `p = 5.27e-15`) and random-`k` `0.3374` (**`1.8453×`**, `p = 7.80e-15`; vs `adfp` null control `0.9984×`, `p = 0.380`).
+  - OOS selective causal ablation (`r_mid=4`): `J-space` drop `0.9896 → 0.1875` (`-0.8021`), while `J_perp_full` stays `0.9688` and `random_k` stays `0.9708`.
+  - OOS concept & compositional patching (`93/96` clean pairs): `J-space` same-table `flip_to_A = 1.0000` (`keep_B = 0.0`) vs `J_perp` `flip_to_A = 0.0` (`keep_B = 0.9785`); cross-table compositional $P_B^4(v_2(A))$ = **`0.9271`** vs `J_perp` **`0.1042`** (vs `adfp` `flip_to_A = 0.0`, compositional `0.0521`).
+- **4-Problem Regression Lock (Unified `RDFLv05Model`):**
+  - **P1:** `dyck_stack` `t80_s_macro_r1_vs_r16_diff = 0.0` (`R1=0.2604 → R16=0.2639`).
+  - **P2 (`s5_perm32`, `running=False`, strict OOD `L ≤ 8`):** **`L2 = 0.8438` (`101.3×` chance `0.00833`), `L4 = 0.6641`, `L8 = 0.4844`, OOD `L16 = 0.1172`, `L32 = 0.0234`**; `s_fast=0` ablation drops to `0.0078`.
+  - **P3:** `dec_ffn_calls = 1`, hook FLOP/B `250,816` (`slowOFF`) / `302,272` (`slowON`), shift `+1/+17` delta `+0.0047 / +0.0036` (`bpb=0.6933` synthetic UTF-8 TR+Math).
+  - **P4 (`0` replay continual learning):** `ACC = 0.2517` vs `frozen = 0.1719` vs `naive_adamw = 0.0851` (`BWT = -0.0625` vs `-0.4167`); streaming `g_surp` `0.3498` (familiar) / `0.7522` (novel) / `0.1335` (distractor), post-distractor `S_slow` cosine `0.5268 > rand 0.4380 > always_one 0.3085`; adaptive space/boundary gate `copy_l16` `p4 |λ| = 0.9440` vs `shuf16_bag = 0.8643`.
+
+---
+
+## Legacy `v0.3` / 55M GPU Baseline (`rdfl/model.py`, `rdfl/layers.py`)
+
+**[Legacy Audited Summary JSON](results/audited_summary.json)** · **[Raw Audited JSONs](results/raw/)**
 
 ## Abstract
 
@@ -171,10 +202,15 @@ git clone https://github.com/berkmec/Recursive-Depth-Flash-Loop.git
 cd Recursive-Depth-Flash-Loop
 pip install -e ".[dev]"
 
-# 1. Mathematical invariant unit tests (13/13: chunk==step FP64, causality, zero-diff, K1-K5, FP32 SlotCore/RLT2 lock, AUROC ties)
+# 1. Full unit test suite (19/19: 13 legacy v0.3 + 6 unified v0.5 parity/purity/O(1)/no-op checks)
 python -m unittest discover -s tests -v
 
-# 2. Programmatically verify all 782 audited cells in results/audited_summary.json against results/raw/*.json
+# 2. Verify unified v0.5 invariants, halting, OOS J-space, and P1-P4 lock -> results/v05_audited_summary.json
+ruff check rdfl benchmarks tests
+mypy --strict rdfl/v05.py benchmarks/verify_v05.py rdfl/__init__.py tests/test_rdfl_v05.py
+python benchmarks/verify_v05.py --out results/v05_audited_summary.json
+
+# 3. Programmatically verify all 782 legacy v0.3 audited cells in results/audited_summary.json against results/raw/*.json
 python benchmarks/verify_audited_results.py
 
 # 3. Measure O(1) decode state vs. FP16 full-KV cache directly from CPU PyTorch tensors

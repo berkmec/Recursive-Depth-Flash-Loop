@@ -92,13 +92,19 @@ The `v0.3` reference package (`rdfl/`, `tests/test_rdfl.py`, `13/13` unit tests)
 
 ---
 
-## 4. Kernel Implementation Note
+## 4. Unified `RDFL v0.5.0` Architecture (`rdfl/v05.py`)
 
-The reference PyTorch implementation executes chunk-parallel `WY` updates in exact FP32/FP64 via `torch.linalg.solve_triangular` alongside PyTorch SDPA. Fusing the chunk-parallel `GatedDeltaNet` recurrence into a Triton / Flash Linear Attention (`fla`) kernel leaves the mathematical specification unchanged while substantially accelerating large-scale from-scratch training.
+For the unified pure-recurrent `RDFLv05Model` specification (`Micro-DeltaProduct n_h=4`, `P=4` Micro-Macro, causal surprise-gated `M2 OWM-GDN` + `ConsolidationManager`, non-collapsing `step_halting` reasoner, and OOS `J-Space` Global Workspace evaluation), see the [RDFL v0.5.0 Technical Report](V05_TECHNICAL_REPORT.md) and [`results/v05_audited_summary.json`](../results/v05_audited_summary.json).
 
 ---
 
-## 5. References
+## 5. Kernel Implementation Note
+
+The reference PyTorch implementation executes chunk-parallel `WY` updates in exact FP32/FP64 via `torch.linalg.solve_triangular` alongside PyTorch SDPA (note: `rdfl/v05.py` is 100% attention-free). Fusing the chunk-parallel `GatedDeltaNet` recurrence into a Triton / Flash Linear Attention (`fla`) kernel leaves the mathematical specification unchanged while substantially accelerating large-scale from-scratch training.
+
+---
+
+## 6. References
 
 1. **Gated DeltaNet:** Songlin Yang, Jan Kautz, and Ali Hatamizadeh. *Gated Delta Networks: Improving Mamba2 with Delta Rule.* ICLR 2025. [`arXiv:2412.06464`](https://arxiv.org/abs/2412.06464)
 2. **RLT:** Yifan Zhang et al. *Recurrent Looped Transformer.* 2026. [`arXiv:2610.07591`](https://arxiv.org/abs/2610.07591)
