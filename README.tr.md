@@ -21,7 +21,7 @@
 
 ## 1. Mimari (`RDFL v0.5.0` — Saf Özyinelemeli, Sıfır Attention)
 
-![RDFL v0.5.0 Saf Özyinelemeli Mimari](docs/diagrams/rdfl_v05_architecture.svg)
+![RDFL v0.5.0 Saf Özyinelemeli Mimari](docs/diagrams/rdfl_architecture.svg)
 
 *Şekil 1 (`v0.5.0`): [`RDFLv05Model`](rdfl/v05.py) saf özyinelemeli hesaplama grafiği (`565,216` param). **Aşama 0** (`P=1`, mavi), `256`-bayt gömme, `MSNgramHashStem` (`2/3/4/6`-gram) ve çift-rejimli `MicroDeltaProductGDNLayer` (`n_h=4` Householder çarpımı, `BiasFreeCausalShortConv`, `n_assoc=2` + `n_hh=2`) katmanlarını birleştirir. **Aşama 1** (`P=4`, kehribar), 4-baytlık nedensel yamaları `MacroRDFLv05Core` içine paketler (`r=0` tek `GDNReadOnlyLayer.write_and_read` + `rlt2_s1` sınırı, `r ≥ 1` çözücüsüz `read_only`, varsayılan çökmeyen `step_halting` + öğrenilmiş `g_step` kapısı ve ortaya çıkan `J-Space` Küresel Çalışma Alanı). **Aşama 2–3** (camgöbeği/kehribar, döngü dışı), sıfır-döngü nedensel şaşkınlık kapısını `OrthogonalSlowGDN` (`M2 OWM-GDN`) + sıfır-replay `ConsolidationManager` (`OGP + EWC + KL`) ile besler. **Aşama 4**, tek-geçişli `dec_ffn` (`calls == 1`), ayrık okuma başlığı, `K3`, `MTP-3` ve `ÖY-3` `MSP + T*` üretir; durum boyutu sabit **`25,136` bayt** (`B=1` FP32) kalır. Tüm denklemler ve tensör-tensör dökümü [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) içindedir.*
 
@@ -77,7 +77,7 @@ python benchmarks/profile_decode_memory.py
 # 5. Eski 1.20M algoritmik suite (4 görev x 4 kol) + SlotCore kosinüs tanılaması (<10 sn CPU)
 python benchmarks/run_1_2m_suite.py --smoke
 
-# 6. Tüm 5 vektör figürü (2 v0.5.0 + 3 eski v0.3) doğrudan denetlenmiş JSON'lardan üret ve XML doğrula
+# 6. Tüm 4 vektör figürü (2 v0.5.0 + 2 eski v0.3) doğrudan denetlenmiş JSON'lardan üret ve XML doğrula
 python scripts/build_diagrams.py
 ```
 
@@ -153,7 +153,7 @@ assert (adapter(z_base) - z_base).abs().max().item() == 0.0
 
 ## 4. Eski `v0.3` Hibrit Tabanı (Pencereli Dikkat + `FP32 SlotCore`)
 
-> **Eski `v0.3` Uyarısı:** Aşağıdaki **Bölüm 4** diyagramı ve deneyleri eski **`v0.3` pencereli-dikkat hibrit / `55M` yan-dal** mimarisine aittir (`rdfl/model.py`, `rdfl/layers.py`, [`results/audited_summary.json`](results/audited_summary.json), [`results/raw/`](results/raw/)). Güncel `v0.5.0` (`rdfl/v05.py`) **sıfır Attention, sıfır RoPE ve sıfır SlotCore** içerir — yukarıdaki **Bölüm 1–2**'ye bakınız.
+> **Eski `v0.3` Uyarısı:** Aşağıdaki **Bölüm 4** sonuçları eski **`v0.3` pencereli-dikkat hibrit / `55M` yan-dal** mimarisine aittir (`rdfl/model.py`, `rdfl/layers.py`, [`results/audited_summary.json`](results/audited_summary.json), [`results/raw/`](results/raw/)). Güncel `v0.5.0` (`rdfl/v05.py`) **sıfır Attention, sıfır RoPE ve sıfır SlotCore** içerir — yukarıdaki **Bölüm 1–2**'ye bakınız.
 
 ### 4.1 Eski `v0.3` Özet ve Hibrit Mimari
 
@@ -165,10 +165,6 @@ Eski `v0.3` **Recursive Depth Flash Loop (`RDFL`)**, nedensel bir giriş gövdes
 2. **Householder Yazma Kapılı Parça-Paralel `Gated DeltaNet`:** Nedensel kısa konvolüsyon ($k=4$), çok-ölçekli yavaş sönümleme ($\alpha_0 \in [0{,}953, 0{,}999]$) ve $\beta_t = 2\sigma(\cdot) \in (0, 2)$ yazma kapısını birleştirir; $S_t^{(r)} \in \mathbb{R}^{H \times d_h \times d_h}$ matris durumu taşır (`FP64`'te parça-paralel `forward == step` farkı `4,44e-16`).
 3. **`BDH` Seyrek Etkileşim Kapısı ve Parça-Sınırı `FP32 SlotCore` (`v0.3`'te Ertelendi / Değiştirildi):** Doğrudan `55M` ablasyonu sıfır durum-izleme katkısı (`delta_durum = 0,0`, `delta_bpb = -0,0005 / -0,0003`) ve simetrik yuva çöküşü (`cos = 0,999982`, Bölüm 4.3.1) gösterdiğinden simetrik `SlotCore` `v0.3`'te `rlt2_s1` ile değiştirilmiş, `v0.5.0`'da tamamen kaldırılmıştır.
 4. **Sıfır-Başlangıçlı Kalıntı Uyarlama ve Kayıpsız Yardımcı Başlıklar:** $W_{\uparrow}|_0 = 0$ çıkışı mevcut önceden eğitilmiş gövdelere adım-0'da `0,0` farkla bağlanır; kayıpsız spekülatif çözümleme (`K3` ve `MTP-4`, [`rdfl/speculative.py`](rdfl/speculative.py)), sıfır-parametreli kalibre belirsizlik (`MSP + T*`), sıfır-kalıntılı halka akış tamponu ve doğrulayıcı-kapılı sınırlı öz-gelişim (`AZR` RSI) ile bütünleşir.
-
-![Eski v0.3 RDFL Akademik Mimari Diyagramı](docs/diagrams/rdfl_architecture.svg)
-
-*Şekil 3 (Eski `v0.3`): Eski `v0.3` hibrit uyarlayıcı (`RDFLModel` / `ZeroDiffRDFLAdapter`) hesaplama grafiği. Mavi yol pencereli-dikkat giriş gövdesini; kehribar yol ağırlık-paylaşımlı döngüyü ve `FP32 SlotCore` geri beslemesini; camgöbeği bloklar $O(1)$ `Gated DeltaNet` durumlarını ve `K3` / `MTP-4` başlıklarını gösterir. Bkz. [docs/ARCHITECTURE.md §2](docs/ARCHITECTURE.md#2-legacy-v03-reference-architecture-windowed-attention-hybrid--fp32-slotcore).*
 
 ### 4.2 Eski Eş-Parametre `1,20M` Kıyaslamalar (`204` Kontrollü Koşu)
 

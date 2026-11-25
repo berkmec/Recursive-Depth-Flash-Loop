@@ -21,7 +21,7 @@
 
 ## 1. Architecture (`RDFL v0.5.0` — Pure-Recurrent, Zero Attention)
 
-![RDFL v0.5.0 Pure-Recurrent Architecture](docs/diagrams/rdfl_v05_architecture.svg)
+![RDFL v0.5.0 Pure-Recurrent Architecture](docs/diagrams/rdfl_architecture.svg)
 
 *Figure 1 (`v0.5.0`): Pure-recurrent computational graph of [`RDFLv05Model`](rdfl/v05.py) (`565,216` params). **Stage 0** (`P=1`, blue) combines `256`-byte embeddings, `MSNgramHashStem` (`2/3/4/6`-gram), and dual-regime `MicroDeltaProductGDNLayer` (`n_h=4` Householder reflections, `BiasFreeCausalShortConv`, `n_assoc=2` + `n_hh=2`). **Stage 1** (`P=4`, amber) packs 4-byte causal patches into `MacroRDFLv05Core` (`GDNReadOnlyLayer` single write at `r=0` + `rlt2_s1` boundary, zero-solver `read_only` for `r ≥ 1`, default non-collapsing `step_halting` with learned `g_step`, and emergent `J-Space` Global Workspace). **Stage 2–3** (teal/amber, outside the loop) runs a zero-loop causal surprise gate into `OrthogonalSlowGDN` (`M2 OWM-GDN`) + zero-replay `ConsolidationManager` (`OGP + EWC + KL`). **Stage 4** executes single-pass `dec_ffn` (`calls == 1`) with untied readout, `K3`, `MTP-3`, and `ÖY-3` `MSP + T*`, maintaining a constant **`25,136`-byte** `O(1)` state (`B=1` FP32). Full equations and tensor-by-tensor state accounting are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).*
 
@@ -77,7 +77,7 @@ python benchmarks/profile_decode_memory.py
 # 5. Run legacy 1.20M algorithmic suite (4 tasks x 4 arms) + SlotCore pairwise cosine diagnostic (<10s on CPU)
 python benchmarks/run_1_2m_suite.py --smoke
 
-# 6. Regenerate & XML-validate all 5 vector figures (2 v0.5.0 + 3 legacy v0.3) directly from audited JSONs
+# 6. Regenerate & XML-validate all 4 vector figures (2 v0.5.0 + 2 legacy v0.3) directly from audited JSONs
 python scripts/build_diagrams.py
 ```
 
@@ -153,7 +153,7 @@ assert (adapter(z_base) - z_base).abs().max().item() == 0.0
 
 ## 4. Legacy `v0.3` Hybrid Baseline (Windowed-Attention + `FP32 SlotCore`)
 
-> **Legacy `v0.3` Notice:** All diagrams and results in **Section 4** below document the legacy **`v0.3` windowed-attention hybrid / `55M` side-branch** (`rdfl/model.py`, `rdfl/layers.py`, [`results/audited_summary.json`](results/audited_summary.json), [`results/raw/`](results/raw/)). Current `v0.5.0` (`rdfl/v05.py`) uses **zero Attention, zero RoPE, and zero SlotCore** — see **Sections 1–2** above.
+> **Legacy `v0.3` Notice:** All results in **Section 4** below document the legacy **`v0.3` windowed-attention hybrid / `55M` side-branch** (`rdfl/model.py`, `rdfl/layers.py`, [`results/audited_summary.json`](results/audited_summary.json), [`results/raw/`](results/raw/)). Current `v0.5.0` (`rdfl/v05.py`) uses **zero Attention, zero RoPE, and zero SlotCore** — see **Sections 1–2** above.
 
 ### 4.1 Legacy `v0.3` Abstract & Hybrid Architecture
 
@@ -165,10 +165,6 @@ Legacy `v0.3` **Recursive Depth Flash Loop (`RDFL`)** coupled a causal input tru
 2. **Chunk-Parallel Gated DeltaNet with Householder Write Gates:** Combines causal short convolution ($k=4$), multi-scale slow decay ($\alpha_0 \in [0.953, 0.999]$), and Householder-range write gates ($\beta_t = 2\sigma(\cdot) \in (0,2)$), maintaining an exact $O(1)$ matrix state $S_t^{(r)} \in \mathbb{R}^{H \times d_h \times d_h}$ with chunk-parallel WY and single-step equivalence (`4.44e-16` max error in FP64).
 3. **Sparse Associative Gating (`BDH`) & Chunk-Boundary `FP32 SlotCore` (Deferred in `v0.3`):** Direct `55M` ablation shows zero state-tracking gain (`delta_durum = 0.0`, `delta_bpb = -0.0005 / -0.0003`) alongside symmetric slot collapse (`cos = 0.999982`, Section 4.3.1), so symmetric `SlotCore` was replaced by `rlt2_s1` in `v0.3` and omitted in `v0.5.0`.
 4. **Zero-Initialization Residual Adaptation & Lossless Auxiliary Heads:** A zero-initialized output projection ($W_{\uparrow}|_0 = 0$) attaches `RDFL` onto pretrained backbones with exact `0.0` step-0 deviation, alongside lossless speculative decoding (`K3` and `MTP-4` in [`rdfl/speculative.py`](rdfl/speculative.py)), zero-parameter calibrated uncertainty (`MSP + T*`), zero-retention ring streaming, and verifier-gated bounded self-improvement (`AZR` RSI).
-
-![Legacy v0.3 RDFL Hybrid Architecture](docs/diagrams/rdfl_architecture.svg)
-
-*Figure 3 (Legacy `v0.3`): Computational graph of the legacy `v0.3` hybrid adapter (`RDFLModel` / `ZeroDiffRDFLAdapter`). Blue denotes the causal windowed-attention trunk and narrow projection; amber denotes the weight-tied recursive depth loop and chunk-boundary `FP32 SlotCore` feedback; teal denotes constant-size $O(1)$ Gated DeltaNet states and decoupled `K3` / `MTP-4` heads. See [docs/ARCHITECTURE.md §2](docs/ARCHITECTURE.md#2-legacy-v03-reference-architecture-windowed-attention-hybrid--fp32-slotcore).*
 
 ### 4.2 Legacy Iso-Parameter `1.20M` Benchmarks (`204` Controlled Runs)
 

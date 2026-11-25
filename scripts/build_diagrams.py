@@ -13,7 +13,6 @@ if str(ROOT) not in sys.path:
 
 from scripts.diagram_architecture import build_architecture_svg
 from scripts.diagram_benchmarks import build_benchmarks_1_2m_svg, build_self_capabilities_svg
-from scripts.diagram_v05_architecture import build_v05_architecture_svg
 from scripts.diagram_v05_benchmarks import build_v05_benchmarks_svg
 
 OUT_DIR = ROOT / "docs" / "diagrams"
@@ -28,9 +27,8 @@ def main() -> int:
     v05_summary = json.loads(V05_SUMMARY_PATH.read_text(encoding="utf-8"))
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     files = {
-        "rdfl_v05_architecture.svg": build_v05_architecture_svg(),
-        "v05_benchmarks_gwt.svg": build_v05_benchmarks_svg(v05_summary),
         "rdfl_architecture.svg": build_architecture_svg(),
+        "v05_benchmarks_gwt.svg": build_v05_benchmarks_svg(v05_summary),
         "benchmarks_1_2m.svg": build_benchmarks_1_2m_svg(summary, gpu_profile),
         "self_capabilities_v2.svg": build_self_capabilities_svg(summary),
     }

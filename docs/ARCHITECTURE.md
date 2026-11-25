@@ -1,6 +1,6 @@
 # Architectural Specification: Recursive Depth Flash Loop (`RDFL`)
 
-![RDFL v0.5.0 Pure-Recurrent Architecture](diagrams/rdfl_v05_architecture.svg)
+![RDFL v0.5.0 Pure-Recurrent Architecture](diagrams/rdfl_architecture.svg)
 
 ---
 
@@ -97,9 +97,7 @@ The reference PyTorch implementation in `rdfl/v05.py` uses **zero SDPA and zero 
 
 ## 2. Legacy `v0.3` Reference Architecture (Windowed-Attention Hybrid + `FP32 SlotCore`)
 
-> **Legacy Reference Scope:** The diagram and sections below document the **`v0.3` reference modules** (`rdfl/model.py`, `rdfl/layers.py`, `ZeroDiffRDFLAdapter`) used for the `1.20M` iso-parameter ablations and `55M` hybrid side-branch (`Diogenes-RDFL-55M`, `782/782` verified cells). For the current pure-recurrent `v0.5.0` architecture (`0` Attention, `0` SlotCore), see **Section 1** above and [`docs/V05_TECHNICAL_REPORT.md`](V05_TECHNICAL_REPORT.md).
-
-![Legacy v0.3 RDFL Hybrid Architecture](diagrams/rdfl_architecture.svg)
+> **Legacy Reference Scope:** The sections below document the **`v0.3` reference modules** (`rdfl/model.py`, `rdfl/layers.py`, `ZeroDiffRDFLAdapter`) used for the `1.20M` iso-parameter ablations and `55M` hybrid side-branch (`Diogenes-RDFL-55M`, `782/782` verified cells). For the current pure-recurrent `v0.5.0` architecture (`0` Attention, `0` SlotCore), see **Section 1** above and [`docs/V05_TECHNICAL_REPORT.md`](V05_TECHNICAL_REPORT.md).
 
 ### 2.1 Problem Statement and Design Principles (`v0.3` Hybrid Context)
 
@@ -146,7 +144,7 @@ $$S_t^{(r)} = \alpha_t S_{t-1}^{(r)} + \beta_t \left(v_t - \alpha_t S_{t-1}^{(r)
 $$u_t^{(r)} = h_t^{(r-1)} + y_t^{(r)} + W_{\text{dec}}\!\left(\mathrm{ReLU}(W_x \tilde{h}_t^{(r)}) \odot \mathrm{ReLU}(W_y y_t^{(r)})\right)$$
 
 - In standalone **`RDFLModel`** (`rdfl/model.py`), each loop step appends a residual `SwiGLU` FFN sub-block: $h_t^{(r)} = u_t^{(r)} + \mathrm{SwiGLU}(\mathrm{RMSNorm}(u_t^{(r)}))$.
-- In **`ZeroDiffRDFLAdapter`** (`rdfl/model.py`, illustrated in the legacy diagram above), the internal `SwiGLU` sub-block is omitted ($h_t^{(r)} = u_t^{(r)}$) because the pretrained backbone already supplies unshrunk FFN layers (`ffn = 3072`).
+- In **`ZeroDiffRDFLAdapter`** (`rdfl/model.py`), the internal `SwiGLU` sub-block is omitted ($h_t^{(r)} = u_t^{(r)}$) because the pretrained backbone already supplies unshrunk FFN layers (`ffn = 3072`).
 
 #### 2.2.4 Zero-Initialization Residual Fusion, Lossless Speculative Heads, and Bounded RSI
 After the final iteration $R$, a zero-initialized projection $W_{\uparrow}$ ($W_{\uparrow}|_0 = 0$) merges the recursive refinement back into the trunk stream:
